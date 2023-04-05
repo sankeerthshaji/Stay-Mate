@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 
 export default function useAdminLogout() {
     const dispatch = useDispatch();
-    const logout = () => {
+    const adminLogout = () => {
         //remove user data from local storage
         localStorage.removeItem("admin");
         //remove user data from redux store
@@ -11,5 +11,5 @@ export default function useAdminLogout() {
         });
     };
 
-  return { logout }; 
+  return { adminLogout }; 
 }

@@ -6,6 +6,7 @@ import Loader from "../../components/user/Loader";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import useLogout from "../../hooks/user/useLogout";
+import useAdminLogout from "../../hooks/admin/useAdminLogout";
 import { useSelector } from "react-redux";
 
 function Users() {
@@ -14,6 +15,13 @@ function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const { logout } = useLogout();
+  const { adminLogout } = useAdminLogout();
+
+  const handleTokenExpiration = () => {
+    adminLogout();
+    toast.error("Your session has expired. Please log in again.");
+  };
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -26,6 +34,19 @@ function Users() {
       setUsers(response.data.users);
     } catch (err) {
       console.log(err);
+      if (err.response && err.response.status === 401) {
+        if (
+          err.response.data.error === "Session timed out. Please login again."
+        ) {
+          // Handle "Session timed out" error
+          adminLogout();
+        } else if (err.response.data.error === "Request is not authorized") {
+          // Handle "Request is not authorized" error
+          toast.error("You are not authorized to perform this action.");
+        }
+      } else {
+        toast.error("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -33,6 +54,7 @@ function Users() {
 
   useEffect(() => {
     fetchUsers();
+    console.log("useEffect");
   }, []);
 
   const blockUser = async (id) => {
@@ -55,11 +77,28 @@ function Users() {
       fetchUsers();
     } catch (err) {
       console.log(err);
-      toast.error("Something went wrong");
+      if (err.response && err.response.status === 401) {
+        if (
+          err.response.data.error === "Session timed out. Please login again."
+        ) {
+          // Handle "Session timed out" error
+          handleTokenExpiration();
+        } else if (err.response.data.error === "Request is not authorized") {
+          // Handle "Request is not authorized" error
+          toast.error("You are not authorized to perform this action.");
+        }
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 
   const unblockUser = async (id) => {
+    if (
+      !window.confirm("Are you sure you want to unblock this user?")
+    ) {
+      return;
+    }
     try {
       const response = await axios.post(
         "/admin/unblockUser",
@@ -75,7 +114,19 @@ function Users() {
       fetchUsers();
     } catch (err) {
       console.log(err);
-      toast.error("Something went wrong");
+      if (err.response && err.response.status === 401) {
+        if (
+          err.response.data.error === "Session timed out. Please login again."
+        ) {
+          // Handle "Session timed out" error
+          handleTokenExpiration();
+        } else if (err.response.data.error === "Request is not authorized") {
+          // Handle "Request is not authorized" error
+          toast.error("You are not authorized to perform this action.");
+        }
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 
@@ -103,7 +154,19 @@ function Users() {
       toast.success("User removed as resident successfully");
     } catch (err) {
       console.log(err);
-      toast.error(err.response.data.message || "Something went wrong");
+      if (err.response && err.response.status === 401) {
+        if (
+          err.response.data.error === "Session timed out. Please login again."
+        ) {
+          // Handle "Session timed out" error
+          handleTokenExpiration();
+        } else if (err.response.data.error === "Request is not authorized") {
+          // Handle "Request is not authorized" error
+          toast.error("You are not authorized to perform this action.");
+        }
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 
@@ -139,7 +202,7 @@ function Users() {
           return (
             <button
               onClick={() => unblockUser(row.original._id)}
-              className="bg-red-500 text-white p-2 rounded-md"
+              className="bg-blue-500 text-white p-2 rounded-md"
             >
               Unblock
             </button>
@@ -148,7 +211,12 @@ function Users() {
           return (
             <button
               onClick={() => blockUser(row.original._id)}
-              className="bg-blue-500 text-white p-2 rounded-md"
+              className={`p-2 rounded-md ${
+                row.original.role === "resident"
+                  ? "bg-red-300 text-white cursor-not-allowed"
+                  : "bg-red-500 text-white hover:bg-red-600"
+              }`}
+              disabled={row.original.role === "resident"}
             >
               Block
             </button>

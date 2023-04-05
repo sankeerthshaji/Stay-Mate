@@ -127,7 +127,19 @@ function BookRoom() {
       rzp1.open();
     } catch (err) {
       console.log(err);
-      toast.error(err.response.data.error || "Something went wrong");
+      if (err.response && err.response.status === 401) {
+        if (
+          err.response.data.error === "Session timed out. Please login again."
+        ) {
+          // Handle "Session timed out" error
+          handleTokenExpiration();
+        } else if (err.response.data.error === "Request is not authorized") {
+          // Handle "Request is not authorized" error
+          toast.error("You are not authorized to perform this action.");
+        }
+      } else {
+        toast.error(err.response.data.error || "Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -175,8 +187,21 @@ function BookRoom() {
           // navigate("/paymentFailed");
         }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.status === 401) {
+          if (
+            err.response.data.error === "Session timed out. Please login again."
+          ) {
+            // Handle "Session timed out" error
+            handleTokenExpiration();
+          } else if (err.response.data.error === "Request is not authorized") {
+            // Handle "Request is not authorized" error
+            toast.error("You are not authorized to perform this action.");
+          }
+        } else {
+          toast.error("Something went wrong");
+        }
       });
   }
 

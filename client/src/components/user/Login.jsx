@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import useLogin from "../../hooks/user/useLogin";
 
@@ -8,7 +8,6 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, error, loading } = useLogin();
-  const navigate = useNavigate();
 
   useEffect(() => {
     inputRef.current.focus();
@@ -17,7 +16,6 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login(email, password);
-    navigate("/roomTypes");
   };
 
   return (

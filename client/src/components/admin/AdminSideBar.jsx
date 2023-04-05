@@ -14,7 +14,7 @@ import useAdminLogout from "../../hooks/admin/useAdminLogout";
 import { toast } from "react-toastify";
 
 function AdminSideBar({ open, setOpen }) {
-  const { logout } = useAdminLogout();
+  const { adminLogout } = useAdminLogout();
   const Menus = [
     { title: "Users", icons: <FaUsers size={20} />, route: "" },
     { title: "Rooms", icons: <MdOutlineMeetingRoom size={20} />, route: "" },
@@ -42,7 +42,7 @@ function AdminSideBar({ open, setOpen }) {
 
   function handleMenuClick(action) {
     if (action === "logout") {
-      logout();
+      adminLogout();
       toast.success("Logged out successfully.");
     }
   }

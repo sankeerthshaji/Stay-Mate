@@ -28,6 +28,7 @@ function useLogin() {
         });
         console.log(store.getState());
         toast.success("Login successfull");
+        navigate("/roomTypes");
       } else {
         //save user data in local storage as guest
         localStorage.setItem("guest", JSON.stringify(json));
@@ -38,6 +39,7 @@ function useLogin() {
         });
         console.log(store.getState());
         toast.success("Login successfull");
+        navigate("/roomTypes");
       }
     } catch (error) {
       setError(error.response.data.error);

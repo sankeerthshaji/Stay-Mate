@@ -9,7 +9,7 @@ const Payment = require("../models/payment");
 const Room = require("../models/room");
 
 const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "1w" });
+  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
 const getRoomTypes = (req, res) => {

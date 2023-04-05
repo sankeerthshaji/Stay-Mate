@@ -9,7 +9,7 @@ function useAdminLogin() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const login = async (email, password) => {
+  const adminLogin = async (email, password) => {
     try {
       setLoading(true);
       const response = await axios.post("/admin/login", { email, password });
@@ -31,7 +31,7 @@ function useAdminLogin() {
     }
   };
 
-  return { login, error, loading };
+  return { adminLogin, error, loading };
 
 }
 

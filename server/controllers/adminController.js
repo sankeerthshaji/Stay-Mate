@@ -5,7 +5,7 @@ const RoomType = require("../models/roomType")
 const jwt = require("jsonwebtoken");
 
 const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "1w" });
+  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
 const loginAdmin = async (req, res) => {
