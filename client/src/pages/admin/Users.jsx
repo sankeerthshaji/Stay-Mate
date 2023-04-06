@@ -11,7 +11,6 @@ import { useSelector } from "react-redux";
 
 function Users() {
   const admin = useSelector((state) => state.admin);
-  const [open, setOpen] = useState(true);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const { logout } = useLogout();
@@ -54,7 +53,6 @@ function Users() {
 
   useEffect(() => {
     fetchUsers();
-    console.log("useEffect");
   }, []);
 
   const blockUser = async (id) => {
@@ -247,17 +245,8 @@ function Users() {
       {loading ? (
         <Loader />
       ) : (
-        <div className="flex flex-col sm:flex-row">
-          <AdminSideBar open={open} setOpen={setOpen} />
-          <div
-            className={`flex flex-1 justify-center items-center h-screen bg-gray-100 sm:w-full md:w-3/4 lg:w-2/3 xl:w-1/2 ${
-              open
-                ? "lg:ml-72 transition-all duration-300"
-                : "transition-all duration-300"
-            }`}
-          >
-            <AdminTable columns={columns} data={users} />
-          </div>
+        <div className="flex">
+          <AdminSideBar/>
         </div>
       )}
     </div>

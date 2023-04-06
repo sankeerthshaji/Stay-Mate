@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "../../axios/axios";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
+import useLogout from "../../hooks/user/useLogout";
 
 function BookRoom() {
   const { id } = useParams(); // get the room ID from the URL params
@@ -22,6 +23,7 @@ function BookRoom() {
     month: "long",
     year: "numeric",
   });
+  const { logout } = useLogout();
 
   useEffect(() => {
     async function fetchRoomData() {
@@ -58,6 +60,12 @@ function BookRoom() {
     default:
       break;
   }
+
+  const handleTokenExpiration = () => {
+    logout();
+    toast.error("Your session has expired. Please log in again.");
+    navigate("/login");
+  };
 
   const handlePayment = async () => {
     try {

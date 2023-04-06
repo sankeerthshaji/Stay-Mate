@@ -13,6 +13,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import Users from "./pages/admin/Users";
 import BookRoomPage from "./pages/user/BookRoomPage";
 import ConfirmationPage from "./pages/user/confirmationPage";
+import UserProfile from "./pages/user/UserProfile";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -95,6 +96,11 @@ function App() {
           <Route
             path="/confirmation"
             element={resident ? <ConfirmationPage /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/userProfile"
+            element={resident ? <UserProfile /> : <Navigate to="/login" />}
           />
         </Routes>
       </BrowserRouter>
