@@ -13,7 +13,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import Users from "./pages/admin/Users";
 import BookRoomPage from "./pages/user/BookRoomPage";
 import ConfirmationPage from "./pages/user/confirmationPage";
-import UserProfile from "./pages/user/UserProfile";
+import UserProfilePage from "./pages/user/UserProfilePage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -57,9 +57,16 @@ function App() {
           <Route
             path="/login"
             element={
-              !guest && !resident ? <Login /> : <Navigate to="/roomTypes" />
+              !guest && !resident ? (
+                <Login />
+              ) : guest && !resident ? (
+                <Navigate to="/roomTypes" />
+              ) : !guest && resident ? (
+                <Navigate to="/userProfile" />
+              ) : null // handle the case where both guest and resident are present, or neither is present
             }
           />
+
           <Route
             path="/forgotPassword"
             element={
@@ -100,7 +107,7 @@ function App() {
 
           <Route
             path="/userProfile"
-            element={resident ? <UserProfile /> : <Navigate to="/login" />}
+            element={resident ? <UserProfilePage /> : <Navigate to="/login" />}
           />
         </Routes>
       </BrowserRouter>

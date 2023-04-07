@@ -245,8 +245,9 @@ function Users() {
       {loading ? (
         <Loader />
       ) : (
-        <div className="flex">
+        <div>
           <AdminSideBar/>
+          <AdminTable columns={columns} data={users}/>
         </div>
       )}
     </div>

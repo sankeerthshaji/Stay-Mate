@@ -408,6 +408,20 @@ const verifyPayment = async (req, res) => {
 //   }
 // }
 
+// Fetching user details
+const fetchUserDetails = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    console.log(req.params)
+    const userDetails =  await User.findById(userId);
+    res.status(200).json({ userDetails: userDetails });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
   getRoomTypes,
   admission,
@@ -419,4 +433,5 @@ module.exports = {
   createOrder,
   verifyPayment,
   // createRoom,
+  fetchUserDetails
 };
