@@ -191,7 +191,7 @@ const verifyPasswordResetOtp = async (req, res, otp, email) => {
   }
 };
 
-const changePassword = async (req, res) => {
+const resetPassword = async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
     console.log(email, password, confirmPassword);
@@ -412,8 +412,8 @@ const verifyPayment = async (req, res) => {
 const fetchUserDetails = async (req, res) => {
   try {
     const userId = req.params.id;
-    console.log(req.params)
-    const userDetails =  await User.findById(userId);
+    console.log(req.params);
+    const userDetails = await User.findById(userId);
     res.status(200).json({ userDetails: userDetails });
   } catch (error) {
     console.log(error);
@@ -421,6 +421,86 @@ const fetchUserDetails = async (req, res) => {
   }
 };
 
+// Update user details
+const updateProfile = async (req, res) => {
+  try {
+    console.log("hooray")
+    const userId = req.params.id;
+    const values = JSON.parse(req.body.values);
+    console.log(values);
+    const file = req.file;
+    console.log(file);
+    const updatedProfile = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          fullName: values.fullName,
+          mobileNumber: values.mobileNumber,
+          address: {
+            houseName: values.houseName,
+            landmark: values.landmark,
+            area: values.area,
+            city: values.city,
+            state: values.state,
+            country: values.country,
+            pincode: values.pincode,
+          },
+          ...(file && {
+            image: {
+              url: file.path,
+              filename: file.filename,
+            },
+          }),
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({ message: "Profile updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Change password
+const changePassword = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      throw new Error("Please enter the password");
+    }
+
+    const user = await User.findById(userId);
+    const samePassword = await bcrypt.compare(currentPassword, user.password);
+    if (!samePassword) {
+      throw new Error("Incorrect password");
+    }
+
+    if(newPassword === currentPassword) {
+      throw new Error("You used this password recently. Please choose a different one.");
+    }
+
+    if (!validator.isStrongPassword(newPassword)) {
+      throw new Error("Password not strong enough");
+    }
+
+    if (newPassword !== confirmPassword) {
+      throw new Error("Passwords do not match");
+    }
+    const hash = await bcrypt.hash(newPassword, 10);
+    user.password = hash;
+    await user.save();
+    res
+      .status(200)
+      .json({ message: "Your password has been changed successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 module.exports = {
   getRoomTypes,
@@ -428,10 +508,12 @@ module.exports = {
   verifySignupOtp,
   loginUser,
   forgotPassword,
-  changePassword,
+  resetPassword,
   getRoomDetails,
   createOrder,
   verifyPayment,
   // createRoom,
-  fetchUserDetails
+  fetchUserDetails,
+  updateProfile,
+  changePassword,
 };

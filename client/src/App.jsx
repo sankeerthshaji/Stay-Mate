@@ -8,12 +8,15 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "./components/user/Loader";
 import ForgotPassword from "./pages/user/ForgotPassword";
-import ChangePassword from "./pages/user/ChangePassword";
 import AdminLogin from "./pages/admin/AdminLogin";
 import Users from "./pages/admin/Users";
 import BookRoomPage from "./pages/user/BookRoomPage";
 import ConfirmationPage from "./pages/user/confirmationPage";
 import UserProfilePage from "./pages/user/UserProfilePage";
+import EditProfilePage from "./pages/user/EditProfilePage";
+import ResetPassword from "./pages/user/ResetPassword";
+import ChangePassword from "./pages/user/ChangePassword";
+import UserDetailsPage from "./pages/admin/userDetailsPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -78,10 +81,10 @@ function App() {
             }
           />
           <Route
-            path="/changePassword"
+            path="/resetPassword"
             element={
               !guest && !resident ? (
-                <ChangePassword />
+                <ResetPassword />
               ) : (
                 <Navigate to="/roomTypes" />
               )
@@ -108,6 +111,21 @@ function App() {
           <Route
             path="/userProfile"
             element={resident ? <UserProfilePage /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/editProfile"
+            element={resident ? <EditProfilePage /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/changePassword"
+            element={resident ? <ChangePassword /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/userDetails/:id"
+            element={admin ? <UserDetailsPage /> : <Navigate to="/admin/login" />}
           />
         </Routes>
       </BrowserRouter>

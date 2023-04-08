@@ -5,17 +5,23 @@ const {
   verifySignupOtp,
   loginUser,
   forgotPassword,
-  changePassword,
+  resetPassword,
   getRoomDetails,
   createOrder,
   verifyPayment,
   //   createRoom,
   fetchUserDetails,
+  updateProfile,
+  changePassword,
 } = require("../controllers/userController");
-const admissionValidationMiddleware = require("../middlewares/validations/user");
+const admissionValidationMiddleware = require("../middlewares/validations/admission");
+const updateProfileValidationMiddleware = require("../middlewares/validations/updateProfile")
 const multer = require("multer");
 const { storage } = require("../cloudinary");
-const { requireAuthGuest, requireAuthResident } = require("../middlewares/authorization");
+const {
+  requireAuthGuest,
+  requireAuthResident,
+} = require("../middlewares/authorization");
 const upload = multer({ storage });
 
 const router = express.Router();
@@ -35,7 +41,7 @@ router.post("/login", loginUser);
 
 router.post("/forgotPassword", forgotPassword);
 
-router.post("/changePassword", changePassword);
+router.post("/resetPassword", resetPassword);
 
 router.get("/roomDetails/:id", getRoomDetails);
 
@@ -45,6 +51,16 @@ router.post("/verifyPayment", requireAuthGuest, verifyPayment);
 
 // router.post("/createRoom", createRoom)
 
-router.get("/userProfile/:id", requireAuthResident , fetchUserDetails);
+router.get("/userProfile/:id", requireAuthResident, fetchUserDetails);
+
+router.patch(
+  "/updateProfile/:id",
+  requireAuthResident,
+  upload.single("image"),
+  updateProfileValidationMiddleware,
+  updateProfile
+);
+
+router.post("/changePassword/:id", requireAuthResident, changePassword);
 
 module.exports = router;

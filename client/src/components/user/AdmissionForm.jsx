@@ -5,7 +5,7 @@ import Avatar from "react-avatar-edit";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Form, Formik } from "formik";
-import { admissionSchema } from "../../schemas";
+import { admissionSchema } from "../../schemas/admissionSchema";
 import CustomInput from "./CustomInput";
 import CustomSelect from "./CustomSelect";
 import { ClipLoader } from "react-spinners";
@@ -89,7 +89,7 @@ function AdmissionForm() {
         Application for hostel admission
       </div>
       <div className="px-12 py-6 sm:mx-auto sm:w-full">
-        <div className=" bg-white py-8 px-6 shadow-lg rounded-lg sm:px-10">
+        <div className="bg-white py-8 px-6 shadow-lg rounded-lg sm:px-10">
           <Formik
             initialValues={{
               fullName: "",

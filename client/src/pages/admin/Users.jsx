@@ -41,11 +41,9 @@ function Users() {
           adminLogout();
         } else if (err.response.data.error === "Request is not authorized") {
           // Handle "Request is not authorized" error
-          toast.error("You are not authorized to perform this action.");
+          console.log(err.response.data.error);
         }
-      } else {
-        toast.error("Something went wrong");
-      }
+      } 
     } finally {
       setLoading(false);
     }
@@ -92,9 +90,7 @@ function Users() {
   };
 
   const unblockUser = async (id) => {
-    if (
-      !window.confirm("Are you sure you want to unblock this user?")
-    ) {
+    if (!window.confirm("Are you sure you want to unblock this user?")) {
       return;
     }
     try {
@@ -185,14 +181,14 @@ function Users() {
       Header: "Role",
       accessor: "role",
     },
-    // {
-    //   Header: "More Details",
-    //   Cell: ({ row }) => (
-    //     <Link to="" className="font-bold text-blue-500 hover:underline">
-    //       More Info
-    //     </Link>
-    //   ),
-    // },
+    {
+      Header: "More Details",
+      Cell: ({ row }) => (
+        <Link to={`/userDetails/${row.original._id}`} className="font-bold text-blue-500 hover:underline">
+          More Info
+        </Link>
+      ),
+    },
     {
       Header: "Actions",
       Cell: ({ row }) => {
@@ -245,9 +241,11 @@ function Users() {
       {loading ? (
         <Loader />
       ) : (
-        <div>
-          <AdminSideBar/>
-          <AdminTable columns={columns} data={users}/>
+        <div className="flex h-screen">
+          <div className="w-16 flex-shrink-0">
+            <AdminSideBar />
+          </div>
+          <AdminTable columns={columns} data={users} />
         </div>
       )}
     </div>

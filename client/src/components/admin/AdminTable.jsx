@@ -12,7 +12,7 @@ function AdminTable(props) {
     tableInstance;
 
   return (
-    <div className="p-3">
+    <div className="flex-grow p-3">
       <h1 className="text-3xl font-bold mb-5">User Management</h1>
 
       <div className="overflow-x-auto rounded-lg shadow">

@@ -1,15 +1,15 @@
 import React from 'react'
-import ChangePasswordForm from '../../components/user/ChangePasswordForm'
-import Footer from '../../components/user/Footer/Footer'
-import Navbar from '../../components/user/Navbar/Navbar'
+import ChangePasswordForm from '../../components/user/changePasswordForm'
+import UserSideBar from '../../components/user/userSideBar'
 
 function ChangePassword() {
   return (
-    <>
-    <Navbar/>
-    <ChangePasswordForm/>
-    <Footer/>
-    </>
+    <div className="flex h-screen">
+      <div className="w-16 flex-shrink-0">
+        <UserSideBar />
+      </div>
+      <ChangePasswordForm />
+    </div>
   )
 }
 

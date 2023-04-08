@@ -105,10 +105,24 @@ const removeAsResident = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Fetch user details
+const fetchUserDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userDetails = await User.findById(id);
+    res.status(200).json({ userDetails: userDetails });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   loginAdmin,
   fetchUsers,
   blockUser,
   unblockUser,
   removeAsResident,
+  fetchUserDetails,
 };

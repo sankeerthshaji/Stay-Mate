@@ -54,7 +54,7 @@ export default function Otp() {
         console.log(response);
         toast.success(response?.data?.message);
         if (response?.data?.email) {
-          navigate("/changePassword", {
+          navigate("/resetPassword", {
             state: { email: response?.data?.email },
           });
         } else {
