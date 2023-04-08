@@ -38,7 +38,7 @@ function ResetPasswordForm() {
   };
   return (
     <section className="flex justify-center items-center h-screen bg-gray-50">
-      <div className="w-96 p-6 shadow-2xl bg-white grid gap-7">
+      <div className="p-6 shadow-2xl bg-white grid gap-7">
         <div className="grid gap-2">
           <h1 className="text-2xl font-medium">Choose a new password.</h1>
           <span className="text-sm whitespace-nowrap">

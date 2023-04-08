@@ -64,14 +64,13 @@ function ChangePasswordForm() {
   return (
     <div className="flex-grow">
       <section className="flex justify-center items-center h-screen bg-gray-50">
-        <div className="w-96 p-6 shadow-2xl bg-white grid gap-7">
+        <div className="p-6 shadow-2xl bg-white grid gap-7">
           <div className="grid gap-2">
-            <h1 className="text-2xl font-medium">Choose a new password.</h1>
-            <span className="text-sm whitespace-nowrap">
+            <h1 className="text-xl lg:text-2xl font-medium">Choose a new password.</h1>
+            <span className="text-sm break-words">
               Create a new password that is at least 8 characters long.
             </span>
           </div>
-          <div>
             <input
               ref={inputRef}
               className="w-full rounded-md p-2"
@@ -82,8 +81,6 @@ function ChangePasswordForm() {
               onChange={(e) => setCurrentPassword(e.target.value)}
               required
             />
-          </div>
-          <div>
             <input
               className="w-full rounded-md p-2"
               type="password"
@@ -93,8 +90,6 @@ function ChangePasswordForm() {
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
-          </div>
-          <div>
             <input
               className="w-full rounded-md p-2"
               type="password"
@@ -104,8 +99,6 @@ function ChangePasswordForm() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
-          </div>
-          <div>
             <button
               type="button"
               onClick={handleClick}
@@ -113,7 +106,6 @@ function ChangePasswordForm() {
             >
               {loading ? <ClipLoader size={20} color={"#fff"} /> : "Submit"}
             </button>
-          </div>
         </div>
       </section>
     </div>
