@@ -43,7 +43,7 @@ function Users() {
           // Handle "Request is not authorized" error
           console.log(err.response.data.error);
         }
-      } 
+      }
     } finally {
       setLoading(false);
     }
@@ -184,7 +184,10 @@ function Users() {
     {
       Header: "More Details",
       Cell: ({ row }) => (
-        <Link to={`/userDetails/${row.original._id}`} className="font-bold text-blue-500 hover:underline">
+        <Link
+          to={`/userDetails/${row.original._id}`}
+          className="font-bold text-blue-500 hover:underline"
+        >
           More Info
         </Link>
       ),
@@ -245,7 +248,9 @@ function Users() {
           <div className="w-16 flex-shrink-0">
             <AdminSideBar />
           </div>
-          <AdminTable columns={columns} data={users} />
+          <div className="flex-1 overflow-x-auto">
+            <AdminTable columns={columns} data={users} />
+          </div>
         </div>
       )}
     </div>

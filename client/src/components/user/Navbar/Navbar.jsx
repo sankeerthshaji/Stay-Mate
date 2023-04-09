@@ -48,12 +48,12 @@ function Navbar() {
           {links.map((link, index) => {
             return (
               <li key={link.name} className="lg:ml-16 text-xl lg:my-0 my-7">
-                <a
-                  href={link.link}
+                <Link
+                  to={link.link}
                   className="text-black hover:text-blue-900 hover:underline"
                 >
                   {link.name}
-                </a>
+                </Link>
               </li>
             );
           })}
