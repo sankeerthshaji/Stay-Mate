@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import axios from "../../axios/axios";
 import Footer from "../../components/user/Footer/Footer";
 import Navbar from "../../components/user/Navbar/Navbar";
-import Room from "../../components/user/Room";
+import RoomType from "../../components/user/RoomType";
 import Loader from "../../components/user/Loader";
 
-function Rooms() {
+function RoomTypes() {
   const [roomTypes, setRoomTypes] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
@@ -33,7 +33,7 @@ function Rooms() {
         <>
           <Navbar />
             {roomTypes.map((roomType) => (
-              <Room key={roomType._id} roomType={roomType} />
+              <RoomType key={roomType._id} roomType={roomType} />
             ))}
           <Footer />
         </>
@@ -42,4 +42,4 @@ function Rooms() {
   );
 }
 
-export default Rooms;
+export default RoomTypes;

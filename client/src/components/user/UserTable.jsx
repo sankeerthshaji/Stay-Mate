@@ -1,7 +1,7 @@
 import React from "react";
 import { useTable } from "react-table";
 
-function AdminTable(props) {
+function UserTable(props) {
   const tableInstance = useTable({
     columns: props.columns,
     data: props.data,
@@ -11,6 +11,8 @@ function AdminTable(props) {
     tableInstance;
 
   return (
+    <div className="p-5 h-screen bg-gray-100">
+      <h1 className="text-2xl mb-2">{props.title}</h1>
       <div className="overflow-auto rounded-lg shadow">
         <table {...getTableProps()} className="w-full table-auto">
           <thead className="bg-gray-900 text-white">
@@ -33,7 +35,7 @@ function AdminTable(props) {
               return (
                 <tr
                   {...row.getRowProps()}
-                  className="odd:bg-white even:bg-gray-50 hover:bg-gray-200"
+                  className="odd:bg-white even:bg-gray-50 hover:bg-gray-200 transition-colors duration-200"
                 >
                   {row.cells.map((cell) => {
                     return (
@@ -51,7 +53,8 @@ function AdminTable(props) {
           </tbody>
         </table>
       </div>
+    </div>
   );
 }
 
-export default AdminTable;
+export default UserTable;

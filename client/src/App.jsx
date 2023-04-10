@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import OtpPage from "./pages/user/OtpPage";
 import Admission from "./pages/user/admission";
-import Rooms from "./pages/user/Rooms";
 import Login from "./pages/user/LoginPage";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +16,11 @@ import EditProfilePage from "./pages/user/EditProfilePage";
 import ResetPassword from "./pages/user/ResetPassword";
 import ChangePassword from "./pages/user/ChangePassword";
 import UserDetailsPage from "./pages/admin/userDetailsPage";
+import HostelMenu from "./pages/user/HostelMenu";
+import AdminHostelMenu from "./pages/admin/AdminHostleMenu";
+import EditHostelMenuPage from "./pages/admin/EditHostelMenuPage";
+import RoomTypes from "./pages/user/RoomTypes";
+import Rooms from "./pages/admin/Rooms";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -49,7 +53,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/roomTypes" element={<Rooms />} />
+          <Route path="/roomTypes" element={<RoomTypes />} />
           <Route
             path="/admission"
             element={
@@ -57,6 +61,7 @@ function App() {
             }
           />
           <Route path="/otp" element={<OtpPage />} />
+
           <Route
             path="/login"
             element={
@@ -125,7 +130,33 @@ function App() {
 
           <Route
             path="/userDetails/:id"
-            element={admin ? <UserDetailsPage /> : <Navigate to="/admin/login" />}
+            element={
+              admin ? <UserDetailsPage /> : <Navigate to="/admin/login" />
+            }
+          />
+
+          <Route
+            path="/hostelMenu"
+            element={resident ? <HostelMenu /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/admin/hostelMenu"
+            element={
+              admin ? <AdminHostelMenu /> : <Navigate to="/admin/login" />
+            }
+          />
+
+          <Route
+            path="/admin/editHostelMenu/:id"
+            element={
+              admin ? <EditHostelMenuPage /> : <Navigate to="/admin/login" />
+            }
+          />
+
+          <Route
+            path="/admin/rooms"
+            element={admin ? <Rooms /> : <Navigate to="/admin/login" />}
           />
         </Routes>
       </BrowserRouter>

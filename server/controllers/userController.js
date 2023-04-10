@@ -7,6 +7,8 @@ const validator = require("validator");
 const Razorpay = require("razorpay");
 const Payment = require("../models/payment");
 const Room = require("../models/room");
+const Menu = require("../models/menu");
+const MenuItem = require("../models/menuItem");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -408,6 +410,36 @@ const verifyPayment = async (req, res) => {
 //   }
 // }
 
+// async function createMenu(){
+//   const newMenu = new Menu({
+//     day: 'Sunday',
+//     breakfast: '6433aea36f027d597421df89',
+//     lunch: '6433afcd67258acef62b6db3',
+//     snacks: '6433b011084bb30c5a9f6399',
+//     dinner: '6433b108ce58b40412aa7e09'
+//   });
+
+//   try {
+//     const savedMenu = await newMenu.save();
+//     console.log('New menu created:', savedMenu);
+//   } catch (error) {
+//     console.error('Error creating new menu:', error);
+//   }
+// }
+
+// async function createMenuItem() {
+//   const newMenuItem = new MenuItem({
+//     description: "Chapathi, Veg kuruma",
+//   });
+
+//   try {
+//     const savedMenuItem = await newMenuItem.save();
+//     console.log("New menu item created:", savedMenuItem);
+//   } catch (error) {
+//     console.error("Error creating new menu item:", error);
+//   }
+// }
+
 // Fetching user details
 const fetchUserDetails = async (req, res) => {
   try {
@@ -424,7 +456,7 @@ const fetchUserDetails = async (req, res) => {
 // Update user details
 const updateProfile = async (req, res) => {
   try {
-    console.log("hooray")
+    console.log("hooray");
     const userId = req.params.id;
     const values = JSON.parse(req.body.values);
     console.log(values);
@@ -434,8 +466,8 @@ const updateProfile = async (req, res) => {
       userId,
       {
         $set: {
-          fullName: values.fullName,
           mobileNumber: values.mobileNumber,
+          parentMobileNumber: values.parentMobileNumber,
           address: {
             houseName: values.houseName,
             landmark: values.landmark,
@@ -468,7 +500,7 @@ const changePassword = async (req, res) => {
   try {
     const userId = req.params.id;
     const { currentPassword, newPassword, confirmPassword } = req.body;
-    
+
     if (!currentPassword || !newPassword || !confirmPassword) {
       throw new Error("Please enter the password");
     }
@@ -479,8 +511,10 @@ const changePassword = async (req, res) => {
       throw new Error("Incorrect password");
     }
 
-    if(newPassword === currentPassword) {
-      throw new Error("You used this password recently. Please choose a different one.");
+    if (newPassword === currentPassword) {
+      throw new Error(
+        "You used this password recently. Please choose a different one."
+      );
     }
 
     if (!validator.isStrongPassword(newPassword)) {
@@ -502,6 +536,21 @@ const changePassword = async (req, res) => {
   }
 };
 
+// Fetching hostel menu
+const fetchHostelMenu = async (req, res) => {
+  try {
+    const hostelMenu = await Menu.find({})
+      .populate("breakfast")
+      .populate("lunch")
+      .populate("snacks")
+      .populate("dinner");
+    res.status(200).json({ hostelMenu: hostelMenu });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getRoomTypes,
   admission,
@@ -513,7 +562,10 @@ module.exports = {
   createOrder,
   verifyPayment,
   // createRoom,
+  // createMenu,
+  // createMenuItem,
   fetchUserDetails,
   updateProfile,
   changePassword,
+  fetchHostelMenu,
 };

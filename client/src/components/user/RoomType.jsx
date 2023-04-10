@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ImCross } from "react-icons/im";
 
-function Room({ roomType }) {
+function RoomType({ roomType }) {
   let bedType = null;
   if (roomType.capacity === 1) {
     bedType = "Single Bed";
@@ -106,4 +106,4 @@ function Room({ roomType }) {
   );
 }
 
-export default Room;
+export default RoomType;

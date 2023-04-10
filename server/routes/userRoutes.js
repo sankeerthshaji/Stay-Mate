@@ -10,9 +10,12 @@ const {
   createOrder,
   verifyPayment,
   //   createRoom,
+  // createMenu,
+  // createMenuItem,
   fetchUserDetails,
   updateProfile,
   changePassword,
+  fetchHostelMenu
 } = require("../controllers/userController");
 const admissionValidationMiddleware = require("../middlewares/validations/admission");
 const updateProfileValidationMiddleware = require("../middlewares/validations/updateProfile")
@@ -22,6 +25,7 @@ const {
   requireAuthGuest,
   requireAuthResident,
 } = require("../middlewares/authorization");
+const { create } = require("../models/roomType");
 const upload = multer({ storage });
 
 const router = express.Router();
@@ -62,5 +66,11 @@ router.patch(
 );
 
 router.post("/changePassword/:id", requireAuthResident, changePassword);
+
+// router.post("/createMenu", createMenu);
+
+// router.post("/createMenuItem", createMenuItem);
+
+router.get("/fetchHostelMenu", requireAuthResident, fetchHostelMenu)
 
 module.exports = router;

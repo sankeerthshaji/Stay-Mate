@@ -73,7 +73,7 @@ function UserDetails() {
             </div>
 
             <div className="flex flex-col items-center py-5 lg:py-3">
-              <div className="flex flex-col gap-2 lg:gap-1 rounded-md shadow-lg border-4 px-3 sm:px-6 md:px-16 lg:px-14 py-4">
+              <div className="flex flex-col gap-2 lg:gap-1 rounded-md shadow-lg border-4 px-3 sm:px-6 md:px-16 lg:px-8 py-4">
                 <div className="font-bold text-lg sm:text-2xl">Address</div>
                 <p className="text-[#2C3C4A] sm:text-2xl lg:text-xl font-semibold">
                   {userDetails.address.houseName}

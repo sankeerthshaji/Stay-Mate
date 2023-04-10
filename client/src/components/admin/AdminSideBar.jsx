@@ -11,6 +11,7 @@ import { FiLogOut } from "react-icons/fi";
 import useAdminLogout from "../../hooks/admin/useAdminLogout";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { BiFoodMenu } from "react-icons/bi";
 
 function AdminSideBar() {
   const { adminLogout } = useAdminLogout();
@@ -25,7 +26,12 @@ function AdminSideBar() {
       <Link to="/admin">
         <SideBarIcon icon={<FaUsers size="25" />} text="Users" />
       </Link>
-      <SideBarIcon icon={<MdOutlineMeetingRoom size="25" />} text="Rooms" />
+      <Link to="/admin/rooms">
+        <SideBarIcon icon={<MdOutlineMeetingRoom size="25" />} text="Rooms" />
+      </Link>
+      <Link to="/admin/hostelMenu">
+        <SideBarIcon icon={<BiFoodMenu size="25" />} text="Hostel Menu" />
+      </Link>
       <SideBarIcon icon={<FaMoneyBill size="25" />} text="Rent" />
       <SideBarIcon icon={<MdReviews size="25" />} text="Reviews" />
       <SideBarIcon icon={<FaWpforms size="25" />} text="Complaints" />

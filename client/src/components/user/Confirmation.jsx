@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import success from "../../assets/img/success.png";
 import tick from "../../assets/img/tick.webp";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function Confirmation() {
@@ -37,7 +37,7 @@ function Confirmation() {
 
       <div>
         <button className="bg-[#235784] text-white text-lg px-8 py-2 rounded-md transform hover:scale-105 transition duration-300">
-          Take me to my Profile
+          <Link to="/userProfile">Take me to my Profile</Link>
         </button>
       </div>
     </div>
