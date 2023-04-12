@@ -18,7 +18,6 @@ import ChangePassword from "./pages/user/ChangePassword";
 import UserDetailsPage from "./pages/admin/userDetailsPage";
 import HostelMenu from "./pages/user/HostelMenu";
 import AdminHostelMenu from "./pages/admin/AdminHostleMenu";
-import EditHostelMenuPage from "./pages/admin/EditHostelMenuPage";
 import RoomTypes from "./pages/user/RoomTypes";
 import Rooms from "./pages/admin/Rooms";
 
@@ -144,13 +143,6 @@ function App() {
             path="/admin/hostelMenu"
             element={
               admin ? <AdminHostelMenu /> : <Navigate to="/admin/login" />
-            }
-          />
-
-          <Route
-            path="/admin/editHostelMenu/:id"
-            element={
-              admin ? <EditHostelMenuPage /> : <Navigate to="/admin/login" />
             }
           />
 

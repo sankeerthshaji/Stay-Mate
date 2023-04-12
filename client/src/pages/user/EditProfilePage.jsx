@@ -1,5 +1,5 @@
 import React from "react";
-import UserSideBar from "../../components/user/userSideBar";
+import UserSideBar from "../../components/user/UserSideBar";
 import EditProfile from "../../components/user/EditProfile";
 
 export default function EditProfilePage() {

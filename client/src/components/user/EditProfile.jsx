@@ -10,6 +10,7 @@ import axios from "../../axios/axios";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import { toast } from "react-toastify";
+import CustomSelect from "./CustomSelect";
 
 function EditProfile() {
   const navigate = useNavigate();
@@ -136,8 +137,18 @@ function EditProfile() {
             <div className="bg-white py-8 sm:shadow-2xl rounded-lg sm:px-10">
               <Formik
                 initialValues={{
+                  fullName: userDetails?.fullName,
+                  dateOfBirth:
+                    userDetails?.dateOfBirth &&
+                    new Date(userDetails.dateOfBirth)
+                      .toISOString()
+                      .split("T")[0],
+                  gender: userDetails?.gender,
                   mobileNumber: userDetails?.mobileNumber,
+                  aadharNumber: userDetails?.aadharNumber,
+                  parentName: userDetails?.parentName,
                   parentMobileNumber: userDetails?.parentMobileNumber,
+                  bloodGroup: userDetails?.bloodGroup,
                   houseName: userDetails?.address?.houseName,
                   landmark: userDetails?.address?.landmark,
                   area: userDetails?.address?.area,
@@ -151,6 +162,33 @@ function EditProfile() {
               >
                 <Form>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <CustomInput
+                      label="FullName"
+                      name="fullName"
+                      id="FullName"
+                      placeholder="Enter your full name"
+                      type="text"
+                      errorMessage={errors?.fullName}
+                    />
+
+                    <CustomInput
+                      label="Date of Birth"
+                      name="dateOfBirth"
+                      id="Date of Birth"
+                      type="date"
+                      errorMessage={errors?.dateOfBirth}
+                    />
+
+                    <CustomSelect
+                      label="Gender"
+                      name="gender"
+                      errorMessage={errors?.gender}
+                    >
+                      <option value="">Please select gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </CustomSelect>
 
                     <CustomInput
                       label="Mobile Number"
@@ -162,6 +200,24 @@ function EditProfile() {
                     />
 
                     <CustomInput
+                      label="Aadhar Number"
+                      name="aadharNumber"
+                      id="Aadhar Number"
+                      placeholder="Enter your Aadhar number"
+                      type="number"
+                      errorMessage={errors?.aadharNumber}
+                    />
+
+                    <CustomInput
+                      label="Parent Name"
+                      name="parentName"
+                      id="Parent Name"
+                      placeholder="Enter your Parent's name"
+                      type="tel"
+                      errorMessage={errors?.parentName}
+                    />
+
+                    <CustomInput
                       label="Parent Mobile Number"
                       name="parentMobileNumber"
                       id="Parent Mobile Number"
@@ -169,6 +225,22 @@ function EditProfile() {
                       type="tel"
                       errorMessage={errors?.parentMobileNumber}
                     />
+
+                    <CustomSelect
+                      label="Blood Group"
+                      name="bloodGroup"
+                      errorMessage={errors?.bloodGroup}
+                    >
+                      <option value="">Please select blood group</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                    </CustomSelect>
 
                     <CustomInput
                       label="House Name"
@@ -233,7 +305,7 @@ function EditProfile() {
                       errorMessage={errors?.pincode}
                     />
                   </div>
-                  <div className="flex justify-center py-5">
+                  <div className="flex justify-center py-16">
                     <Avatar
                       width={200}
                       height={200}

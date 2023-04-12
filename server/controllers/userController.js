@@ -452,8 +452,14 @@ const updateProfile = async (req, res) => {
       userId,
       {
         $set: {
+          fullName: values.fullName,
+          dateOfBirth: values.dateOfBirth,
+          gender: values.gender,
           mobileNumber: values.mobileNumber,
+          aadharNumber: values.aadharNumber,
+          parentName: values.parentName,
           parentMobileNumber: values.parentMobileNumber,
+          bloodGroup: values.bloodGroup,
           address: {
             houseName: values.houseName,
             landmark: values.landmark,
