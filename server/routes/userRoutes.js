@@ -10,8 +10,7 @@ const {
   createOrder,
   verifyPayment,
   //   createRoom,
-  // createMenu,
-  // createMenuItem,
+  createMenu,
   fetchUserDetails,
   updateProfile,
   changePassword,
@@ -67,9 +66,7 @@ router.patch(
 
 router.post("/changePassword/:id", requireAuthResident, changePassword);
 
-// router.post("/createMenu", createMenu);
-
-// router.post("/createMenuItem", createMenuItem);
+router.post("/createMenu", createMenu);
 
 router.get("/fetchHostelMenu", requireAuthResident, fetchHostelMenu)
 

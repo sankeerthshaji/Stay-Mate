@@ -51,19 +51,19 @@ function HostelMenu() {
     },
     {
       Header: "Breakfast",
-      Cell: ({ row }) => row.original.breakfast.description,
+      Cell: ({ row }) => row.original.breakfast,
     },
     {
       Header: "Lunch",
-      Cell: ({ row }) => row.original.lunch.description,
+      Cell: ({ row }) => row.original.lunch,
     },
     {
       Header: "Snacks",
-      Cell: ({ row }) => row.original.snacks.description,
+      Cell: ({ row }) => row.original.snacks,
     },
     {
       Header: "Dinner",
-      Cell: ({ row }) => row.original.dinner.description,
+      Cell: ({ row }) => row.original.dinner,
     },
   ];
 

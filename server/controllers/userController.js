@@ -8,7 +8,6 @@ const Razorpay = require("razorpay");
 const Payment = require("../models/payment");
 const Room = require("../models/room");
 const Menu = require("../models/menu");
-const MenuItem = require("../models/menuItem");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -410,42 +409,29 @@ const verifyPayment = async (req, res) => {
 //   }
 // }
 
-// async function createMenu(){
-//   const newMenu = new Menu({
-//     day: 'Sunday',
-//     breakfast: '6433aea36f027d597421df89',
-//     lunch: '6433afcd67258acef62b6db3',
-//     snacks: '6433b011084bb30c5a9f6399',
-//     dinner: '6433b108ce58b40412aa7e09'
-//   });
+async function createMenu() {
+  const newMenu = new Menu({
+    day: "Sunday",
+    breakfast: "Dosa, Chutney, tea",
+    lunch: "Rice, Chena-Parippu curry, Beetroot Upperi, Achar, Pappadam",
+    snacks: "Black Tea and Enna Kadi",
+    dinner: "Chapathi, Veg kuruma",
+  });
 
-//   try {
-//     const savedMenu = await newMenu.save();
-//     console.log('New menu created:', savedMenu);
-//   } catch (error) {
-//     console.error('Error creating new menu:', error);
-//   }
-// }
-
-// async function createMenuItem() {
-//   const newMenuItem = new MenuItem({
-//     description: "Chapathi, Veg kuruma",
-//   });
-
-//   try {
-//     const savedMenuItem = await newMenuItem.save();
-//     console.log("New menu item created:", savedMenuItem);
-//   } catch (error) {
-//     console.error("Error creating new menu item:", error);
-//   }
-// }
+  try {
+    const savedMenu = await newMenu.save();
+    console.log("New menu created:", savedMenu);
+  } catch (error) {
+    console.error("Error creating new menu:", error);
+  }
+}
 
 // Fetching user details
 const fetchUserDetails = async (req, res) => {
   try {
     const userId = req.params.id;
     console.log(req.params);
-    const userDetails = await User.findById(userId);
+    const userDetails = await User.findById(userId).select("-password");
     res.status(200).json({ userDetails: userDetails });
   } catch (error) {
     console.log(error);
@@ -539,11 +525,7 @@ const changePassword = async (req, res) => {
 // Fetching hostel menu
 const fetchHostelMenu = async (req, res) => {
   try {
-    const hostelMenu = await Menu.find({})
-      .populate("breakfast")
-      .populate("lunch")
-      .populate("snacks")
-      .populate("dinner");
+    const hostelMenu = await Menu.find({});
     res.status(200).json({ hostelMenu: hostelMenu });
   } catch (error) {
     console.log(error);
@@ -562,8 +544,7 @@ module.exports = {
   createOrder,
   verifyPayment,
   // createRoom,
-  // createMenu,
-  // createMenuItem,
+  createMenu,
   fetchUserDetails,
   updateProfile,
   changePassword,

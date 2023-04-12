@@ -74,7 +74,7 @@ function EditHostelMenu() {
           // Handle "Session timed out" error
           adminLogout();
         }
-      }else{
+      } else {
         toast.error(err.response.data.message || "Something went wrong");
       }
     } finally {
@@ -110,15 +110,12 @@ function EditHostelMenu() {
                     name="breakfast"
                     id="breakfast"
                     placeholder="Breakfast"
-                    value={menuDetails?.breakfast.description}
+                    value={menuDetails?.breakfast}
                     onChange={(event) => {
                       setMenuDetails((prevMenuDetails) => {
                         return {
                           ...prevMenuDetails,
-                          breakfast: {
-                            ...prevMenuDetails.breakfast,
-                            description: event.target.value,
-                          },
+                          breakfast: event.target.value,
                         };
                       });
                     }}
@@ -126,7 +123,7 @@ function EditHostelMenu() {
                 </div>
 
                 <div>
-                <label
+                  <label
                     htmlFor="lunch"
                     className="text-sm font-medium text-gray-700"
                   >
@@ -138,15 +135,12 @@ function EditHostelMenu() {
                     name="lunch"
                     id="lunch"
                     placeholder="Lunch"
-                    value={menuDetails?.lunch.description}
+                    value={menuDetails?.lunch}
                     onChange={(event) => {
                       setMenuDetails((prevMenuDetails) => {
                         return {
                           ...prevMenuDetails,
-                          lunch: {
-                            ...prevMenuDetails.lunch,
-                            description: event.target.value,
-                          },
+                          lunch: event.target.value,
                         };
                       });
                     }}
@@ -154,7 +148,7 @@ function EditHostelMenu() {
                 </div>
 
                 <div>
-                <label
+                  <label
                     htmlFor="snacks"
                     className="text-sm font-medium text-gray-700"
                   >
@@ -166,15 +160,12 @@ function EditHostelMenu() {
                     name="snacks"
                     id="snacks"
                     placeholder="Snacks"
-                    value={menuDetails?.snacks.description}
+                    value={menuDetails?.snacks}
                     onChange={(event) => {
                       setMenuDetails((prevMenuDetails) => {
                         return {
                           ...prevMenuDetails,
-                          snacks: {
-                            ...prevMenuDetails.snacks,
-                            description: event.target.value,
-                          },
+                          snacks: event.target.value,
                         };
                       });
                     }}
@@ -182,7 +173,7 @@ function EditHostelMenu() {
                 </div>
 
                 <div>
-                <label
+                  <label
                     htmlFor="dinner"
                     className="text-sm font-medium text-gray-700"
                   >
@@ -194,15 +185,12 @@ function EditHostelMenu() {
                     name="dinner"
                     id="dinner"
                     placeholder="Dinner"
-                    value={menuDetails?.dinner.description}
+                    value={menuDetails?.dinner}
                     onChange={(event) => {
                       setMenuDetails((prevMenuDetails) => {
                         return {
                           ...prevMenuDetails,
-                          dinner: {
-                            ...prevMenuDetails.dinner,
-                            description: event.target.value,
-                          },
+                          dinner: event.target.value,
                         };
                       });
                     }}

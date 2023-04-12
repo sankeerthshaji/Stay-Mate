@@ -7,23 +7,19 @@ const menuSchema = new Schema({
         required: true
     },
     breakfast: {
-        type: Schema.Types.ObjectId,
-        ref: 'MenuItem',
+        type: String,
         required: true
     },
     lunch: {
-        type: Schema.Types.ObjectId,
-        ref: 'MenuItem',
+        type: String,
         required: true
     },
     snacks: {
-        type: Schema.Types.ObjectId,
-        ref: 'MenuItem',
+        type: String,
         required: true
     },
     dinner: {
-        type: Schema.Types.ObjectId,
-        ref: 'MenuItem',
+        type: String,
         required: true
     }
 });

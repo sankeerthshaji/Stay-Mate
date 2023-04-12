@@ -3,7 +3,6 @@ const User = require("../models/user");
 const Room = require("../models/room");
 const RoomType = require("../models/roomType");
 const Menu = require("../models/menu");
-const MenuItem = require("../models/menuItem");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 
@@ -27,7 +26,7 @@ const loginAdmin = async (req, res) => {
 
 const fetchUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}, { password: 0 });
     res.status(200).json({ users });
   } catch (error) {
     console.log(error);
@@ -113,7 +112,7 @@ const removeAsResident = async (req, res) => {
 const fetchUserDetails = async (req, res) => {
   try {
     const { id } = req.params;
-    const userDetails = await User.findById(id);
+    const userDetails = await User.findById(id).select("-password");
     res.status(200).json({ userDetails: userDetails });
   } catch (error) {
     console.log(error);
@@ -124,11 +123,7 @@ const fetchUserDetails = async (req, res) => {
 // Fetching hostel menu
 const fetchHostelMenu = async (req, res) => {
   try {
-    const hostelMenu = await Menu.find({})
-      .populate("breakfast")
-      .populate("lunch")
-      .populate("snacks")
-      .populate("dinner");
+    const hostelMenu = await Menu.find({});
     res.status(200).json({ hostelMenu: hostelMenu });
   } catch (error) {
     console.log(error);
@@ -140,11 +135,7 @@ const fetchHostelMenu = async (req, res) => {
 const fetchMenuDetails = async (req, res) => {
   try {
     const { id } = req.params;
-    const menuDetails = await Menu.findById(id)
-      .populate("breakfast")
-      .populate("lunch")
-      .populate("snacks")
-      .populate("dinner");
+    const menuDetails = await Menu.findById(id);
     res.status(200).json({ menuDetails: menuDetails });
   } catch (error) {
     console.log(error);
@@ -159,29 +150,31 @@ const updateMenuDetails = async (req, res) => {
 
     // Validate menu item names
     if (
-      !menuDetails.breakfast.description ||
-      !menuDetails.lunch.description ||
-      !menuDetails.snacks.description ||
-      !menuDetails.dinner.description
+      !menuDetails.breakfast ||
+      !menuDetails.lunch ||
+      !menuDetails.snacks ||
+      !menuDetails.dinner
     ) {
       return res.status(400).json({ message: "Please fill all the fields" });
     }
 
     if (
-      !validator.isLength(menuDetails.breakfast.description, {
+      !validator.isLength(menuDetails.breakfast, {
         min: 1,
         max: 100,
       }) ||
-      !validator.isLength(menuDetails.lunch.description, { min: 1, max: 100 }) ||
-      !validator.isLength(menuDetails.snacks.description, {
+      !validator.isLength(menuDetails.lunch, {
         min: 1,
         max: 100,
       }) ||
-      !validator.isLength(menuDetails.dinner.description, { min: 1, max: 100 })
+      !validator.isLength(menuDetails.snacks, {
+        min: 1,
+        max: 100,
+      }) ||
+      !validator.isLength(menuDetails.dinner, { min: 1, max: 100 })
     ) {
       return res.status(400).json({
-        message:
-          "Menu item must be 1-100 characters long",
+        message: "Menu item must be 1-100 characters long",
       });
     }
 
@@ -196,24 +189,12 @@ const updateMenuDetails = async (req, res) => {
     //   });
     // }
 
-    // update breakfast description
-    await MenuItem.findByIdAndUpdate(menuDetails.breakfast._id, {
-      description: menuDetails.breakfast.description,
-    });
-
-    // update lunch description
-    await MenuItem.findByIdAndUpdate(menuDetails.lunch._id, {
-      description: menuDetails.lunch.description,
-    });
-
-    // update snacks description
-    await MenuItem.findByIdAndUpdate(menuDetails.snacks._id, {
-      description: menuDetails.snacks.description,
-    });
-
-    // update dinner description
-    await MenuItem.findByIdAndUpdate(menuDetails.dinner._id, {
-      description: menuDetails.dinner.description,
+    // update menu details
+    await Menu.findByIdAndUpdate(menuDetails._id, {
+      breakfast: menuDetails.breakfast,
+      lunch: menuDetails.lunch,
+      snacks: menuDetails.snacks,
+      dinner: menuDetails.dinner,
     });
 
     res.status(200).json({ message: "Menu updated successfully" });
@@ -226,8 +207,7 @@ const updateMenuDetails = async (req, res) => {
 // Fetching hostel rooms
 const fetchRooms = async (req, res) => {
   try {
-    const rooms = await Room.find({})
-      .populate("roomType")
+    const rooms = await Room.find({}).populate("roomType");
     res.status(200).json({ rooms: rooms });
   } catch (error) {
     console.log(error);
