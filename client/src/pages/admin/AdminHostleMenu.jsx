@@ -11,7 +11,8 @@ import { toast } from "react-toastify";
 
 function AdminHostelMenu() {
   const [hostelMenu, setHostelMenu] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [showModal, setShowModal] = useState(false);
   // const [id, setId] = useState(null);
   const admin = useSelector((state) => state.admin);
@@ -43,7 +44,7 @@ function AdminHostelMenu() {
         }
       }
     } finally {
-      setLoading(false);
+      setLoader(false);
     }
   }
 
@@ -98,7 +99,7 @@ function AdminHostelMenu() {
   };
 
   async function fetchMenuDetails(id) {
-    setLoading(true);
+    setLoader(true);
     try {
       console.log(id);
       const response = await axios.get(`/admin/hostelMenu/${id}`, {
@@ -119,7 +120,7 @@ function AdminHostelMenu() {
         }
       }
     } finally {
-      setLoading(false);
+      setLoader(false);
       inputRef?.current?.focus();
     }
   }
@@ -163,7 +164,7 @@ function AdminHostelMenu() {
   }
   const modal = (
     <div>
-      {loading ? (
+      {loader ? (
         <Loader />
       ) : (
         <AdminModal onClose={handleClose}>
@@ -292,7 +293,7 @@ function AdminHostelMenu() {
 
   return (
     <div>
-      {loading ? (
+      {loader ? (
         <Loader />
       ) : (
         <div className="flex h-screen">

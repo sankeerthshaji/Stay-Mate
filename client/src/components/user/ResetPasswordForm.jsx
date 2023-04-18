@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "../../axios/axios";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { ClipLoader } from "react-spinners";
 
 function ResetPasswordForm() {
@@ -22,20 +22,40 @@ function ResetPasswordForm() {
 
   const handleClick = async () => {
     try {
-      setLoading(true);
-      const response = await axios.post("/resetPassword", {
-        email,
-        password,
-        confirmPassword,
-      });
-      toast.success(response.data.message);
-      navigate("/login");
+        setLoading(true);
+        const response = await axios.post("/resetPassword", {
+            email,
+            password,
+            confirmPassword,
+        });
+        Swal.fire({
+            icon: 'success',
+            text: response.data.message,
+            confirmButtonText: 'OK',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+            showConfirmButton: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                navigate("/login");
+            }
+        });
     } catch (err) {
-      toast.error(err.response.data.error || "Something went wrong");
+        Swal.fire({
+            icon: 'error',
+            text: err.response.data.error || "Something went wrong",
+            confirmButtonText: 'OK',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+            showConfirmButton: true
+        });
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+  
   return (
     <section className="flex justify-center items-center h-screen bg-gray-50">
       <div className="p-6 shadow-2xl bg-white grid gap-7">

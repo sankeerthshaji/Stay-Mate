@@ -8,6 +8,8 @@ const Razorpay = require("razorpay");
 const Payment = require("../models/payment");
 const Room = require("../models/room");
 const Menu = require("../models/menu");
+const Review = require("../models/review");
+const LeaveLetter = require("../models/leaveLetter");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -539,6 +541,102 @@ const fetchHostelMenu = async (req, res) => {
   }
 };
 
+const getRoomTypeDetails = async (req, res) => {
+  try {
+    const roomNo = req.query.roomNo;
+    // Find the room document that matches the roomNo
+    const room = await Room.findOne({ roomNo });
+    console.log(room.roomType);
+
+    if (!room) {
+      return res.status(404).json({ error: "Room not found" });
+    }
+
+    // Find the roomType document that matches the roomType ID in the room document
+    const roomType = await RoomType.findById(room.roomType);
+
+    if (!roomType) {
+      return res.status(404).json({ error: "Room type not found" });
+    }
+
+    // Return the roomType document to the frontend
+    res.json({ roomTypeDetails: roomType });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const postHostelReview = async (req, res) => {
+  try {
+    // check if user has already posted a review for this hostel
+    const existingReview = await Review.findOne({
+      user: req.body.userId,
+    });
+    if (existingReview) {
+      throw new Error("You have already posted a review");
+    }
+    const newReview = new Review({
+      ...req.body.values,
+      user: req.body.userId,
+    });
+    await newReview.save();
+    console.log("New review created:", newReview);
+    res.status(200).json({ message: "Review posted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getHostelReview = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const hostelReview = await Review.findOne({ user: userId });
+    res.status(200).json({ hostelReview: hostelReview });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const deleteHostelReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Review.findByIdAndDelete(id);
+    res.status(200).json({ message: "Review deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getLeaveLetters = async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    const leaveLetters = await LeaveLetter.find({ user: userId });
+    res.status(200).json({ leaveLetters: leaveLetters });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const postLeaveLetter = async (req, res) => {
+  try {
+    const newLeaveLetter = new LeaveLetter({
+      ...req.body.values,
+      user: req.body.userId,
+    });
+    await newLeaveLetter.save();
+    console.log(newLeaveLetter);
+    res.status(200).json({ message: "Leave Letter submitted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getRoomTypes,
   admission,
@@ -555,4 +653,10 @@ module.exports = {
   updateProfile,
   changePassword,
   fetchHostelMenu,
+  getRoomTypeDetails,
+  postHostelReview,
+  getHostelReview,
+  deleteHostelReview,
+  getLeaveLetters,
+  postLeaveLetter,
 };

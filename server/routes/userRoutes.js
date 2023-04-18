@@ -14,10 +14,16 @@ const {
   fetchUserDetails,
   updateProfile,
   changePassword,
-  fetchHostelMenu
+  fetchHostelMenu,
+  getRoomTypeDetails,
+  postHostelReview,
+  getHostelReview,
+  deleteHostelReview,
+  getLeaveLetters,
+  postLeaveLetter
 } = require("../controllers/userController");
 const admissionValidationMiddleware = require("../middlewares/validations/admission");
-const updateProfileValidationMiddleware = require("../middlewares/validations/updateProfile")
+const updateProfileValidationMiddleware = require("../middlewares/validations/updateProfile");
 const multer = require("multer");
 const { storage } = require("../cloudinary");
 const {
@@ -25,6 +31,8 @@ const {
   requireAuthResident,
 } = require("../middlewares/authorization");
 const { create } = require("../models/roomType");
+const reviewValidationMiddleware = require("../middlewares/validations/review");
+const LeaveLetterValidationMiddleware = require("../middlewares/validations/leaveLetter");
 const upload = multer({ storage });
 
 const router = express.Router();
@@ -68,6 +76,24 @@ router.post("/changePassword/:id", requireAuthResident, changePassword);
 
 router.post("/createMenu", createMenu);
 
-router.get("/fetchHostelMenu", requireAuthResident, fetchHostelMenu)
+router.get("/fetchHostelMenu", requireAuthResident, fetchHostelMenu);
+
+router.get("/roomTypeDetails", requireAuthResident, getRoomTypeDetails);
+
+router.post(
+  "/hostelReview",
+  requireAuthResident,
+  reviewValidationMiddleware,
+  postHostelReview
+);
+
+router.get("/leaveLetters", requireAuthResident, getLeaveLetters);
+
+router.post("/leaveLetters", requireAuthResident, LeaveLetterValidationMiddleware, postLeaveLetter)
+
+router
+  .route("/hostelReview/:id")
+  .get(requireAuthResident, getHostelReview)
+  .delete(requireAuthResident, deleteHostelReview);
 
 module.exports = router;

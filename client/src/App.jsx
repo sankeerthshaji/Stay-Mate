@@ -20,6 +20,10 @@ import HostelMenu from "./pages/user/HostelMenu";
 import AdminHostelMenu from "./pages/admin/AdminHostleMenu";
 import RoomTypes from "./pages/user/RoomTypes";
 import Rooms from "./pages/admin/Rooms";
+import ReviewPage from "./pages/user/ReviewPage";
+import Reviews from "./pages/admin/Reviews";
+import LeaveLetter from "./pages/user/LeaveLetter";
+import LeaveLetters from "./pages/admin/LeaveLetters";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -149,6 +153,26 @@ function App() {
           <Route
             path="/admin/rooms"
             element={admin ? <Rooms /> : <Navigate to="/admin/login" />}
+          />
+
+          <Route
+            path="/review"
+            element={resident ? <ReviewPage /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/admin/reviews"
+            element={admin ? <Reviews /> : <Navigate to="/admin/login" />}
+          />
+
+          <Route
+            path="/leaveLetters"
+            element={resident ? <LeaveLetter /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/admin/leaveLetters"
+            element={admin ? <LeaveLetters /> : <Navigate to="/admin/login" />}
           />
         </Routes>
       </BrowserRouter>

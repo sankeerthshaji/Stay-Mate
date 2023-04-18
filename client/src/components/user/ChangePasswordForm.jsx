@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../axios/axios";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2"
 import { ClipLoader } from "react-spinners";
 import { useSelector } from "react-redux";
 import useLogout from "../../hooks/user/useLogout";
@@ -41,8 +41,19 @@ function ChangePasswordForm() {
           },
         }
       );
-      toast.success(response.data.message);
-      navigate("/userProfile");
+      Swal.fire({
+        icon: 'success',
+        text: response.data.message,
+        confirmButtonText: 'OK',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        showConfirmButton: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            navigate("/userProfile");
+        }
+    });
     } catch (err) {
       if (err.response && err.response.status === 401) {
         if (
@@ -55,7 +66,15 @@ function ChangePasswordForm() {
           toast.error("You are not authorized to perform this action.");
         }
       } else {
-        toast.error(err.response.data.error || "Something went wrong");
+        Swal.fire({
+          icon: 'error',
+          text: err.response.data.error || "Something went wrong",
+          confirmButtonText: 'OK',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+          showConfirmButton: true
+      });
       }
     } finally {
       setLoading(false);

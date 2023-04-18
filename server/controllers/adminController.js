@@ -5,6 +5,8 @@ const RoomType = require("../models/roomType");
 const Menu = require("../models/menu");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
+const Review = require("../models/review");
+const LeaveLetter = require("../models/leaveLetter");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -215,6 +217,64 @@ const fetchRooms = async (req, res) => {
   }
 };
 
+// Fetching hostel reviews
+const getReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find({}).populate({
+      path: "user",
+      select: "-password",
+    });
+    console.log(reviews);
+    res.status(200).json({ reviews: reviews });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Approve hostel review
+const approveReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const review = await Review.findById(id);
+    review.status = "Approved";
+    await review.save();
+    res.status(200).json({ message: "Review approved successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Reject hostel review
+const rejectReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const review = await Review.findById(id);
+    review.status = "Rejected";
+    await review.save();
+    res.status(200).json({ message: "Review rejected successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Fetch Leave Letters
+const getLeaveLetters = async (req,res) => {
+  try {
+    const leaveLetters = await LeaveLetter.find({}).populate({
+      path: "user",
+      select: "-password",
+    });
+    console.log(leaveLetters);
+    res.status(200).json({ leaveLetters: leaveLetters });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   loginAdmin,
   fetchUsers,
@@ -226,4 +286,8 @@ module.exports = {
   fetchMenuDetails,
   updateMenuDetails,
   fetchRooms,
+  getReviews,
+  approveReview,
+  rejectReview,
+  getLeaveLetters
 };

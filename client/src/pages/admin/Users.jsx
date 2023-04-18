@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import useLogout from "../../hooks/user/useLogout";
 import useAdminLogout from "../../hooks/admin/useAdminLogout";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 function Users() {
   const admin = useSelector((state) => state.admin);
@@ -54,9 +55,6 @@ function Users() {
   }, []);
 
   const blockUser = async (id) => {
-    if (!window.confirm("Are you sure you want to block this user?")) {
-      return;
-    }
     try {
       const response = await axios.post(
         "/admin/blockUser",
@@ -90,9 +88,6 @@ function Users() {
   };
 
   const unblockUser = async (id) => {
-    if (!window.confirm("Are you sure you want to unblock this user?")) {
-      return;
-    }
     try {
       const response = await axios.post(
         "/admin/unblockUser",
@@ -125,11 +120,6 @@ function Users() {
   };
 
   const removeAsResident = async (id) => {
-    if (
-      !window.confirm("Are you sure you want to remove this user as resident?")
-    ) {
-      return;
-    }
     try {
       const response = await axios.post(
         "/admin/removeAsResident",
@@ -162,6 +152,58 @@ function Users() {
         toast.error("Something went wrong");
       }
     }
+  };
+
+  const confirmBlock = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to Block this user?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Block",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        blockUser(id);
+      }
+    });
+  };
+
+  const confirmUnblock = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to Unblock this user?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#22C55E",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Unblock",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        unblockUser(id);
+      }
+    });
+  };
+
+
+  const confirmRemove = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to Remove this user as Resident?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Remove",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        removeAsResident(id);
+      }
+    });
   };
 
   const columns = [
@@ -198,8 +240,8 @@ function Users() {
         if (row.original.isBlocked) {
           return (
             <button
-              onClick={() => unblockUser(row.original._id)}
-              className="bg-blue-500 text-white p-2 rounded-md"
+              onClick={() => confirmUnblock(row.original._id)}
+              className="bg-green-500 text-white p-2 rounded-md"
             >
               Unblock
             </button>
@@ -207,7 +249,7 @@ function Users() {
         } else {
           return (
             <button
-              onClick={() => blockUser(row.original._id)}
+              onClick={() => confirmBlock(row.original._id)}
               className={`p-2 rounded-md ${
                 row.original.role === "resident"
                   ? "bg-red-300 text-white cursor-not-allowed"
@@ -225,7 +267,7 @@ function Users() {
       Header: "Remove as Resident",
       Cell: ({ row }) => (
         <button
-          onClick={() => removeAsResident(row.original._id)}
+          onClick={() => confirmRemove(row.original._id)}
           className={`p-2 rounded-md ${
             row.original.role === "guest"
               ? "bg-red-300 text-white cursor-not-allowed"

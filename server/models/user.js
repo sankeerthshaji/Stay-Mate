@@ -100,10 +100,10 @@ const userSchema = new Schema(
       type: Date,
     },
 
-    review: {
-      type: ObjectID,
-      ref: "Review",
-    },
+    // review: {
+    //   type: ObjectID,
+    //   ref: "Review",
+    // },
 
     isBlocked: {
       type: Boolean,

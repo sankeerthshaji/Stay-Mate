@@ -55,6 +55,7 @@ const requireAuthResident = async (req, res, next) => {
 const requireAuthAdmin = async (req, res, next) => {
   //verify authentication
   const { authorization } = req.headers;
+  console.log(req.headers)
 
   if (!authorization) {
     console.log("Authorization token required");

@@ -1,6 +1,5 @@
 import React from "react";
 import { useTable } from "react-table";
-import AdminModal from "./AdminModal";
 
 function AdminTable(props) {
   const tableInstance = useTable({
@@ -40,7 +39,7 @@ function AdminTable(props) {
                   return (
                     <td
                       {...cell.getCellProps()}
-                      className="p-3 text-sm font-medium text-gray-700 whitespace-nowrap text-center border-b border-gray-300"
+                      className="p-3 text-sm font-medium text-gray-700 break-words text-center border-b border-gray-300"
                     >
                       {cell.render("Cell")}
                     </td>

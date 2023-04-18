@@ -11,6 +11,10 @@ const {
   fetchMenuDetails,
   updateMenuDetails,
   fetchRooms,
+  getReviews,
+  approveReview,
+  rejectReview,
+  getLeaveLetters
 } = require("../controllers/adminController");
 const { requireAuthAdmin } = require("../middlewares/authorization");
 
@@ -30,10 +34,19 @@ router.get("/userDetails/:id", requireAuthAdmin, fetchUserDetails);
 
 router.get("/fetchHostelMenu", requireAuthAdmin, fetchHostelMenu);
 
-router.get("/hostelMenu/:id", requireAuthAdmin, fetchMenuDetails);
-
-router.put("/hostelMenu/:id", requireAuthAdmin, updateMenuDetails);
+router
+  .route("/hostelMenu/:id")
+  .get(requireAuthAdmin, fetchMenuDetails)
+  .put(requireAuthAdmin, updateMenuDetails);
 
 router.get("/rooms", requireAuthAdmin, fetchRooms);
+
+router.get("/reviews", requireAuthAdmin, getReviews);
+
+router.put("/reviews/:id/approve", requireAuthAdmin, approveReview);
+
+router.put("/reviews/:id/reject", requireAuthAdmin, rejectReview);
+
+router.get("/leaveLetters", requireAuthAdmin, getLeaveLetters)
 
 module.exports = router;

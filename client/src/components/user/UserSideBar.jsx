@@ -27,13 +27,13 @@ function UserSideBar() {
       <Link to="/userProfile">
         <SideBarIcon icon={<BsCreditCardFill size="25" />} text="Hostel Rent" />
       </Link>
-      <Link to="/userProfile">
+      <Link to="/review">
         <SideBarIcon icon={<MdReviews size="25" />} text="Review" />
       </Link>
       <Link to="/userProfile">
         <SideBarIcon icon={<FaWpforms size="25" />} text="Complaints" />
       </Link>
-      <Link to="/userProfile">
+      <Link to="/leaveLetters">
         <SideBarIcon
           icon={<SlEnvolopeLetter size="25" />}
           text="Leave Letter"
