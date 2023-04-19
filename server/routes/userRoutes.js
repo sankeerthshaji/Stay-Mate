@@ -18,6 +18,7 @@ const {
   getRoomTypeDetails,
   postHostelReview,
   getHostelReview,
+  updateHostelReview,
   deleteHostelReview,
   getLeaveLetters,
   postLeaveLetter
@@ -94,6 +95,7 @@ router.post("/leaveLetters", requireAuthResident, LeaveLetterValidationMiddlewar
 router
   .route("/hostelReview/:id")
   .get(requireAuthResident, getHostelReview)
+  .put(requireAuthResident, updateHostelReview)
   .delete(requireAuthResident, deleteHostelReview);
 
 module.exports = router;

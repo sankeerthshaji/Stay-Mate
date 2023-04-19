@@ -11,12 +11,14 @@ import { Form, Formik } from "formik";
 import { reviewSchema } from "../../../schemas/reviewSchema";
 import CustomTextArea from "../CustomTextArea";
 import useLogout from "../../../hooks/user/useLogout";
+import UserModal from "../UserModal";
 
 function Review() {
   const [roomTypeDetails, setRoomTypeDetails] = useState({});
   const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showModal, setShowModal] = useState(false);
   const resident = useSelector((state) => state.resident);
   const [review, setReview] = useState({});
   const { logout } = useLogout();
@@ -187,6 +189,191 @@ function Review() {
     });
   };
 
+  const handleClick = (id) => {
+    setShowModal(true);
+    fetchReview();
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+  };
+
+  const handleUpdate = async (values) => {
+    console.log(values);
+    setLoading(true);
+    try {
+      const response = await axios.put(
+        `/hostelReview/${review._id}`,
+        {
+          values,
+          userId: resident.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${resident.token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      toast.success(response.data.message);
+      fetchReview();
+      setShowModal(false);
+    } catch (err) {
+      console.log(err);
+      if (err.response && err.response.status === 401) {
+        if (
+          err.response.data.error === "Session timed out. Please login again."
+        ) {
+          // Handle "Session timed out" error
+          logout();
+        }
+      } else if (err.response && err.response.status === 422) {
+        if (err?.response?.data?.errors) {
+          setErrors(err.response.data.errors);
+        }
+      } else {
+        // Handle any other unknown errors
+        toast.error(err.response.data.error || "Something went wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const modal = (
+    <UserModal onClose={handleCancel}>
+      <Formik
+        initialValues={{
+          rating: review?.rating,
+          body: review?.body,
+        }}
+        validationSchema={reviewSchema}
+        onSubmit={handleUpdate}
+      >
+        {({ values, handleChange }) => (
+          <Form>
+            <h2 className="mb-3 text-2xl font-semibold">Edit your review</h2>
+            <div>
+              <fieldset className="starability-basic">
+                <input
+                  type="radio"
+                  id="no-rate"
+                  className="input-no-rate"
+                  name="rating"
+                  value="1"
+                  defaultChecked={!values?.rating}
+                  onChange={handleChange}
+                  aria-label="No rating."
+                />
+                <input
+                  type="radio"
+                  id="second-rate1"
+                  name="rating"
+                  value="1"
+                  defaultChecked={values?.rating === 1}
+                  onChange={handleChange}
+                />
+                <label htmlFor="second-rate1" title="Terrible">
+                  1 star
+                </label>
+                <input
+                  type="radio"
+                  id="second-rate2"
+                  name="rating"
+                  value="2"
+                  defaultChecked={values?.rating === 2}
+                  onChange={handleChange}
+                />
+                <label htmlFor="second-rate2" title="Not good">
+                  2 stars
+                </label>
+                <input
+                  type="radio"
+                  id="second-rate3"
+                  name="rating"
+                  value="3"
+                  defaultChecked={values?.rating === 3}
+                  onChange={handleChange}
+                />
+                <label htmlFor="second-rate3" title="Average">
+                  3 stars
+                </label>
+                <input
+                  type="radio"
+                  id="second-rate4"
+                  name="rating"
+                  value="4"
+                  defaultChecked={values?.rating === 4}
+                  onChange={handleChange}
+                />
+                <label htmlFor="second-rate4" title="Very good">
+                  4 stars
+                </label>
+                <input
+                  type="radio"
+                  id="second-rate5"
+                  name="rating"
+                  value="5"
+                  defaultChecked={values?.rating === 5}
+                  onChange={handleChange}
+                />
+                <label htmlFor="second-rate5" title="Amazing">
+                  5 stars
+                </label>
+              </fieldset>
+            </div>
+            <div className="mb-3">
+              <CustomTextArea
+                label="Review Text"
+                name="body"
+                id="Review Text"
+                cols="30"
+                rows="3"
+                errorMessage={errors?.body}
+              />
+            </div>
+            <div className="mb-3">
+              <button
+                type="submit"
+                className={`px-2 py-1 text-sm font-semibold bg-green-600 text-white rounded-sm hover:bg-green-700${
+                  loading && "cursor-not-allowed"
+                }`}
+                disabled={loading}
+              >
+                Submit
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </UserModal>
+  );
+
+  // const fetchReviewDetails = async (id) => {
+  //   try {
+  //     setLoader(true);
+  //     const response = await axios.get(`/hostelReview/${id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${resident.token}`,
+  //       },
+  //     });
+  //     console.log(response.data);
+  //     setReviewDetails(response.data.hostelReview);
+  //   } catch (err) {
+  //     console.log(err);
+  //     if (err.response && err.response.status === 401) {
+  //       if (
+  //         err.response.data.error === "Session timed out. Please login again."
+  //       ) {
+  //         // Handle "Session timed out" error
+  //         logout();
+  //       }
+  //     }
+  //   } finally {
+  //     setLoader(false);
+  //   }
+  // };
+
   return (
     <div className="flex justify-center items-center h-screen">
       {loader ? (
@@ -252,14 +439,14 @@ function Review() {
                     max={5}
                     errorMessage={errors?.rating}
                   /> */}
-                  <fieldset class="starability-growRotate">
+                  <fieldset className="starability-growRotate">
                     <input
                       type="radio"
                       id="no-rate"
-                      class="input-no-rate"
+                      className="input-no-rate"
                       name="rating"
+                      defaultChecked
                       value="1"
-                      checked
                       aria-label="No rating."
                     />
                     <input
@@ -268,7 +455,7 @@ function Review() {
                       name="rating"
                       value="1"
                     />
-                    <label for="first-rate1" title="Terrible">
+                    <label htmlFor="first-rate1" title="Terrible">
                       1 star
                     </label>
                     <input
@@ -277,7 +464,7 @@ function Review() {
                       name="rating"
                       value="2"
                     />
-                    <label for="first-rate2" title="Not good">
+                    <label htmlFor="first-rate2" title="Not good">
                       2 stars
                     </label>
                     <input
@@ -286,7 +473,7 @@ function Review() {
                       name="rating"
                       value="3"
                     />
-                    <label for="first-rate3" title="Average">
+                    <label htmlFor="first-rate3" title="Average">
                       3 stars
                     </label>
                     <input
@@ -295,7 +482,7 @@ function Review() {
                       name="rating"
                       value="4"
                     />
-                    <label for="first-rate4" title="Very good">
+                    <label htmlFor="first-rate4" title="Very good">
                       4 stars
                     </label>
                     <input
@@ -304,7 +491,7 @@ function Review() {
                       name="rating"
                       value="5"
                     />
-                    <label for="first-rate5" title="Amazing">
+                    <label htmlFor="first-rate5" title="Amazing">
                       5 stars
                     </label>
                   </fieldset>
@@ -347,8 +534,19 @@ function Review() {
                     >
                       {`Rated: ${review.rating} stars`}
                     </p>
-                    <p className="text-sm mb-3">Review: {review.body}</p>
-                    <div>
+                    <p className="text-sm mb-3 break-words">Review: {review.body}</p>
+                    <div className="flex gap-2.5">
+                      {showModal && modal}
+                      <button
+                        onClick={() => handleClick(review._id)}
+                        className={`px-2 py-1 text-sm font-semibold bg-blue-600 text-white rounded-sm hover:bg-blue-700 ${
+                          loading && "cursor-not-allowed"
+                        }`}
+                        disabled={loading}
+                      >
+                        Edit
+                      </button>
+
                       <button
                         onClick={() => confirmDelete(review._id)}
                         className={`px-2 py-1 text-sm font-semibold bg-red-600 text-white rounded-sm hover:bg-red-700 ${

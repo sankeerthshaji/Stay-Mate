@@ -1,6 +1,6 @@
 import React from 'react'
 import ChangePasswordForm from '../../components/user/ChangePasswordForm'
-import UserSideBar from '../../components/user/userSideBar'
+import UserSideBar from '../../components/user/UserSideBar'
 
 function ChangePassword() {
   return (

@@ -611,6 +611,20 @@ const deleteHostelReview = async (req, res) => {
   }
 };
 
+const updateHostelReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Review.findByIdAndUpdate(id, {
+      ...req.body.values,
+      user: req.body.userId,
+    });
+    res.status(200).json({ message: "Review updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const getLeaveLetters = async (req, res) => {
   try {
     const userId = req.query.userId;
@@ -656,6 +670,7 @@ module.exports = {
   getRoomTypeDetails,
   postHostelReview,
   getHostelReview,
+  updateHostelReview,
   deleteHostelReview,
   getLeaveLetters,
   postLeaveLetter,
