@@ -1,42 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "../../components/user/Loader";
 import { useSelector } from "react-redux";
+import useLogout from "../../hooks/user/useLogout";
 import UserSideBar from "../../components/user/UserSideBar";
 import UserTable from "../../components/user/UserTable";
-import useLogout from "../../hooks/user/useLogout";
-import axios from "../../axios/axios";
 import UserModal from "../../components/user/UserModal";
+import CustomSelect from "../../components/user/CustomSelect";
 import { ClipLoader } from "react-spinners";
-import CustomInput from "../../components/user/CustomInput";
+import { complaintSchema } from "../../schemas/complaintSchema";
 import { Formik, Form } from "formik";
-import { leaveLetterSchema } from "../../schemas/leaveLetterSchema";
 import CustomTextArea from "../../components/user/CustomTextArea";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
+import axios from "../../axios/axios";
 
-function LeaveLetter() {
-  const [loader, setLoader] = useState(true);
+function Complaint() {
   const [loading, setLoading] = useState(false);
-  const [leaveLetters, setLeaveLetters] = useState([]);
+  const [loader, setLoader] = useState(true);
+  const [complaints, setComplaints] = useState([]);
+  const [errors, setErrors] = useState({});
   const resident = useSelector((state) => state.resident);
   const { logout } = useLogout();
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    fetchLeaveLetters();
+    fetchComplaints();
   }, []);
 
-  const fetchLeaveLetters = async () => {
+  const fetchComplaints = async () => {
     try {
       const userId = resident.id;
-      const response = await axios.get("/leaveLetters", {
+      const response = await axios.get("/complaints", {
         params: { userId },
         headers: {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      console.log(response.data.leaveLetters);
-      setLeaveLetters(response.data.leaveLetters);
+      console.log(response.data.complaints);
+      setComplaints(response.data.complaints);
     } catch (err) {
       console.log(err);
       if (err.response && err.response.status === 401) {
@@ -52,25 +51,6 @@ function LeaveLetter() {
     }
   };
 
-  const columns = [
-    {
-      Header: "#",
-      Cell: ({ row }) => row.index + 1,
-    },
-    {
-      Header: "Leave Start Date",
-      Cell: ({ row }) => new Date(row.original.startDate).toLocaleDateString(),
-    },
-    {
-      Header: "Leave End Date",
-      Cell: ({ row }) => new Date(row.original.endDate).toLocaleDateString(),
-    },
-    {
-      Header: "Comments",
-      Cell: ({ row }) => row.original.comments,
-    },
-  ];
-
   const handleClick = () => {
     setShowModal(true);
   };
@@ -82,21 +62,19 @@ function LeaveLetter() {
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
+      const userId = resident.id;
       const response = await axios.post(
-        "/leaveLetters",
-        {
-          values,
-          userId: resident.id,
-        },
+        "/complaints",
+        { values, userId },
         {
           headers: {
             Authorization: `Bearer ${resident.token}`,
           },
         }
       );
-      console.log(response.data.message);
+      console.log(response.data);
       handleClose();
-      fetchLeaveLetters();
+      fetchComplaints();
       Swal.fire({
         icon: "success",
         text: response.data.message,
@@ -126,37 +104,32 @@ function LeaveLetter() {
   const modal = (
     <UserModal onClose={handleClose}>
       <div className="grid gap-4">
-        <div className="text-2xl font-bold">Submit Leave Letter</div>
+        <div className="text-2xl font-bold">Register a New Complaint</div>
         <Formik
           initialValues={{
-            startDate: "",
-            endDate: "",
-            comments: "",
+            type: "",
+            description: "",
           }}
-          validationSchema={leaveLetterSchema}
+          validationSchema={complaintSchema}
           onSubmit={handleSubmit}
         >
-          <Form className="grid gap-5">
-            <CustomInput
-              label="Leave Start Date"
-              name="startDate"
-              id="Leave Start Date"
-              placeholder="Select a date"
-              type="date"
-            />
-
-            <CustomInput
-              label="Leave End Date"
-              name="endDate"
-              id="Leave End Date"
-              placeholder="Select a date"
-              type="date"
-            />
+          <Form className="grid gap-6">
+            <CustomSelect
+              label="Complaint Type"
+              name="type"
+              errorMessage={errors?.gender}
+            >
+              <option value="">Select a Complaint Type</option>
+              <option value="Maintenance">Maintenance</option>
+              <option value="Security">Security</option>
+              <option value="Cleanliness">Cleanliness</option>
+              <option value="Others">Others</option>
+            </CustomSelect>
 
             <CustomTextArea
-              label="Comments"
-              name="comments"
-              id="Comments"
+              label="Complaint Description"
+              name="description"
+              id="Complaint Description"
               cols="30"
               rows="2"
             />
@@ -176,6 +149,33 @@ function LeaveLetter() {
     </UserModal>
   );
 
+  const columns = [
+    {
+      Header: "#",
+      Cell: ({ row }) => row.index + 1,
+    },
+    {
+      Header: "Complaint Type",
+      Cell: ({ row }) => row.original.type,
+    },
+    {
+      Header: "Complaint Description",
+      Cell: ({ row }) => row.original.description,
+    },
+    {
+      Header: "Status",
+      Cell: ({ row }) => row.original.status,
+    },
+    {
+      Header: "Created At",
+      Cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
+    },
+    {
+      Header: "Admin Response",
+      Cell: ({ row }) => row.original.adminResponse,
+    },
+  ];
+
   return (
     <div>
       {loader ? (
@@ -189,16 +189,16 @@ function LeaveLetter() {
             {showModal && modal}
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
-                Leave Letters
+                Complaints
               </h1>
               <button
                 onClick={handleClick}
                 className="bg-gray-900 rounded-md text-white p-2"
               >
-                Add Leave Letter
+                Add Complaint
               </button>
             </div>
-            <UserTable columns={columns} data={leaveLetters} />
+            <UserTable columns={columns} data={complaints} />
           </div>
         </div>
       )}
@@ -206,4 +206,4 @@ function LeaveLetter() {
   );
 }
 
-export default LeaveLetter;
+export default Complaint;

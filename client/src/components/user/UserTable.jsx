@@ -39,7 +39,7 @@ function UserTable(props) {
                   return (
                     <td
                       {...cell.getCellProps()}
-                      className="p-3 text-sm font-medium text-gray-700 break-words text-center border-b border-gray-300"
+                      className="p-3 text-sm font-medium text-gray-700 text-center border-b border-gray-300 break-words"
                     >
                       {cell.render("Cell")}
                     </td>

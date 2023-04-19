@@ -30,7 +30,7 @@ function UserSideBar() {
       <Link to="/review">
         <SideBarIcon icon={<MdReviews size="25" />} text="Review" />
       </Link>
-      <Link to="/userProfile">
+      <Link to="/complaints">
         <SideBarIcon icon={<FaWpforms size="25" />} text="Complaints" />
       </Link>
       <Link to="/leaveLetters">

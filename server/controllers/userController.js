@@ -10,6 +10,7 @@ const Room = require("../models/room");
 const Menu = require("../models/menu");
 const Review = require("../models/review");
 const LeaveLetter = require("../models/leaveLetter");
+const Complaint = require("../models/complaint");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -651,6 +652,32 @@ const postLeaveLetter = async (req, res) => {
   }
 };
 
+const getComplaints = async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    const complaints = await Complaint.find({ user: userId });
+    res.status(200).json({ complaints: complaints });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const postComplaint = async (req, res) => {
+  try {
+    const newComplaint = new Complaint({
+      ...req.body.values,
+      user: req.body.userId,
+    });
+    await newComplaint.save();
+    console.log(newComplaint);
+    res.status(200).json({ message: "Complaint submitted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getRoomTypes,
   admission,
@@ -674,4 +701,6 @@ module.exports = {
   deleteHostelReview,
   getLeaveLetters,
   postLeaveLetter,
+  getComplaints,
+  postComplaint,
 };

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import OtpPage from "./pages/user/OtpPage";
-import Admission from "./pages/user/admission";
+import Admission from "./pages/user/Admission";
 import Login from "./pages/user/LoginPage";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +24,7 @@ import ReviewPage from "./pages/user/ReviewPage";
 import Reviews from "./pages/admin/Reviews";
 import LeaveLetter from "./pages/user/LeaveLetter";
 import LeaveLetters from "./pages/admin/LeaveLetters";
+import Complaint from "./pages/user/Complaint";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -173,6 +174,11 @@ function App() {
           <Route
             path="/admin/leaveLetters"
             element={admin ? <LeaveLetters /> : <Navigate to="/admin/login" />}
+          />
+
+          <Route
+            path="/complaints"
+            element={resident ? <Complaint /> : <Navigate to="/login" />}
           />
         </Routes>
       </BrowserRouter>

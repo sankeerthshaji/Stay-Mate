@@ -21,7 +21,9 @@ const {
   updateHostelReview,
   deleteHostelReview,
   getLeaveLetters,
-  postLeaveLetter
+  postLeaveLetter,
+  getComplaints,
+  postComplaint
 } = require("../controllers/userController");
 const admissionValidationMiddleware = require("../middlewares/validations/admission");
 const updateProfileValidationMiddleware = require("../middlewares/validations/updateProfile");
@@ -34,6 +36,7 @@ const {
 const { create } = require("../models/roomType");
 const reviewValidationMiddleware = require("../middlewares/validations/review");
 const LeaveLetterValidationMiddleware = require("../middlewares/validations/leaveLetter");
+const ComplaintValidationMiddleware = require("../middlewares/validations/complaintSchema");
 const upload = multer({ storage });
 
 const router = express.Router();
@@ -88,14 +91,19 @@ router.post(
   postHostelReview
 );
 
-router.get("/leaveLetters", requireAuthResident, getLeaveLetters);
-
-router.post("/leaveLetters", requireAuthResident, LeaveLetterValidationMiddleware, postLeaveLetter)
-
 router
   .route("/hostelReview/:id")
   .get(requireAuthResident, getHostelReview)
   .put(requireAuthResident, updateHostelReview)
   .delete(requireAuthResident, deleteHostelReview);
+
+router
+  .route("/leaveLetters")
+  .get(requireAuthResident, getLeaveLetters)
+  .post(requireAuthResident, LeaveLetterValidationMiddleware, postLeaveLetter);
+
+  router.get("/complaints", requireAuthResident, getComplaints);
+
+  router.post("/complaints", requireAuthResident, ComplaintValidationMiddleware, postComplaint)
 
 module.exports = router;
