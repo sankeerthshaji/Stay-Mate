@@ -25,6 +25,7 @@ import Reviews from "./pages/admin/Reviews";
 import LeaveLetter from "./pages/user/LeaveLetter";
 import LeaveLetters from "./pages/admin/LeaveLetters";
 import Complaint from "./pages/user/Complaint";
+import Complaints from "./pages/admin/Complaints";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -179,6 +180,11 @@ function App() {
           <Route
             path="/complaints"
             element={resident ? <Complaint /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/admin/complaints"
+            element={admin ? <Complaints /> : <Navigate to="/admin/login" />}
           />
         </Routes>
       </BrowserRouter>

@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const Review = require("../models/review");
 const LeaveLetter = require("../models/leaveLetter");
+const Complaint = require("../models/complaint");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -261,7 +262,7 @@ const rejectReview = async (req, res) => {
 };
 
 // Fetch Leave Letters
-const getLeaveLetters = async (req,res) => {
+const getLeaveLetters = async (req, res) => {
   try {
     const leaveLetters = await LeaveLetter.find({}).populate({
       path: "user",
@@ -273,7 +274,53 @@ const getLeaveLetters = async (req,res) => {
     console.log(error);
     res.status(500).json({ error: error.message });
   }
-}
+};
+
+// Fetch Complaints
+const getComplaints = async (req, res) => {
+  try {
+    const complaints = await Complaint.find({}).populate({
+      path: "user",
+      select: "-password",
+    });
+    console.log(complaints);
+    res.status(200).json({ complaints: complaints });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get complaint details
+const getComplaintDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const complaint = await Complaint.findById(id);
+    res.status(200).json({ complaint: complaint });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Update complaint Details
+const updateComplaintDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { values } = req.body;
+    const complaint = await Complaint.findByIdAndUpdate(
+      id,
+      { $set: values },
+      { new: true }
+    );
+    res
+      .status(200)
+      .json({ message: "Complaint updated successfully", complaint });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 module.exports = {
   loginAdmin,
@@ -289,5 +336,8 @@ module.exports = {
   getReviews,
   approveReview,
   rejectReview,
-  getLeaveLetters
+  getLeaveLetters,
+  getComplaints,
+  getComplaintDetails,
+  updateComplaintDetails,
 };

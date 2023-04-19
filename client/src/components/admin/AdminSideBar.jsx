@@ -34,11 +34,16 @@ function AdminSideBar() {
       </Link>
       <SideBarIcon icon={<FaMoneyBill size="25" />} text="Rent" />
       <Link to="/admin/reviews">
-      <SideBarIcon icon={<MdReviews size="25" />} text="Reviews" />
+        <SideBarIcon icon={<MdReviews size="25" />} text="Reviews" />
       </Link>
-      <SideBarIcon icon={<FaWpforms size="25" />} text="Complaints" />
+      <Link to="/admin/complaints">
+        <SideBarIcon icon={<FaWpforms size="25" />} text="Complaints" />
+      </Link>
       <Link to="/admin/leaveLetters">
-      <SideBarIcon icon={<SlEnvolopeLetter size="25" />} text="Leave letters" />
+        <SideBarIcon
+          icon={<SlEnvolopeLetter size="25" />}
+          text="Leave letters"
+        />
       </Link>
       <SideBarIcon icon={<BsEnvelope size="25" />} text="Vacating letters" />
       <SideBarIcon

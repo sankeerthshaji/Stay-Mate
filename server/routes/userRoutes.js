@@ -94,7 +94,7 @@ router.post(
 router
   .route("/hostelReview/:id")
   .get(requireAuthResident, getHostelReview)
-  .put(requireAuthResident, updateHostelReview)
+  .put(requireAuthResident, reviewValidationMiddleware, updateHostelReview)
   .delete(requireAuthResident, deleteHostelReview);
 
 router

@@ -113,11 +113,11 @@ function Complaint() {
           validationSchema={complaintSchema}
           onSubmit={handleSubmit}
         >
-          <Form className="grid gap-6">
+          <Form className="grid gap-5">
             <CustomSelect
               label="Complaint Type"
               name="type"
-              errorMessage={errors?.gender}
+              errorMessage={errors?.type}
             >
               <option value="">Select a Complaint Type</option>
               <option value="Maintenance">Maintenance</option>
@@ -132,15 +132,12 @@ function Complaint() {
               id="Complaint Description"
               cols="30"
               rows="2"
+              errorMessage={errors?.description}
             />
 
             <div className="flex flex-col gap-4">
               <button className="bg-blue-500 text-white p-2 rounded-md transform hover:scale-105 transition duration-300">
-                {loading ? (
-                  <ClipLoader size={20} color={"#fff"} />
-                ) : (
-                  "Submit"
-                )}
+                {loading ? <ClipLoader size={20} color={"#fff"} /> : "Submit"}
               </button>
             </div>
           </Form>
@@ -164,7 +161,19 @@ function Complaint() {
     },
     {
       Header: "Status",
-      Cell: ({ row }) => row.original.status,
+      Cell: ({ row }) => (
+        <p
+          className={`${
+            row.original.status === "New"
+              ? "text-blue-500"
+              : row.original.status === "In Progress"
+              ? "text-yellow-400"
+              : "text-green-500"
+          }`}
+        >
+          {row.original.status}
+        </p>
+      ),
     },
     {
       Header: "Created At",
@@ -189,7 +198,7 @@ function Complaint() {
             {showModal && modal}
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
-                Complaints
+                Registered Complaints
               </h1>
               <button
                 onClick={handleClick}

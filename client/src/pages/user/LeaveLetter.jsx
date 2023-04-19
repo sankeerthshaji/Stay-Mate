@@ -21,6 +21,7 @@ function LeaveLetter() {
   const resident = useSelector((state) => state.resident);
   const { logout } = useLogout();
   const [showModal, setShowModal] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     fetchLeaveLetters();
@@ -143,6 +144,7 @@ function LeaveLetter() {
               id="Leave Start Date"
               placeholder="Select a date"
               type="date"
+              errorMessage={errors?.startDate}
             />
 
             <CustomInput
@@ -151,6 +153,7 @@ function LeaveLetter() {
               id="Leave End Date"
               placeholder="Select a date"
               type="date"
+              errorMessage={errors?.endDate}
             />
 
             <CustomTextArea
@@ -159,6 +162,7 @@ function LeaveLetter() {
               id="Comments"
               cols="30"
               rows="2"
+              errorMessage={errors?.comments}
             />
 
             <div className="flex flex-col gap-4">
