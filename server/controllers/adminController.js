@@ -8,6 +8,8 @@ const validator = require("validator");
 const Review = require("../models/review");
 const LeaveLetter = require("../models/leaveLetter");
 const Complaint = require("../models/complaint");
+const RentDue = require("../models/rentDue");
+const Payment = require("../models/payment");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -322,6 +324,38 @@ const updateComplaintDetails = async (req, res) => {
   }
 };
 
+// Fetch Paid Rents
+const getPaidRents = async (req, res) => {
+  try {
+    const paidRents = await Payment.find({})
+      .sort({ dateOfPayment: -1 })
+      .populate({
+        path: "user",
+        select: "-password",
+      });
+    console.log(paidRents);
+    res.status(200).json({ paidRents: paidRents });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Fetch Unpaid Rents
+const getUnpaidRents = async (req, res) => {
+  try {
+    const unpaidRents = await RentDue.find({ status: "Unpaid" }).populate({
+      path: "user",
+      select: "-password",
+    });
+    console.log(unpaidRents);
+    res.status(200).json({ unpaidRents: unpaidRents });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   loginAdmin,
   fetchUsers,
@@ -340,4 +374,6 @@ module.exports = {
   getComplaints,
   getComplaintDetails,
   updateComplaintDetails,
+  getPaidRents,
+  getUnpaidRents,
 };

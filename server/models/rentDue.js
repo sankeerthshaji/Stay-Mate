@@ -35,8 +35,8 @@ const rentDueSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["paid", "unpaid"],
-      default: "unpaid",
+      enum: ["Paid", "Unpaid"],
+      default: "Unpaid",
     }
   },
   {

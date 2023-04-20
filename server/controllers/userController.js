@@ -705,7 +705,7 @@ const getRentDue = async (req, res) => {
       user: userId,
       rentMonth: month,
       rentDate: moment(date).format("YYYY-MM-DD"),
-      status: "paid",
+      status: "Paid",
     });
 
     if (rentPaid) {
@@ -719,7 +719,7 @@ const getRentDue = async (req, res) => {
       user: userId,
       rentMonth: month,
       rentDate: moment(date).format("YYYY-MM-DD"),
-      status: "unpaid",
+      status: "Unpaid",
     });
 
     if (rentDue) {
@@ -758,7 +758,6 @@ const getRentDue = async (req, res) => {
       lastDateWithoutFine: moment(lastDateWithoutFine).format("YYYY-MM-DD"),
       fine,
       user: userId,
-      status: "unpaid",
     });
 
     // Save the RentDue document to the database.
@@ -835,9 +834,9 @@ const verifyRentPayment = async (req, res) => {
         user: userId,
         rentMonth: month,
         rentDate: moment(date).format("YYYY-MM-DD"),
-        status: "unpaid",
+        status: "Unpaid",
       });
-      rentDue.status = "paid";
+      rentDue.status = "Paid";
       await rentDue.save();
       // create a new payment document
       const payment = new Payment({

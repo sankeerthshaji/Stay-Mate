@@ -29,6 +29,8 @@ import Complaints from "./pages/admin/Complaints";
 import RentDuePage from "./pages/user/RentDuePage";
 import RentPaid from "./pages/user/RentPaid";
 import RentConfirmationPage from "./pages/user/RentConfirmationPage";
+import PaidRents from "./pages/admin/PaidRents";
+import UnpaidRents from "./pages/admin/UnpaidRents";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -202,7 +204,19 @@ function App() {
 
           <Route
             path="/rentConfirmation"
-            element={resident ? <RentConfirmationPage /> : <Navigate to="/login" />}
+            element={
+              resident ? <RentConfirmationPage /> : <Navigate to="/login" />
+            }
+          />
+
+          <Route
+            path="/admin/paidRents"
+            element={admin ? <PaidRents /> : <Navigate to="/admin/login" />}
+          />
+
+          <Route
+            path="/admin/unpaidRents"
+            element={admin ? <UnpaidRents /> : <Navigate to="/admin/login" />}
           />
         </Routes>
       </BrowserRouter>

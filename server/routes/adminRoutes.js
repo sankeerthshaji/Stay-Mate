@@ -18,6 +18,8 @@ const {
   getComplaints,
   getComplaintDetails,
   updateComplaintDetails,
+  getPaidRents,
+  getUnpaidRents,
 } = require("../controllers/adminController");
 const { requireAuthAdmin } = require("../middlewares/authorization");
 const AdminComplaintValidationMiddleware = require("../middlewares/validations/adminComplaintSchema");
@@ -58,5 +60,9 @@ router.get("/complaints", requireAuthAdmin, getComplaints);
 router.get("/complaint/:id", requireAuthAdmin, getComplaintDetails);
 
 router.patch("/complaint/:id", requireAuthAdmin, AdminComplaintValidationMiddleware, updateComplaintDetails);
+
+router.get("/paidRents", requireAuthAdmin, getPaidRents);
+
+router.get("/unpaidRents", requireAuthAdmin, getUnpaidRents);
 
 module.exports = router;

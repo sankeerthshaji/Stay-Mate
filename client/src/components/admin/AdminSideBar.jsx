@@ -32,7 +32,9 @@ function AdminSideBar() {
       <Link to="/admin/hostelMenu">
         <SideBarIcon icon={<BiFoodMenu size="25" />} text="Hostel Menu" />
       </Link>
+      <Link to="/admin/paidRents">
       <SideBarIcon icon={<FaMoneyBill size="25" />} text="Rent" />
+      </Link>
       <Link to="/admin/reviews">
         <SideBarIcon icon={<MdReviews size="25" />} text="Reviews" />
       </Link>

@@ -118,4 +118,5 @@ router.post("/createRentOrder", requireAuthGuest, createRentOrder);
 router.post("/verifyRentPayment", requireAuthGuest, verifyRentPayment);
 
 router.get("/rentPaid", requireAuthResident, getRentPaid);
+
 module.exports = router;
