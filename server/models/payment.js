@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const paymentSchema = new Schema(
     {
-        userId: {
+        user: {
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true,
@@ -16,6 +16,13 @@ const paymentSchema = new Schema(
             type: Date,
             default: Date.now,
         },
+        monthOfPayment: {
+            type: String,
+            required: true,
+        },
+    },
+    {
+        timestamps: true,
     }
 );
 

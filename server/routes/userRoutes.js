@@ -7,8 +7,8 @@ const {
   forgotPassword,
   resetPassword,
   getRoomDetails,
-  createOrder,
-  verifyPayment,
+  createBookingOrder,
+  verifyBookingPayment,
   //   createRoom,
   createMenu,
   fetchUserDetails,
@@ -23,7 +23,11 @@ const {
   getLeaveLetters,
   postLeaveLetter,
   getComplaints,
-  postComplaint
+  postComplaint,
+  getRentDue,
+  getRentPaid,
+  createRentOrder,
+  verifyRentPayment,
 } = require("../controllers/userController");
 const admissionValidationMiddleware = require("../middlewares/validations/admission");
 const updateProfileValidationMiddleware = require("../middlewares/validations/updateProfile");
@@ -60,9 +64,9 @@ router.post("/resetPassword", resetPassword);
 
 router.get("/roomDetails/:id", getRoomDetails);
 
-router.post("/orders", requireAuthGuest, createOrder);
+router.post("/createBookingOrder", requireAuthGuest, createBookingOrder);
 
-router.post("/verifyPayment", requireAuthGuest, verifyPayment);
+router.post("/verifyBookingPayment", requireAuthGuest, verifyBookingPayment);
 
 // router.post("/createRoom", createRoom)
 
@@ -102,8 +106,16 @@ router
   .get(requireAuthResident, getLeaveLetters)
   .post(requireAuthResident, LeaveLetterValidationMiddleware, postLeaveLetter);
 
-  router.get("/complaints", requireAuthResident, getComplaints);
+router
+  .route("/complaints")
+  .get(requireAuthResident, getComplaints)
+  .post(requireAuthResident, ComplaintValidationMiddleware, postComplaint);
 
-  router.post("/complaints", requireAuthResident, ComplaintValidationMiddleware, postComplaint)
+router.get("/rentDue", requireAuthResident, getRentDue);
 
+router.post("/createRentOrder", requireAuthGuest, createRentOrder);
+
+router.post("/verifyRentPayment", requireAuthGuest, verifyRentPayment);
+
+router.get("/rentPaid", requireAuthResident, getRentPaid);
 module.exports = router;

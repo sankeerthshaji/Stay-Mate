@@ -197,7 +197,7 @@ function LeaveLetter() {
               </h1>
               <button
                 onClick={handleClick}
-                className="bg-gray-900 rounded-md text-white p-2"
+                className="bg-gray-white border border-gray-900 text-black rounded-md p-2 hover:bg-gray-900 hover:text-white transition duration-300"
               >
                 Add Leave Letter
               </button>

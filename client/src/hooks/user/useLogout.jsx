@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import store from "../../redux/store";
 
 export default function useLogout() {
   const dispatch = useDispatch();
@@ -9,6 +10,8 @@ export default function useLogout() {
       dispatch({
         type: "GUEST_LOGOUT",
       });
+      console.log("Guest logged out");
+      console.log(store.getState());
     }
     //check if user is logged in as resident
     if (localStorage.getItem("resident")) {

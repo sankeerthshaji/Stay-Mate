@@ -46,10 +46,10 @@ function AdminSideBar() {
         />
       </Link>
       <SideBarIcon icon={<BsEnvelope size="25" />} text="Vacating letters" />
-      <SideBarIcon
+      {/* <SideBarIcon
         icon={<HiOutlineDocumentReport size="25" />}
         text="Sales Report"
-      />
+      /> */}
       <SideBarIcon
         icon={<FiLogOut size="25" />}
         text="Logout"

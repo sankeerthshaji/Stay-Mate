@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { BiFoodMenu } from "react-icons/bi";
 import { BsCreditCardFill } from "react-icons/bs";
+import { GiBookmarklet } from "react-icons/gi";
 import { MdReviews } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 import { SlEnvolopeLetter } from "react-icons/sl";
@@ -24,8 +25,11 @@ function UserSideBar() {
       <Link to="/hostelMenu">
         <SideBarIcon icon={<BiFoodMenu size="25" />} text="Hostel Menu" />
       </Link>
-      <Link to="/userProfile">
+      <Link to="/rentDue">
         <SideBarIcon icon={<BsCreditCardFill size="25" />} text="Hostel Rent" />
+      </Link>
+      <Link to="/rentPaid">
+        <SideBarIcon icon={<GiBookmarklet size="25" />} text="Rent History" />
       </Link>
       <Link to="/review">
         <SideBarIcon icon={<MdReviews size="25" />} text="Review" />

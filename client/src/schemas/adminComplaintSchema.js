@@ -5,6 +5,6 @@ export const adminComplaintSchema = Yup.object().shape({
         .oneOf(['New', 'In Progress', 'Resolved'], 'Complaint Status is required')
         .required('Complaint Status is required'),
     adminResponse: Yup.string()
-        .max(500, 'Response should not exceed 500 characters')
-        .required('Response is required'),
+        .max(500, 'Admin Response should not exceed 500 characters')
+        .required('Admin Response is required'),
 });

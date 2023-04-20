@@ -26,6 +26,9 @@ import LeaveLetter from "./pages/user/LeaveLetter";
 import LeaveLetters from "./pages/admin/LeaveLetters";
 import Complaint from "./pages/user/Complaint";
 import Complaints from "./pages/admin/Complaints";
+import RentDuePage from "./pages/user/RentDuePage";
+import RentPaid from "./pages/user/RentPaid";
+import RentConfirmationPage from "./pages/user/RentConfirmationPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -185,6 +188,21 @@ function App() {
           <Route
             path="/admin/complaints"
             element={admin ? <Complaints /> : <Navigate to="/admin/login" />}
+          />
+
+          <Route
+            path="/rentDue"
+            element={resident ? <RentDuePage /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/rentPaid"
+            element={resident ? <RentPaid /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/rentConfirmation"
+            element={resident ? <RentConfirmationPage /> : <Navigate to="/login" />}
           />
         </Routes>
       </BrowserRouter>

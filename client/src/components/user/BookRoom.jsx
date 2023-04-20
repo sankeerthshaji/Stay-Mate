@@ -5,6 +5,7 @@ import axios from "../../axios/axios";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import useLogout from "../../hooks/user/useLogout";
+import store from "../../redux/store";
 
 function BookRoom() {
   const { id } = useParams(); // get the room ID from the URL params
@@ -68,6 +69,7 @@ function BookRoom() {
   };
 
   const handlePayment = async () => {
+    console.log(store.getState());
     try {
       setLoading(true);
       if (resident) {
@@ -80,7 +82,7 @@ function BookRoom() {
         return;
       }
       const response = await axios.post(
-        "/orders",
+        "/createBookingOrder",
         {
           totalRent: roomData?.totalRent,
           roomTypeId: id,
@@ -156,7 +158,7 @@ function BookRoom() {
   function verifyPayment(response, order) {
     axios
       .post(
-        "/verifyPayment",
+        "/verifyBookingPayment",
         {
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_order_id: response.razorpay_order_id,

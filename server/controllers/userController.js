@@ -11,6 +11,8 @@ const Menu = require("../models/menu");
 const Review = require("../models/review");
 const LeaveLetter = require("../models/leaveLetter");
 const Complaint = require("../models/complaint");
+const RentDue = require("../models/rentDue");
+const moment = require("moment");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -252,7 +254,7 @@ const getRoomDetails = async (req, res) => {
 };
 
 //Creating a razorpay order
-const createOrder = async (req, res) => {
+const createBookingOrder = async (req, res) => {
   try {
     const { totalRent, roomTypeId, userId } = req.body;
 
@@ -299,7 +301,7 @@ const createOrder = async (req, res) => {
 };
 
 //Verifying the razorpay payment
-const verifyPayment = async (req, res) => {
+const verifyBookingPayment = async (req, res) => {
   try {
     const {
       razorpay_payment_id,
@@ -372,9 +374,10 @@ const verifyPayment = async (req, res) => {
 
       // create a new payment document
       const payment = new Payment({
-        userId: userId,
+        user: userId,
         rentAmount: order.amount / 100,
         dateOfPayment: new Date(),
+        monthOfPayment: new Date().toLocaleString("default", { month: "long" }),
       });
       await payment.save();
 
@@ -678,6 +681,187 @@ const postComplaint = async (req, res) => {
   }
 };
 
+const getRentDue = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const user = await User.findById(userId);
+    const dateOfAdmission = user.dateOfAdmission;
+
+    // Check whether the dateOfAdmission month and year are the same as the current month and year.
+    const today = moment();
+    const admissionMonthYear = moment(dateOfAdmission).format("MMMM, YYYY");
+    const currentMonthYear = moment(today).format("MMMM, YYYY");
+
+    if (admissionMonthYear === currentMonthYear) {
+      console.log("You have already paid the rent for this month");
+      throw new Error("You have already paid the rent for this month");
+    }
+
+    // Check whether the user has already paid the rent for the current month.
+    const month = moment(today).format("MMMM");
+    const date = moment(today).startOf("month");
+    console.log(month, date, userId);
+    const rentPaid = await RentDue.findOne({
+      user: userId,
+      rentMonth: month,
+      rentDate: moment(date).format("YYYY-MM-DD"),
+      status: "paid",
+    });
+
+    if (rentPaid) {
+      console.log("You have already paid the rent for this month");
+      throw new Error("You have already paid the rent for this month");
+    }
+
+    // Check whether a RentDue document already exists for the current month and year for the given userId.
+    console.log(month, date, userId);
+    const rentDue = await RentDue.findOne({
+      user: userId,
+      rentMonth: month,
+      rentDate: moment(date).format("YYYY-MM-DD"),
+      status: "unpaid",
+    });
+
+    if (rentDue) {
+      return res.status(200).json({ rentDue: rentDue });
+    }
+
+    // Retrieve the roomNo of the user from the User collection and then retrieve the corresponding room document from the Room collection.
+    const { roomNo } = user;
+    const room = await Room.findOne({ roomNo });
+
+    // Retrieve the rent amount of the corresponding roomType from the RoomType collection using the roomNo
+    const roomType = await RoomType.findById(room.roomType);
+    const { rent } = roomType;
+
+    // Calculate the lastDateWithFine and lastDateWithoutFine for the current month and year.
+    const lastDateWithoutFine = moment(date).add(4, "days");
+    const lastDateWithFine = moment(date).add(9, "days");
+
+    // Calculate the fine amount if the rent is paid after lastDateWithoutFine
+    let fine = 0;
+    const currentDate = moment(today);
+    if (currentDate.isAfter(lastDateWithoutFine)) {
+      const daysLate = currentDate.diff(lastDateWithoutFine, "days");
+      fine = daysLate * 100;
+      if (currentDate.isAfter(lastDateWithFine)) {
+        fine = 500;
+      }
+    }
+
+    // Create a new RentDue document with the calculated fields.
+    const newRentDue = new RentDue({
+      rentMonth: month,
+      rentDate: moment(date).format("YYYY-MM-DD"),
+      rentAmount: rent,
+      lastDateWithFine: moment(lastDateWithFine).format("YYYY-MM-DD"),
+      lastDateWithoutFine: moment(lastDateWithoutFine).format("YYYY-MM-DD"),
+      fine,
+      user: userId,
+      status: "unpaid",
+    });
+
+    // Save the RentDue document to the database.
+    await newRentDue.save();
+
+    // Return the RentDue document to the client side.
+    res.status(200).json({ rentDue: newRentDue });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getRentPaid = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const rentPaid = await Payment.find({ user: userId }).sort({ dateOfPayment: -1 });
+    res.status(200).json({ rentPaid: rentPaid });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const createRentOrder = async (req, res) => {
+  try {
+    const { totalRent } = req.body;
+
+    var instance = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+
+    const options = {
+      amount: totalRent * 100, // amount in the smallest currency unit
+      currency: "INR",
+      receipt: `PAY-${Date.now()}`,
+    };
+
+    instance.orders.create(options, function (err, order) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.status(200).json({ order: order });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const verifyRentPayment = async (req, res) => {
+  try {
+    const {
+      razorpay_payment_id,
+      razorpay_order_id,
+      razorpay_signature,
+      order,
+      userId,
+    } = req.body;
+    const crypto = require("crypto");
+    let hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+    hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
+    hmac = hmac.digest("hex");
+    console.log(hmac, razorpay_signature);
+    if (hmac == razorpay_signature) {
+      // update the rentDue document by updating the status to paid
+      const today = moment();
+      const month = moment(today).format("MMMM");
+      const date = moment(today).startOf("month");
+      console.log(month, date, userId);
+      const rentDue = await RentDue.findOne({
+        user: userId,
+        rentMonth: month,
+        rentDate: moment(date).format("YYYY-MM-DD"),
+        status: "unpaid",
+      });
+      rentDue.status = "paid";
+      await rentDue.save();
+      // create a new payment document
+      const payment = new Payment({
+        user: userId,
+        rentAmount: order.amount / 100,
+        dateOfPayment: new Date(),
+        monthOfPayment: new Date().toLocaleString("default", { month: "long" }),
+      });
+      await payment.save();
+      console.log(payment)
+
+      res.status(200).json({
+        status: "success",
+        message: "Rent Payment Successful",
+      });
+    } else {
+      res.status(400).json({ message: "Payment Failed" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getRoomTypes,
   admission,
@@ -686,8 +870,8 @@ module.exports = {
   forgotPassword,
   resetPassword,
   getRoomDetails,
-  createOrder,
-  verifyPayment,
+  createBookingOrder,
+  verifyBookingPayment,
   // createRoom,
   createMenu,
   fetchUserDetails,
@@ -703,4 +887,8 @@ module.exports = {
   postLeaveLetter,
   getComplaints,
   postComplaint,
+  getRentDue,
+  createRentOrder,
+  verifyRentPayment,
+  getRentPaid,
 };
