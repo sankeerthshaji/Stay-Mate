@@ -18,8 +18,7 @@ function RentDue() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchRentDue();
-    fetchRoomData();
+    fetchRentDue(fetchRoomData());
   }, []);
 
   async function fetchRoomData() {
@@ -186,7 +185,7 @@ function RentDue() {
         if (response.data.status === "success") {
           console.log(response.data);
           toast.success(response.data.message);
-          navigate("/rentConfirmation")
+          navigate("/rentConfirmation");
         } else {
           toast.error("Payment Failed");
           // navigate("/paymentFailed");
@@ -310,8 +309,9 @@ function RentDue() {
 
             <div className="flex justify-center mb-5">
               <button
-              onClick={handlePayment}
-              className="bg-[#235784] text-white w-5/6 py-2 font-bold text-lg rounded-md transform hover:scale-110 transition duration-300">
+                onClick={handlePayment}
+                className="bg-[#235784] text-white w-5/6 py-2 font-bold text-lg rounded-md transform hover:scale-110 transition duration-300"
+              >
                 {loading ? (
                   <ClipLoader size={20} color={"#fff"} />
                 ) : (
@@ -323,16 +323,16 @@ function RentDue() {
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center h-screen gap-5 bg-white">
-      <div className="w-44">
-        <img src={noRent} alt="" />
-      </div>
-      <div className="font-bold text-[#235784] text-3xl">No Rent Due</div>
-      <div>
-        <button className="bg-[#235784] text-white text-lg px-4 py-2 rounded-md transform hover:scale-105 transition duration-300">
-          <Link to="/rentPaid">See Rent History</Link>
-        </button>
-      </div>
-    </div>
+          <div className="w-44">
+            <img src={noRent} alt="" />
+          </div>
+          <div className="font-bold text-[#235784] text-3xl">No Rent Due</div>
+          <div>
+            <button className="bg-[#235784] text-white text-lg px-4 py-2 rounded-md transform hover:scale-105 transition duration-300">
+              <Link to="/rentPaid">See Rent History</Link>
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

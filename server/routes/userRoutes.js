@@ -28,6 +28,7 @@ const {
   getRentPaid,
   createRentOrder,
   verifyRentPayment,
+  getRentPaymentStatus,
 } = require("../controllers/userController");
 const admissionValidationMiddleware = require("../middlewares/validations/admission");
 const updateProfileValidationMiddleware = require("../middlewares/validations/updateProfile");
@@ -69,6 +70,8 @@ router.post("/createBookingOrder", requireAuthGuest, createBookingOrder);
 router.post("/verifyBookingPayment", requireAuthGuest, verifyBookingPayment);
 
 // router.post("/createRoom", createRoom)
+
+router.get("/rentPaymentStatus", requireAuthResident, getRentPaymentStatus);
 
 router.get("/userProfile/:id", requireAuthResident, fetchUserDetails);
 

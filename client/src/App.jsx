@@ -31,6 +31,7 @@ import RentPaid from "./pages/user/RentPaid";
 import RentConfirmationPage from "./pages/user/RentConfirmationPage";
 import PaidRents from "./pages/admin/PaidRents";
 import UnpaidRents from "./pages/admin/UnpaidRents";
+import RentPaymentChecker from "./components/user/RentPaymentChecker";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -120,22 +121,54 @@ function App() {
 
           <Route
             path="/confirmation"
-            element={resident ? <ConfirmationPage /> : <Navigate to="/login" />}
+            element={
+              resident ? (
+                <RentPaymentChecker>
+                  <ConfirmationPage />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
             path="/userProfile"
-            element={resident ? <UserProfilePage /> : <Navigate to="/login" />}
+            element={
+              resident ? (
+                <RentPaymentChecker>
+                  <UserProfilePage />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
             path="/editProfile"
-            element={resident ? <EditProfilePage /> : <Navigate to="/login" />}
+            element={
+              resident ? (
+                <RentPaymentChecker>
+                  <EditProfilePage />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
             path="/changePassword"
-            element={resident ? <ChangePassword /> : <Navigate to="/login" />}
+            element={
+              resident ? (
+                <RentPaymentChecker>
+                  <ChangePassword />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
@@ -147,7 +180,15 @@ function App() {
 
           <Route
             path="/hostelMenu"
-            element={resident ? <HostelMenu /> : <Navigate to="/login" />}
+            element={
+              resident ? (
+                <RentPaymentChecker>
+                  <HostelMenu />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
@@ -164,7 +205,15 @@ function App() {
 
           <Route
             path="/review"
-            element={resident ? <ReviewPage /> : <Navigate to="/login" />}
+            element={
+              resident ? (
+                <RentPaymentChecker>
+                  <ReviewPage />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
@@ -174,7 +223,15 @@ function App() {
 
           <Route
             path="/leaveLetters"
-            element={resident ? <LeaveLetter /> : <Navigate to="/login" />}
+            element={
+              resident ? (
+                <RentPaymentChecker>
+                  <LeaveLetter />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
@@ -184,7 +241,15 @@ function App() {
 
           <Route
             path="/complaints"
-            element={resident ? <Complaint /> : <Navigate to="/login" />}
+            element={
+              resident ? (
+                <RentPaymentChecker>
+                  <Complaint />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
@@ -194,18 +259,40 @@ function App() {
 
           <Route
             path="/rentDue"
-            element={resident ? <RentDuePage /> : <Navigate to="/login" />}
+            element={
+              resident ? (
+                <RentPaymentChecker>
+                  <RentDuePage />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
             path="/rentPaid"
-            element={resident ? <RentPaid /> : <Navigate to="/login" />}
+            element={
+              resident ? (
+                <RentPaymentChecker>
+                  <RentPaid />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
             path="/rentConfirmation"
             element={
-              resident ? <RentConfirmationPage /> : <Navigate to="/login" />
+              resident ? (
+                <RentPaymentChecker>
+                  <RentConfirmationPage />
+                </RentPaymentChecker>
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
 

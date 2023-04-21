@@ -27,7 +27,7 @@ function useLogin() {
           payload: json,
         });
         console.log(store.getState());
-        toast.success("Login successfull");
+        // toast.success("Login successfull");
       } else {
         //save user data in local storage as guest
         localStorage.setItem("guest", JSON.stringify(json));
@@ -37,7 +37,7 @@ function useLogin() {
           payload: json,
         });
         console.log(store.getState());
-        toast.success("Login successfull");
+        // toast.success("Login successfull");
       }
     } catch (error) {
       setError(error.response.data.error);

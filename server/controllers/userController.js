@@ -684,37 +684,10 @@ const postComplaint = async (req, res) => {
 const getRentDue = async (req, res) => {
   try {
     const { userId } = req.query;
-    const user = await User.findById(userId);
-    const dateOfAdmission = user.dateOfAdmission;
-
-    // Check whether the dateOfAdmission month and year are the same as the current month and year.
+    // Check whether a RentDue document already exists for the current month and year for the given userId.
     const today = moment();
-    const admissionMonthYear = moment(dateOfAdmission).format("MMMM, YYYY");
-    const currentMonthYear = moment(today).format("MMMM, YYYY");
-
-    if (admissionMonthYear === currentMonthYear) {
-      console.log("You have already paid the rent for this month");
-      throw new Error("You have already paid the rent for this month");
-    }
-
-    // Check whether the user has already paid the rent for the current month.
     const month = moment(today).format("MMMM");
     const date = moment(today).startOf("month");
-    console.log(month, date, userId);
-    const rentPaid = await RentDue.findOne({
-      user: userId,
-      rentMonth: month,
-      rentDate: moment(date).format("YYYY-MM-DD"),
-      status: "Paid",
-    });
-
-    if (rentPaid) {
-      console.log("You have already paid the rent for this month");
-      throw new Error("You have already paid the rent for this month");
-    }
-
-    // Check whether a RentDue document already exists for the current month and year for the given userId.
-    console.log(month, date, userId);
     const rentDue = await RentDue.findOne({
       user: userId,
       rentMonth: month,
@@ -726,45 +699,8 @@ const getRentDue = async (req, res) => {
       return res.status(200).json({ rentDue: rentDue });
     }
 
-    // Retrieve the roomNo of the user from the User collection and then retrieve the corresponding room document from the Room collection.
-    const { roomNo } = user;
-    const room = await Room.findOne({ roomNo });
-
-    // Retrieve the rent amount of the corresponding roomType from the RoomType collection using the roomNo
-    const roomType = await RoomType.findById(room.roomType);
-    const { rent } = roomType;
-
-    // Calculate the lastDateWithFine and lastDateWithoutFine for the current month and year.
-    const lastDateWithoutFine = moment(date).add(4, "days");
-    const lastDateWithFine = moment(date).add(9, "days");
-
-    // Calculate the fine amount if the rent is paid after lastDateWithoutFine
-    let fine = 0;
-    const currentDate = moment(today);
-    if (currentDate.isAfter(lastDateWithoutFine)) {
-      const daysLate = currentDate.diff(lastDateWithoutFine, "days");
-      fine = daysLate * 100;
-      if (currentDate.isAfter(lastDateWithFine)) {
-        fine = 500;
-      }
-    }
-
-    // Create a new RentDue document with the calculated fields.
-    const newRentDue = new RentDue({
-      rentMonth: month,
-      rentDate: moment(date).format("YYYY-MM-DD"),
-      rentAmount: rent,
-      lastDateWithFine: moment(lastDateWithFine).format("YYYY-MM-DD"),
-      lastDateWithoutFine: moment(lastDateWithoutFine).format("YYYY-MM-DD"),
-      fine,
-      user: userId,
-    });
-
-    // Save the RentDue document to the database.
-    await newRentDue.save();
-
-    // Return the RentDue document to the client side.
-    res.status(200).json({ rentDue: newRentDue });
+    // If no RentDue document exists for the current month and year for the given userId, create a new RentDue document.
+    res.status(200).json({ rentDue: {} });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -774,7 +710,9 @@ const getRentDue = async (req, res) => {
 const getRentPaid = async (req, res) => {
   try {
     const { userId } = req.query;
-    const rentPaid = await Payment.find({ user: userId }).sort({ dateOfPayment: -1 });
+    const rentPaid = await Payment.find({ user: userId }).sort({
+      dateOfPayment: -1,
+    });
     res.status(200).json({ rentPaid: rentPaid });
   } catch (error) {
     console.log(error);
@@ -846,7 +784,7 @@ const verifyRentPayment = async (req, res) => {
         monthOfPayment: new Date().toLocaleString("default", { month: "long" }),
       });
       await payment.save();
-      console.log(payment)
+      console.log(payment);
 
       res.status(200).json({
         status: "success",
@@ -854,6 +792,115 @@ const verifyRentPayment = async (req, res) => {
       });
     } else {
       res.status(400).json({ message: "Payment Failed" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getRentPaymentStatus = async (req, res) => {
+  try {
+    console.log(req.query);
+    const { resident } = req.query;
+    const user = await User.findById(resident.id);
+    const room = await Room.findOne({ roomNo: user.roomNo });
+    const roomType = await RoomType.findById(room.roomType);
+    const today = moment();
+    const month = moment(today).format("MMMM");
+    const date = moment(today).startOf("month");
+    const rentDue = await RentDue.findOne({
+      user: resident.id,
+      rentMonth: month,
+      rentDate: moment(date).format("YYYY-MM-DD"),
+      status: "Unpaid",
+    });
+
+    if (rentDue) {
+      const currentDate = moment(today);
+      const lastDateWithFine = moment(rentDue.lastDateWithFine);
+      if (currentDate.isAfter(lastDateWithFine)) {
+        room.occupants -= 1;
+        if (room.occupants < room.capacity && room.status === "occupied") {
+          room.status = "available";
+        }
+        if (roomType.status === "unavailable") {
+          roomType.status = "available";
+          await roomType.save();
+        }
+        user.role = "guest";
+        user.roomNo = undefined;
+        await user.save();
+        await room.save();
+        // Delete the rentDue document
+        await RentDue.findByIdAndDelete(rentDue._id);
+        res.status(200).json({ status: "Late" });
+      } else {
+        res.status(200).json({ status: "Unpaid" });
+      }
+    } else {
+      const dateOfAdmission = user.dateOfAdmission;
+      // Check whether the dateOfAdmission month and year are the same as the current month and year.
+      const admissionMonthYear = moment(dateOfAdmission).format("MMMM, YYYY");
+      const currentMonthYear = moment(today).format("MMMM, YYYY");
+
+      if (admissionMonthYear === currentMonthYear) {
+        console.log("hloo");
+        throw new Error("You have already paid the rent for this month");
+      }
+
+      // Check whether the user has already paid the rent for the current month.
+      // const month = moment(today).format("MMMM");
+      const rentPaid = await RentDue.findOne({
+        user: resident.id,
+        rentMonth: month,
+        rentDate: moment(date).format("YYYY-MM-DD"),
+        status: "Paid",
+      });
+
+      if (rentPaid) {
+        console.log("You have already paid the rent for this month");
+        throw new Error("You have already paid the rent for this month");
+      }
+
+      // Retrieve the roomNo of the user from the User collection and then retrieve the corresponding room document from the Room collection.
+      const roomNo = resident.roomNo;
+      const room = await Room.findOne({ roomNo });
+      if (!room) {
+        console.log(`Room with roomNo ${roomNo} not found`);
+        throw new Error(`Room with roomNo ${roomNo} not found`);
+      }
+
+      // Retrieve the rent amount of the corresponding roomType from the RoomType collection using the roomNo
+      const { rent } = roomType;
+
+      // Calculate the lastDateWithFine and lastDateWithoutFine for the current month and year.
+      const lastDateWithoutFine = moment(date).add(4, "days");
+      const lastDateWithFine = moment(date).add(9, "days");
+
+      // Calculate the fine amount if the rent is paid after lastDateWithoutFine
+      let fine = 0;
+      const currentDate = moment(today);
+      if (currentDate.isAfter(lastDateWithoutFine)) {
+        const daysLate = currentDate.diff(lastDateWithoutFine, "days");
+        fine = daysLate * 100;
+        if (currentDate.isAfter(lastDateWithFine)) {
+          fine = 500;
+        }
+      }
+
+      const newRentDue = new RentDue({
+        rentMonth: month,
+        rentDate: moment(date).format("YYYY-MM-DD"),
+        rentAmount: rent,
+        lastDateWithFine: moment(lastDateWithFine).format("YYYY-MM-DD"),
+        lastDateWithoutFine: moment(lastDateWithoutFine).format("YYYY-MM-DD"),
+        fine,
+        user: resident.id,
+      });
+
+      await newRentDue.save();
+      res.status(200).json({ status: "Unpaid" });
     }
   } catch (error) {
     console.log(error);
@@ -890,4 +937,5 @@ module.exports = {
   createRentOrder,
   verifyRentPayment,
   getRentPaid,
+  getRentPaymentStatus,
 };
