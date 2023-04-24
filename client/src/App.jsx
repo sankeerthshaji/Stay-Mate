@@ -15,7 +15,6 @@ import UserProfilePage from "./pages/user/UserProfilePage";
 import EditProfilePage from "./pages/user/EditProfilePage";
 import ResetPassword from "./pages/user/ResetPassword";
 import ChangePassword from "./pages/user/ChangePassword";
-import UserDetailsPage from "./pages/admin/userDetailsPage";
 import HostelMenu from "./pages/user/HostelMenu";
 import AdminHostelMenu from "./pages/admin/AdminHostleMenu";
 import RoomTypes from "./pages/user/RoomTypes";
@@ -32,6 +31,8 @@ import RentConfirmationPage from "./pages/user/RentConfirmationPage";
 import PaidRents from "./pages/admin/PaidRents";
 import UnpaidRents from "./pages/admin/UnpaidRents";
 import RentPaymentChecker from "./components/user/RentPaymentChecker";
+import GuestDetailsPage from "./pages/admin/GuestDetailsPage";
+import ResidentDetailsPage from "./pages/admin/ResidentDetailsPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -172,9 +173,16 @@ function App() {
           />
 
           <Route
-            path="/userDetails/:id"
+            path="/admin/residentDetails/:id"
             element={
-              admin ? <UserDetailsPage /> : <Navigate to="/admin/login" />
+              admin ? <ResidentDetailsPage/> : <Navigate to="/admin/login" />
+            }
+          />
+
+          <Route
+            path="/admin/guestDetails/:id"
+            element={
+              admin ? <GuestDetailsPage /> : <Navigate to="/admin/login" />
             }
           />
 

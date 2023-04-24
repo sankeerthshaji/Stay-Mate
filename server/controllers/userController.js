@@ -326,6 +326,7 @@ const verifyBookingPayment = async (req, res) => {
       // If no available rooms found, return error
       if (!availableRoom) {
         throw new Error("No rooms available for booking.");
+        
       }
 
       // Increase the no of occupants to 1 for occupants field in the selected document
@@ -801,7 +802,6 @@ const verifyRentPayment = async (req, res) => {
 
 const getRentPaymentStatus = async (req, res) => {
   try {
-    console.log(req.query);
     const { resident } = req.query;
     const user = await User.findById(resident.id);
     const room = await Room.findOne({ roomNo: user.roomNo });
@@ -845,8 +845,7 @@ const getRentPaymentStatus = async (req, res) => {
       const currentMonthYear = moment(today).format("MMMM, YYYY");
 
       if (admissionMonthYear === currentMonthYear) {
-        console.log("hloo");
-        throw new Error("You have already paid the rent for this month");
+        return res.status(200).json({ status: "paid" });
       }
 
       // Check whether the user has already paid the rent for the current month.
@@ -859,8 +858,7 @@ const getRentPaymentStatus = async (req, res) => {
       });
 
       if (rentPaid) {
-        console.log("You have already paid the rent for this month");
-        throw new Error("You have already paid the rent for this month");
+        return res.status(200).json({ status: "paid" });
       }
 
       // Retrieve the roomNo of the user from the User collection and then retrieve the corresponding room document from the Room collection.

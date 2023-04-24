@@ -113,12 +113,29 @@ const removeAsResident = async (req, res) => {
   }
 };
 
-// Fetch user details
-const fetchUserDetails = async (req, res) => {
+// Fetch Resident details
+const fetchResidentDetails = async (req, res) => {
   try {
     const { id } = req.params;
-    const userDetails = await User.findById(id).select("-password");
-    res.status(200).json({ userDetails: userDetails });
+    const residentDetails = await User.findById(id).select("-password");
+    console.log(residentDetails);
+    const room = await Room.findOne({ roomNo: residentDetails.roomNo });
+    const roomType = await RoomType.findById(room.roomType);
+    res
+      .status(200)
+      .json({ residentDetails: residentDetails, roomTypeDetails: roomType });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Fetch Guest details
+const fetchGuestDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const guestDetails = await User.findById(id).select("-password");
+    res.status(200).json({ guestDetails: guestDetails });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -210,7 +227,7 @@ const updateMenuDetails = async (req, res) => {
 };
 
 // Fetching hostel rooms
-const fetchRooms = async (req, res) => {
+const fetchAllRooms = async (req, res) => {
   try {
     const rooms = await Room.find({}).populate("roomType");
     res.status(200).json({ rooms: rooms });
@@ -356,17 +373,73 @@ const getUnpaidRents = async (req, res) => {
   }
 };
 
+const fetchRooms = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const rooms = await Room.find({ roomType: id, status: "available" });
+    res.status(200).json({ rooms: rooms });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const assignRoom = async (req, res) => {
+  try {
+    const { oldRoomNo, newRoomId, residentId } = req.body;
+
+    if (!newRoomId) {
+      throw new Error("Please select a Room No.");
+    }
+
+    const oldRoom = await Room.findOne({roomNo: oldRoomNo});
+    // Decrease the no of occupants by 1 for occupants field in the old room document
+    oldRoom.occupants -= 1;
+
+    // Check whether the status of old room is occupied, then update the status to available
+    if (oldRoom.status === "occupied") {
+      oldRoom.status = "available";
+    }
+
+    // Save the updated old room document
+    await oldRoom.save();
+
+    const resident = await User.findById(residentId);
+    const newRoom = await Room.findById(newRoomId);
+    // Increase the no of occupants to 1 for occupants field in the new room document
+    newRoom.occupants += 1;
+
+    // Check whether the no of occupants is equal to the capacity field in the document, if it is equal, then update the status to unavailable
+    if (newRoom.occupants === newRoom.capacity) {
+      newRoom.status = "occupied";
+    }
+
+    // Save the updated new room document
+    await newRoom.save();
+
+    // Update the room field in the user document
+    resident.roomNo = newRoom.roomNo;
+    await resident.save();
+
+    res.status(200).json({ message: "Room No changed successfully!" });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err.message });
+  }
+};
+
 module.exports = {
   loginAdmin,
   fetchUsers,
   blockUser,
   unblockUser,
   removeAsResident,
-  fetchUserDetails,
+  fetchResidentDetails,
+  fetchGuestDetails,
   fetchHostelMenu,
   fetchMenuDetails,
   updateMenuDetails,
-  fetchRooms,
+  fetchAllRooms,
   getReviews,
   approveReview,
   rejectReview,
@@ -376,4 +449,6 @@ module.exports = {
   updateComplaintDetails,
   getPaidRents,
   getUnpaidRents,
+  fetchRooms,
+  assignRoom
 };

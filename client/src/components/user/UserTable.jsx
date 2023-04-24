@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTable } from "react-table";
 
 function UserTable(props) {
@@ -28,24 +28,33 @@ function UserTable(props) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()} className="bg-white">
-          {rows.map((row, i) => {
+          {props.noComplaints ? (
+            <tr>
+              <td className="bg-gray-50 flex justify-center w-full">No data</td>
+            </tr>
+          ) : null}
+          {
+            rows.map((row, i) => {
             prepareRow(row);
+
             return (
-              <tr
-                {...row.getRowProps()}
-                className="odd:bg-white even:bg-gray-50 hover:bg-gray-200"
-              >
-                {row.cells.map((cell) => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      className="p-3 text-sm font-medium text-gray-700 text-center border-b border-gray-300 break-words"
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
-              </tr>
+              <>
+                <tr
+                  {...row.getRowProps()}
+                  className="odd:bg-white even:bg-gray-50 hover:bg-gray-200"
+                >
+                  {row.cells.map((cell) => {
+                    return (
+                      <td
+                        {...cell.getCellProps()}
+                        className="p-3 text-sm font-medium text-gray-700 text-center border-b border-gray-300 break-words"
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
+                </tr>
+              </>
             );
           })}
         </tbody>

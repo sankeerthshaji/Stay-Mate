@@ -6,11 +6,12 @@ const {
   blockUser,
   unblockUser,
   removeAsResident,
-  fetchUserDetails,
+  fetchResidentDetails,
+  fetchGuestDetails,
   fetchHostelMenu,
   fetchMenuDetails,
   updateMenuDetails,
-  fetchRooms,
+  fetchAllRooms,
   getReviews,
   approveReview,
   rejectReview,
@@ -20,6 +21,8 @@ const {
   updateComplaintDetails,
   getPaidRents,
   getUnpaidRents,
+  fetchRooms,
+  assignRoom,
 } = require("../controllers/adminController");
 const { requireAuthAdmin } = require("../middlewares/authorization");
 const AdminComplaintValidationMiddleware = require("../middlewares/validations/adminComplaintSchema");
@@ -36,7 +39,9 @@ router.post("/unblockUser", requireAuthAdmin, unblockUser);
 
 router.post("/removeAsResident", requireAuthAdmin, removeAsResident);
 
-router.get("/userDetails/:id", requireAuthAdmin, fetchUserDetails);
+router.get("/residentDetails/:id", requireAuthAdmin, fetchResidentDetails);
+
+router.get("/guestDetails/:id", requireAuthAdmin, fetchGuestDetails);
 
 router.get("/fetchHostelMenu", requireAuthAdmin, fetchHostelMenu);
 
@@ -45,7 +50,7 @@ router
   .get(requireAuthAdmin, fetchMenuDetails)
   .put(requireAuthAdmin, updateMenuDetails);
 
-router.get("/rooms", requireAuthAdmin, fetchRooms);
+router.get("/rooms", requireAuthAdmin, fetchAllRooms);
 
 router.get("/reviews", requireAuthAdmin, getReviews);
 
@@ -64,5 +69,9 @@ router.patch("/complaint/:id", requireAuthAdmin, AdminComplaintValidationMiddlew
 router.get("/paidRents", requireAuthAdmin, getPaidRents);
 
 router.get("/unpaidRents", requireAuthAdmin, getUnpaidRents);
+
+router.get("/rooms/:id", requireAuthAdmin, fetchRooms);
+
+router.patch("/assignRoom", requireAuthAdmin, assignRoom);
 
 module.exports = router;

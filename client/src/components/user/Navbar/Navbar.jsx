@@ -58,11 +58,13 @@ function Navbar() {
             );
           })}
 
-          {(guest || resident) && (
+          {!guest && resident && <Button onClick={() => {navigate("/userProfile")}}>Account</Button>}
+
+          {guest && !resident && (
             <Button onClick={handleLogout}>Logout</Button>
           )}
 
-          {(!guest && !resident) && (
+          {!guest && !resident && (
             <Link to="/login">
               <Button>Login</Button>
             </Link>

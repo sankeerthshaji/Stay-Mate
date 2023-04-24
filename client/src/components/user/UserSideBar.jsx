@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { BiFoodMenu } from "react-icons/bi";
 import { BsCreditCardFill } from "react-icons/bs";
-import { GiBookmarklet } from "react-icons/gi";
+import { FaHistory } from "react-icons/fa";
 import { MdReviews } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 import { SlEnvolopeLetter } from "react-icons/sl";
 import { BsEnvelope } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
+import { TbHomeMove } from "react-icons/tb";
 import useLogout from "../../hooks/user/useLogout";
 
 function UserSideBar() {
@@ -29,7 +30,7 @@ function UserSideBar() {
         <SideBarIcon icon={<BsCreditCardFill size="25" />} text="Hostel Rent" />
       </Link>
       <Link to="/rentPaid">
-        <SideBarIcon icon={<GiBookmarklet size="25" />} text="Rent History" />
+        <SideBarIcon icon={<FaHistory size="25" />} text="Rent History" />
       </Link>
       <Link to="/review">
         <SideBarIcon icon={<MdReviews size="25" />} text="Review" />
@@ -46,6 +47,9 @@ function UserSideBar() {
       <Link to="/userProfile">
         <SideBarIcon icon={<BsEnvelope size="25" />} text="Vacating Letter" />
       </Link>
+      <Link to="/roomTypes">
+      <SideBarIcon icon={<TbHomeMove size="25"/>} text="Back to Home"/>
+      </Link>
       <SideBarIcon
         icon={<FiLogOut size="25" />}
         text="Logout"
@@ -57,10 +61,7 @@ function UserSideBar() {
 
 const SideBarIcon = ({ icon, text, onClick }) => {
   return (
-    <div
-      className="sidebar-icon group"
-      onClick={onClick}
-    >
+    <div className="sidebar-icon group" onClick={onClick}>
       {icon}
       <span className="sidebar-tooltip group-hover:scale-100">{text}</span>
     </div>

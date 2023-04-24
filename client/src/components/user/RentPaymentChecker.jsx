@@ -13,14 +13,12 @@ function RentPaymentChecker({ children }) {
   useEffect(() => {
     const fetchRentPaymentStatus = async () => {
       try {
-        console.log(resident._id, resident.token);
         const { data } = await axios.get(`/rentPaymentStatus`, {
           params: { resident },
           headers: {
             Authorization: `Bearer ${resident.token}`,
           },
         });
-        console.log(data);
         if (data.status === "Late") {
           // Handle late payment
           logout();
@@ -46,7 +44,7 @@ function RentPaymentChecker({ children }) {
       }
     };
     fetchRentPaymentStatus();
-  }, [resident._id, resident.token]);
+  });
 
   return <div>{loading ? <Loader /> : <>{children}</>}</div>;
 }

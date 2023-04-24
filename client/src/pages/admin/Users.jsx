@@ -188,7 +188,6 @@ function Users() {
     });
   };
 
-
   const confirmRemove = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -225,14 +224,27 @@ function Users() {
     },
     {
       Header: "More Details",
-      Cell: ({ row }) => (
-        <Link
-          to={`/userDetails/${row.original._id}`}
-          className="font-bold text-blue-500 hover:underline"
-        >
-          More Info
-        </Link>
-      ),
+      Cell: ({ row }) => {
+        if (row.original.role === "resident") {
+          return (
+            <Link
+              to={`/admin/residentDetails/${row.original._id}`}
+              className="font-bold text-blue-500 hover:underline"
+            >
+              More Info
+            </Link>
+          );
+        } else {
+          return (
+            <Link
+              to={`/admin/guestDetails/${row.original._id}`}
+              className="font-bold text-blue-500 hover:underline"
+            >
+              More Info
+            </Link>
+          );
+        }
+      },
     },
     {
       Header: "Actions",
@@ -292,9 +304,11 @@ function Users() {
           </div>
           <div className="flex-1 overflow-x-auto p-5 bg-gray-100">
             <div className="flex justify-between p-3">
-              <h1 className="flex text-2xl font-bold text-center">User Management</h1>
+              <h1 className="flex text-2xl font-bold text-center">
+                User Management
+              </h1>
             </div>
-            <AdminTable columns={columns} data={users}/>
+            <AdminTable columns={columns} data={users} />
           </div>
         </div>
       )}

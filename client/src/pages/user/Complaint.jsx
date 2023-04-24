@@ -11,11 +11,13 @@ import { complaintSchema } from "../../schemas/complaintSchema";
 import { Formik, Form } from "formik";
 import CustomTextArea from "../../components/user/CustomTextArea";
 import axios from "../../axios/axios";
+import Swal from "sweetalert2";
 
 function Complaint() {
   const [loading, setLoading] = useState(false);
   const [loader, setLoader] = useState(true);
   const [complaints, setComplaints] = useState([]);
+  const [noComplaints, setNoComplaints] = useState(false);
   const [errors, setErrors] = useState({});
   const resident = useSelector((state) => state.resident);
   const { logout } = useLogout();
@@ -36,6 +38,13 @@ function Complaint() {
       });
       console.log(response.data.complaints);
       setComplaints(response.data.complaints);
+      if(response.data.complaints.length === 0){
+        Swal.fire({
+          icon: "info",
+          text: "You have not registered any complaints yet.",
+        });
+        setNoComplaints(true);
+      }
     } catch (err) {
       console.log(err);
       if (err.response && err.response.status === 401) {
@@ -207,7 +216,7 @@ function Complaint() {
                 Add Complaint
               </button>
             </div>
-            <UserTable columns={columns} data={complaints} />
+            <UserTable columns={columns} data={complaints} noComplaints={noComplaints}/>
           </div>
         </div>
       )}
