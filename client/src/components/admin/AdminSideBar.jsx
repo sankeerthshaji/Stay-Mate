@@ -6,7 +6,6 @@ import { MdReviews } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 import { SlEnvolopeLetter } from "react-icons/sl";
 import { BsEnvelope } from "react-icons/bs";
-import { HiOutlineDocumentReport } from "react-icons/hi";
 import { FiLogOut } from "react-icons/fi";
 import useAdminLogout from "../../hooks/admin/useAdminLogout";
 import { toast } from "react-toastify";

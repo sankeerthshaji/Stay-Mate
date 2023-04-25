@@ -97,7 +97,7 @@ function BookRoom() {
       const order = response?.data?.order;
       console.log(order);
 
-      var options = {
+      let options = {
         key: "rzp_test_tN9rva6tbuI8ng", // Enter the Key ID generated from the Dashboard
         amount: order?.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
         currency: "INR",
@@ -123,7 +123,7 @@ function BookRoom() {
           color: "#235784",
         },
       };
-      var rzp1 = new Razorpay(options);
+      let rzp1 = new Razorpay(options);
       rzp1.on("payment.failed", function (response) {
         // alert(response.error.code);
         // alert(response.error.description);

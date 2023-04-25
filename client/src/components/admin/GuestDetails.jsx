@@ -1,4 +1,6 @@
-function GuestDetails({onClick, guestDetails, formattedDateOfBirth}) {
+import React from 'react'
+
+function GuestDetails({guestDetails, formattedDateOfBirth}) {
   return (
     <div className="lg:flex lg:justify-center items-center h-screen gap-12">
           <div>
@@ -112,4 +114,5 @@ function GuestDetails({onClick, guestDetails, formattedDateOfBirth}) {
         </div>
   );
 }
+
 export default GuestDetails;

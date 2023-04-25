@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import AdminSideBar from "../../components/admin/AdminSideBar";
-import GuestDetails from "../../components/admin/GuestDetails";
 import useAdminLogout from "../../hooks/admin/useAdminLogout";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import axios from "../../axios/axios";
 import Loader from "../../components/user/Loader";
+import GuestDetails from "../../components/admin/GuestDetails";
 
 function GuestDetailsPage() {
   const { id } = useParams();

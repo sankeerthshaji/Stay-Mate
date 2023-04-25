@@ -35,7 +35,7 @@ const admission = async (req, res) => {
     console.log(values);
     const file = req.file;
     console.log(file);
-    var mailOptions = {
+    let mailOptions = {
       from: process.env.NODEMAILER_USER,
       to: values.email,
       subject: "OTP for admission",
@@ -154,7 +154,7 @@ const forgotPassword = async (req, res) => {
       throw new Error("Please check the Email address and try again.");
     }
 
-    var mailOptions = {
+    let mailOptions = {
       from: process.env.NODEMAILER_USER,
       to: email,
       subject: "Email Verification",
@@ -276,7 +276,7 @@ const createBookingOrder = async (req, res) => {
       return res.status(400).json({ error: "You have already booked a room" });
     }
 
-    var instance = new Razorpay({
+    let instance = new Razorpay({
       key_id: process.env.RAZORPAY_KEY_ID,
       key_secret: process.env.RAZORPAY_KEY_SECRET,
     });
@@ -725,7 +725,7 @@ const createRentOrder = async (req, res) => {
   try {
     const { totalRent } = req.body;
 
-    var instance = new Razorpay({
+    let instance = new Razorpay({
       key_id: process.env.RAZORPAY_KEY_ID,
       key_secret: process.env.RAZORPAY_KEY_SECRET,
     });

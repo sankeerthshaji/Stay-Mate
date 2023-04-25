@@ -55,7 +55,7 @@ function EditProfile() {
   }, [resident.id, resident.token]);
 
   const dataURLtoFile = (dataurl, filename) => {
-    var arr = dataurl.split(","),
+    let arr = dataurl.split(","),
       mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[1]),
       n = bstr.length,
