@@ -16,7 +16,7 @@ function useLogin() {
       setLoading(true);
       const response = await axios.post("/login", { email, password });
       const json = response.data;
-      console.log(response);
+      
 
       if (json.roomNo) {
         //save user data in local storage as guest
@@ -26,7 +26,7 @@ function useLogin() {
           type: "RESIDENT_LOGIN",
           payload: json,
         });
-        console.log(store.getState());
+        
         // toast.success("Login successfull");
       } else {
         //save user data in local storage as guest
@@ -36,7 +36,7 @@ function useLogin() {
           type: "GUEST_LOGIN",
           payload: json,
         });
-        console.log(store.getState());
+        
         // toast.success("Login successfull");
       }
     } catch (error) {

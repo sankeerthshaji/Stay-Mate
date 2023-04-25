@@ -30,10 +30,10 @@ function Users() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.users);
+      
       setUsers(response.data.users);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -42,7 +42,7 @@ function Users() {
           adminLogout();
         } else if (err.response.data.error === "Request is not authorized") {
           // Handle "Request is not authorized" error
-          console.log(err.response.data.error);
+          
         }
       }
     } finally {
@@ -65,12 +65,12 @@ function Users() {
           },
         }
       );
-      console.log(response.data);
+      
       logout();
       toast.success("User blocked successfully");
       fetchUsers();
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -98,11 +98,11 @@ function Users() {
           },
         }
       );
-      console.log(response.data);
+      
       toast.success("User unblocked successfully");
       fetchUsers();
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -132,12 +132,12 @@ function Users() {
           },
         }
       );
-      console.log(response.data);
+      
       logout();
       fetchUsers();
       toast.success("User removed as resident successfully");
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."

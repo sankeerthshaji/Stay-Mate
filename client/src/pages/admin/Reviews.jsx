@@ -25,10 +25,10 @@ function Reviews() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.reviews);
+      
       setReviews(response.data.reviews);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -54,10 +54,10 @@ function Reviews() {
           },
         }
       );
-      console.log(response.data);
+      
       fetchReviews();
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -83,10 +83,10 @@ function Reviews() {
           },
         }
       );
-      console.log(response.data);
+      
       fetchReviews();
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."

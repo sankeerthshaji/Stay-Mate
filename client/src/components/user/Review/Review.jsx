@@ -39,10 +39,10 @@ function Review() {
           // add any additional headers here
         },
       });
-      console.log(response.data);
+      
       setRoomTypeDetails(response.data.roomTypeDetails);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -64,10 +64,10 @@ function Review() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      console.log(response.data);
+      
       setReview(response.data.hostelReview);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -101,7 +101,7 @@ function Review() {
   }
 
   const handleSubmit = async (values) => {
-    console.log(values);
+    
     setLoading(true);
     try {
       // update the rating value based on the checked radio button
@@ -121,11 +121,11 @@ function Review() {
           },
         }
       );
-      console.log(response.data);
+      
       toast.success(response.data.message);
       fetchReview();
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -154,11 +154,11 @@ function Review() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      console.log(response.data);
+      
       toast.success(response.data.message);
       fetchReview();
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -199,7 +199,7 @@ function Review() {
   };
 
   const handleUpdate = async (values) => {
-    console.log(values);
+    
     setLoading(true);
     try {
       const response = await axios.put(
@@ -214,12 +214,12 @@ function Review() {
           },
         }
       );
-      console.log(response.data);
+      
       toast.success(response.data.message);
       fetchReview();
       setShowModal(false);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -357,10 +357,10 @@ function Review() {
   //         Authorization: `Bearer ${resident.token}`,
   //       },
   //     });
-  //     console.log(response.data);
+  //     
   //     setReviewDetails(response.data.hostelReview);
   //   } catch (err) {
-  //     console.log(err);
+  //     
   //     if (err.response && err.response.status === 401) {
   //       if (
   //         err.response.data.error === "Session timed out. Please login again."

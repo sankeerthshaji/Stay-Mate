@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const mongoose = require("mongoose");
@@ -15,16 +15,16 @@ app.use(cors());
 // parse application/json
 app.use(bodyParser.json());
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use((req,res,next)=>{
-    console.log(req.method, req.path);
-    next();
+app.use((req, res, next) => {
+  console.log(req.method, req.path);
+  next();
 });
 
 //routes
 app.use("/", userRoutes);
-app.use("/admin",adminRoutes)
+app.use("/admin", adminRoutes);
 
 //connect to db
 mongoose.set("strictQuery", true);

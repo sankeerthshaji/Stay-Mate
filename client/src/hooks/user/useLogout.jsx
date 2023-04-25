@@ -10,8 +10,8 @@ export default function useLogout() {
       dispatch({
         type: "GUEST_LOGOUT",
       });
-      console.log("Guest logged out");
-      console.log(store.getState());
+      
+      
     }
     //check if user is logged in as resident
     if (localStorage.getItem("resident")) {

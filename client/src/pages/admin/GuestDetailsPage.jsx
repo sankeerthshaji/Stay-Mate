@@ -26,7 +26,7 @@ function GuestDetailsPage() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.guestDetails);
+      
       setGuestDetails(response.data.guestDetails);
 
       // Format date of birth
@@ -38,7 +38,7 @@ function GuestDetailsPage() {
       const formattedDate = `${day}/${month}/${year}`;
       setFormattedDateOfBirth(formattedDate);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -47,7 +47,7 @@ function GuestDetailsPage() {
           adminLogout();
         } else if (err.response.data.error === "Request is not authorized") {
           // Handle "Request is not authorized" error
-          console.log(err.response.data.error);
+          
         }
       }
     } finally {

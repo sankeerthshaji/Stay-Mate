@@ -36,10 +36,10 @@ function LeaveLetter() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      console.log(response.data.leaveLetters);
+      
       setLeaveLetters(response.data.leaveLetters);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -95,7 +95,7 @@ function LeaveLetter() {
           },
         }
       );
-      console.log(response.data.message);
+      
       handleClose();
       fetchLeaveLetters();
       Swal.fire({
@@ -103,7 +103,7 @@ function LeaveLetter() {
         text: response.data.message,
       });
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."

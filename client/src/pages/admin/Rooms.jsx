@@ -21,10 +21,10 @@ function Rooms() {
             Authorization: `Bearer ${admin.token}`,
           },
         });
-        console.log(response.data.rooms);
+        
         setRooms(response.data.rooms);
       } catch (err) {
-        console.log(err);
+        
         if (err.response && err.response.status === 401) {
           if (
             err.response.data.error === "Session timed out. Please login again."

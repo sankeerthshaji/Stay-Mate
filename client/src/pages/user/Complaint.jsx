@@ -36,7 +36,7 @@ function Complaint() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      console.log(response.data.complaints);
+      
       setComplaints(response.data.complaints);
       if(response.data.complaints.length === 0){
         Swal.fire({
@@ -46,7 +46,7 @@ function Complaint() {
         setNoComplaints(true);
       }
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -81,7 +81,7 @@ function Complaint() {
           },
         }
       );
-      console.log(response.data);
+      
       handleClose();
       fetchComplaints();
       Swal.fire({
@@ -89,7 +89,7 @@ function Complaint() {
         text: response.data.message,
       });
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."

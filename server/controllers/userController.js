@@ -24,7 +24,6 @@ const getRoomTypes = (req, res) => {
       res.json(roomTypes);
     })
     .catch((error) => {
-      console.log(error);
       res.status(500).json({ message: "Internal server error" });
     });
 };
@@ -32,9 +31,9 @@ const getRoomTypes = (req, res) => {
 const admission = async (req, res) => {
   try {
     const values = JSON.parse(req.body.values);
-    console.log(values);
+
     const file = req.file;
-    console.log(file);
+
     let mailOptions = {
       from: process.env.NODEMAILER_USER,
       to: values.email,
@@ -48,9 +47,7 @@ const admission = async (req, res) => {
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        console.log(error);
       } else {
-        console.log("Email sent: " + info.response);
       }
     });
 
@@ -60,7 +57,6 @@ const admission = async (req, res) => {
       file: file,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -104,20 +100,19 @@ const verifySignupOtp = async (req, res) => {
         },
       });
       await user.save();
-      console.log(user);
+
       res.status(200).json({ message: "OTP verified successfully" });
     } else {
       res.status(400).json({ message: "Invalid OTP" });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
+
   try {
     const user = await User.login(email, password);
 
@@ -135,7 +130,6 @@ const loginUser = async (req, res) => {
       return;
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -167,9 +161,7 @@ const forgotPassword = async (req, res) => {
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        console.log(error);
       } else {
-        console.log("Email sent: " + info.response);
       }
     });
 
@@ -177,7 +169,6 @@ const forgotPassword = async (req, res) => {
       .status(200)
       .json({ message: "OTP sent to your email address", email: email });
   } catch (error) {
-    console.log(error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -192,7 +183,6 @@ const verifyPasswordResetOtp = async (req, res, otp, email) => {
       throw new Error("Invalid OTP");
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -200,7 +190,7 @@ const verifyPasswordResetOtp = async (req, res, otp, email) => {
 const resetPassword = async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
-    console.log(email, password, confirmPassword);
+
     if (!password || !confirmPassword) {
       throw new Error("Please enter the password");
     }
@@ -224,7 +214,6 @@ const resetPassword = async (req, res) => {
       .status(200)
       .json({ message: "Your password has been changed successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -248,7 +237,6 @@ const getRoomDetails = async (req, res) => {
 
     res.status(200).json({ roomDetails, dynamicRent, totalRent });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -289,13 +277,11 @@ const createBookingOrder = async (req, res) => {
 
     instance.orders.create(options, function (err, order) {
       if (err) {
-        console.log(err);
       } else {
         res.status(200).json({ order: order });
       }
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -315,7 +301,7 @@ const verifyBookingPayment = async (req, res) => {
     let hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
     hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
     hmac = hmac.digest("hex");
-    console.log(hmac, razorpay_signature);
+
     if (hmac == razorpay_signature) {
       // Find a room document from rooms collection in which the status of every room document is available
       const availableRoom = await Room.findOne({
@@ -326,7 +312,6 @@ const verifyBookingPayment = async (req, res) => {
       // If no available rooms found, return error
       if (!availableRoom) {
         throw new Error("No rooms available for booking.");
-        
       }
 
       // Increase the no of occupants to 1 for occupants field in the selected document
@@ -396,7 +381,6 @@ const verifyBookingPayment = async (req, res) => {
       res.status(400).json({ message: "Payment Failed" });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -410,7 +394,7 @@ const verifyBookingPayment = async (req, res) => {
 
 //   try {
 //     const savedRoom = await newRoom.save();
-//     console.log('New room created:', savedRoom);
+//
 //   } catch (error) {
 //     console.error('Error creating new room:', error);
 //   }
@@ -427,7 +411,6 @@ async function createMenu() {
 
   try {
     const savedMenu = await newMenu.save();
-    console.log("New menu created:", savedMenu);
   } catch (error) {
     console.error("Error creating new menu:", error);
   }
@@ -437,11 +420,10 @@ async function createMenu() {
 const fetchUserDetails = async (req, res) => {
   try {
     const userId = req.params.id;
-    console.log(req.params);
+
     const userDetails = await User.findById(userId).select("-password");
     res.status(200).json({ userDetails: userDetails });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -449,12 +431,11 @@ const fetchUserDetails = async (req, res) => {
 // Update user details
 const updateProfile = async (req, res) => {
   try {
-    console.log("hooray");
     const userId = req.params.id;
     const values = JSON.parse(req.body.values);
-    console.log(values);
+
     const file = req.file;
-    console.log(file);
+
     const updatedProfile = await User.findByIdAndUpdate(
       userId,
       {
@@ -489,7 +470,6 @@ const updateProfile = async (req, res) => {
 
     res.status(200).json({ message: "Profile updated successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -530,7 +510,6 @@ const changePassword = async (req, res) => {
       .status(200)
       .json({ message: "Your password has been changed successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -541,7 +520,6 @@ const fetchHostelMenu = async (req, res) => {
     const hostelMenu = await Menu.find({});
     res.status(200).json({ hostelMenu: hostelMenu });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -551,7 +529,6 @@ const getRoomTypeDetails = async (req, res) => {
     const roomNo = req.query.roomNo;
     // Find the room document that matches the roomNo
     const room = await Room.findOne({ roomNo });
-    console.log(room.roomType);
 
     if (!room) {
       return res.status(404).json({ error: "Room not found" });
@@ -586,10 +563,9 @@ const postHostelReview = async (req, res) => {
       user: req.body.userId,
     });
     await newReview.save();
-    console.log("New review created:", newReview);
+
     res.status(200).json({ message: "Review posted successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -600,7 +576,6 @@ const getHostelReview = async (req, res) => {
     const hostelReview = await Review.findOne({ user: userId });
     res.status(200).json({ hostelReview: hostelReview });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -611,7 +586,6 @@ const deleteHostelReview = async (req, res) => {
     await Review.findByIdAndDelete(id);
     res.status(200).json({ message: "Review deleted successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -625,7 +599,6 @@ const updateHostelReview = async (req, res) => {
     });
     res.status(200).json({ message: "Review updated successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -636,7 +609,6 @@ const getLeaveLetters = async (req, res) => {
     const leaveLetters = await LeaveLetter.find({ user: userId });
     res.status(200).json({ leaveLetters: leaveLetters });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -648,10 +620,9 @@ const postLeaveLetter = async (req, res) => {
       user: req.body.userId,
     });
     await newLeaveLetter.save();
-    console.log(newLeaveLetter);
+
     res.status(200).json({ message: "Leave Letter submitted successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -662,7 +633,6 @@ const getComplaints = async (req, res) => {
     const complaints = await Complaint.find({ user: userId });
     res.status(200).json({ complaints: complaints });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -674,10 +644,9 @@ const postComplaint = async (req, res) => {
       user: req.body.userId,
     });
     await newComplaint.save();
-    console.log(newComplaint);
+
     res.status(200).json({ message: "Complaint submitted successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -703,7 +672,6 @@ const getRentDue = async (req, res) => {
     // If no RentDue document exists for the current month and year for the given userId, create a new RentDue document.
     res.status(200).json({ rentDue: {} });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -716,7 +684,6 @@ const getRentPaid = async (req, res) => {
     });
     res.status(200).json({ rentPaid: rentPaid });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -738,13 +705,11 @@ const createRentOrder = async (req, res) => {
 
     instance.orders.create(options, function (err, order) {
       if (err) {
-        console.log(err);
       } else {
         res.status(200).json({ order: order });
       }
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -762,13 +727,13 @@ const verifyRentPayment = async (req, res) => {
     let hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
     hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
     hmac = hmac.digest("hex");
-    console.log(hmac, razorpay_signature);
+
     if (hmac == razorpay_signature) {
       // update the rentDue document by updating the status to paid
       const today = moment();
       const month = moment(today).format("MMMM");
       const date = moment(today).startOf("month");
-      console.log(month, date, userId);
+
       const rentDue = await RentDue.findOne({
         user: userId,
         rentMonth: month,
@@ -785,7 +750,6 @@ const verifyRentPayment = async (req, res) => {
         monthOfPayment: new Date().toLocaleString("default", { month: "long" }),
       });
       await payment.save();
-      console.log(payment);
 
       res.status(200).json({
         status: "success",
@@ -795,7 +759,6 @@ const verifyRentPayment = async (req, res) => {
       res.status(400).json({ message: "Payment Failed" });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -865,7 +828,6 @@ const getRentPaymentStatus = async (req, res) => {
       const roomNo = resident.roomNo;
       const room = await Room.findOne({ roomNo });
       if (!room) {
-        console.log(`Room with roomNo ${roomNo} not found`);
         throw new Error(`Room with roomNo ${roomNo} not found`);
       }
 
@@ -901,7 +863,6 @@ const getRentPaymentStatus = async (req, res) => {
       res.status(200).json({ status: "Unpaid" });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };

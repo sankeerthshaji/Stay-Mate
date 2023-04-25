@@ -34,7 +34,7 @@ function ResidentDetailsPage() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response);
+      
       setResidentDetails(response.data.residentDetails);
       setRoomTypeDetails(response.data.roomTypeDetails);
       fetchRooms(response.data.roomTypeDetails._id);
@@ -48,7 +48,7 @@ function ResidentDetailsPage() {
       const formattedDate = `${day}/${month}/${year}`;
       setFormattedDateOfBirth(formattedDate);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -57,7 +57,7 @@ function ResidentDetailsPage() {
           adminLogout();
         } else if (err.response.data.error === "Request is not authorized") {
           // Handle "Request is not authorized" error
-          console.log(err.response.data.error);
+          
         }
       }
     }
@@ -70,10 +70,10 @@ function ResidentDetailsPage() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.rooms);
+      
       setRooms(response.data.rooms);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -82,7 +82,7 @@ function ResidentDetailsPage() {
           adminLogout();
         } else if (err.response.data.error === "Request is not authorized") {
           // Handle "Request is not authorized" error
-          console.log(err.response.data.error);
+          
         }
       }
     } finally {
@@ -125,7 +125,7 @@ function ResidentDetailsPage() {
           },
         }
       );
-      console.log(response);
+      
       Swal.fire({
         icon: "success",
         title: "Success",
@@ -134,7 +134,7 @@ function ResidentDetailsPage() {
       fetchResidentDetails();
       setShowModal(false);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -143,7 +143,7 @@ function ResidentDetailsPage() {
           adminLogout();
         } else if (err.response.data.error === "Request is not authorized") {
           // Handle "Request is not authorized" error
-          console.log(err.response.data.error);
+          
         }
       } else {
         toast.error(err.response.data.error || "Something went wrong");

@@ -31,10 +31,10 @@ function RentDue() {
           // add any additional headers here
         },
       });
-      console.log(response.data);
+      
       setRoomTypeDetails(response.data.roomTypeDetails);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -55,10 +55,10 @@ function RentDue() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      console.log(response);
+      
       setRentDue(response.data.rentDue);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -104,7 +104,7 @@ function RentDue() {
         }
       );
       const order = response?.data?.order;
-      console.log(order);
+      
 
       let options = {
         key: "rzp_test_tN9rva6tbuI8ng", // Enter the Key ID generated from the Dashboard
@@ -145,7 +145,7 @@ function RentDue() {
       });
       rzp1.open();
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -183,7 +183,7 @@ function RentDue() {
       )
       .then((response) => {
         if (response.data.status === "success") {
-          console.log(response.data);
+          
           toast.success(response.data.message);
           navigate("/rentConfirmation");
         } else {
@@ -192,7 +192,7 @@ function RentDue() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        
         if (err.response && err.response.status === 401) {
           if (
             err.response.data.error === "Session timed out. Please login again."

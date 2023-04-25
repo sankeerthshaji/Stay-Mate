@@ -14,10 +14,10 @@ function RoomTypes() {
       setLoaded(true);
       try {
         const response = await axios.get("/roomTypes");
-        console.log(response.data);
+
         setRoomTypes(response.data);
       } catch (error) {
-        console.log(error);
+        console.error(error.message);
       } finally {
         setLoaded(false);
       }
@@ -29,15 +29,15 @@ function RoomTypes() {
     <div>
       {loaded ? (
         <Loader />
-      ) :
+      ) : (
         <>
           <Navbar />
-            {roomTypes.map((roomType) => (
-              <RoomType key={roomType._id} roomType={roomType} />
-            ))}
+          {roomTypes.map((roomType) => (
+            <RoomType key={roomType._id} roomType={roomType} />
+          ))}
           <Footer />
         </>
-      }
+      )}
     </div>
   );
 }

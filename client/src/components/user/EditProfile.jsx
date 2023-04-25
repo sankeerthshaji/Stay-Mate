@@ -35,10 +35,10 @@ function EditProfile() {
             Authorization: `Bearer ${resident.token}`,
           },
         });
-        console.log(response.data.userDetails);
+        
         setUserDetails(response.data.userDetails);
       } catch (err) {
-        console.log(err);
+        
         if (err.response && err.response.status === 401) {
           if (
             err.response.data.error === "Session timed out. Please login again."
@@ -77,7 +77,7 @@ function EditProfile() {
         : finalImage;
 
     if (imageFile) {
-      console.log(imageFile);
+      
       setImage(imageFile);
     } else {
       toast.error("Please select an image.");
@@ -91,7 +91,7 @@ function EditProfile() {
   };
 
   const handleSubmit = async (values, actions) => {
-    console.log("Form submitted");
+    
     setLoading(true);
 
     try {
@@ -110,7 +110,7 @@ function EditProfile() {
           },
         }
       );
-      console.log(response);
+      
       toast.success(response.data.message);
       navigate("/userProfile");
     } catch (error) {

@@ -21,7 +21,7 @@ function useAdminLogin() {
         type: "ADMIN_LOGIN",
         payload: json,
       });
-      console.log(store.getState());
+      
       toast.success("Login successfull");
     } catch (error) {
       setError(error.response.data.error);

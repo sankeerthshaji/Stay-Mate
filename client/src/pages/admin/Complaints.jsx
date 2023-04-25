@@ -34,10 +34,10 @@ function Complaints() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.complaints);
+      
       setComplaints(response.data.complaints);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -121,10 +121,10 @@ function Complaints() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.complaint);
+      
       setComplaintDetails(response.data.complaint);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -156,12 +156,12 @@ function Complaints() {
           },
         }
       );
-      console.log(response.data);
+      
       toast.success(response.data.message);
       fetchLeaveLetters();
       setShowModal(false);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."

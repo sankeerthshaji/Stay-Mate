@@ -30,14 +30,14 @@ function BookRoom() {
     async function fetchRoomData() {
       try {
         const response = await axios.get(`/roomDetails/${id}`);
-        console.log(response.data);
+        
         setRoomData({
           details: response.data.roomDetails,
           dynamicRent: response.data.dynamicRent,
           totalRent: response.data.totalRent,
         });
       } catch (error) {
-        console.log(error);
+        console.error(error.message);
       }
     }
     fetchRoomData();
@@ -69,7 +69,7 @@ function BookRoom() {
   };
 
   const handlePayment = async () => {
-    console.log(store.getState());
+    
     try {
       setLoading(true);
       if (resident) {
@@ -95,7 +95,7 @@ function BookRoom() {
         }
       );
       const order = response?.data?.order;
-      console.log(order);
+      
 
       let options = {
         key: "rzp_test_tN9rva6tbuI8ng", // Enter the Key ID generated from the Dashboard
@@ -136,7 +136,7 @@ function BookRoom() {
       });
       rzp1.open();
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -175,7 +175,7 @@ function BookRoom() {
       )
       .then((response) => {
         if (response.data.status === "success") {
-          console.log(response.data);
+          
 
           localStorage.removeItem("guest");
           dispatch({
@@ -198,7 +198,7 @@ function BookRoom() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        
         if (err.response && err.response.status === 401) {
           if (
             err.response.data.error === "Session timed out. Please login again."

@@ -119,7 +119,7 @@ userSchema.statics.login = async function (email, password) {
     throw new Error("Please enter all the fields");
   }
 
-  const user = await User.findOne({ email: email });
+  const user = await this.findOne({ email: email });
   if (!user) {
     throw new Error("Incorrect login credentials");
   }

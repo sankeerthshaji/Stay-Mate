@@ -27,10 +27,10 @@ function RentPaid() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      console.log(response.data.rentPaid);
+      
       setRentPaid(response.data.rentPaid);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."

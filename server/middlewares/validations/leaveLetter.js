@@ -18,7 +18,7 @@ const leaveLetterSchema = yup.object().shape({
 const validateSchema = (schema) => async (req, res, next) => {
   try {
     await schema.validate(req.body.values, { abortEarly: false });
-    console.log("Validation successful");
+    
     next();
   } catch (err) {
     console.error(err);

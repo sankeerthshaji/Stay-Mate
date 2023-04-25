@@ -23,10 +23,10 @@ function LeaveLetters() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.leaveLetters);
+      
       setLeaveLetters(response.data.leaveLetters);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."

@@ -25,7 +25,7 @@ function UserProfile() {
             Authorization: `Bearer ${resident.token}`,
           },
         });
-        console.log(response.data.userDetails);
+        
         setUserDetails(response.data.userDetails);
 
         // Format date of birth
@@ -37,7 +37,7 @@ function UserProfile() {
         const formattedDate = `${day}/${month}/${year}`;
         setFormattedDateOfBirth(formattedDate);
       } catch (err) {
-        console.log(err);
+        
         if (err.response && err.response.status === 401) {
           if (
             err.response.data.error === "Session timed out. Please login again."

@@ -41,7 +41,7 @@ export default function Otp() {
 
     validate,
     onSubmit: async (values) => {
-      console.log(values.otp.join(""));
+      
       const otp = values.otp.join("");
       setLoading(true);
       try {
@@ -51,7 +51,7 @@ export default function Otp() {
           userImage,
           userEmail,
         });
-        console.log(response);
+        
         toast.success(response?.data?.message);
         if (response?.data?.email) {
           navigate("/resetPassword", {

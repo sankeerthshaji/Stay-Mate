@@ -26,10 +26,10 @@ function UnpaidRents() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.unpaidRents);
+      
       setUnpaidRents(response.data.unpaidRents);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."

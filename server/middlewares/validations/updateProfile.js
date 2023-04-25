@@ -80,7 +80,7 @@ const validateSchema = (schema) => async (req, res, next) => {
     //     throw new Error("Image file is required");
     //   }
     const values = JSON.parse(req.body.values);
-    console.log(values);
+    
     await schema.validate(values, { abortEarly: false });
     next();
   } catch (err) {

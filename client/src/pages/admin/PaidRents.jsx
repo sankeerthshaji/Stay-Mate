@@ -26,10 +26,10 @@ function PaidRents() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.paidRents);
+      
       setPaidRents(response.data.paidRents);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -51,10 +51,10 @@ function PaidRents() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.paidRents);
+      
       setPaidRents(response.data.paidRents);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."

@@ -24,7 +24,6 @@ const loginAdmin = async (req, res) => {
 
     res.status(200).json({ email, token });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -34,7 +33,6 @@ const fetchUsers = async (req, res) => {
     const users = await User.find({}, { password: 0 });
     res.status(200).json({ users });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -46,7 +44,6 @@ const blockUser = async (req, res) => {
     await User.findByIdAndUpdate(id, { isBlocked: true });
     res.status(200).json({ message: "User blocked successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -58,7 +55,6 @@ const unblockUser = async (req, res) => {
     await User.findByIdAndUpdate(id, { isBlocked: false });
     res.status(200).json({ message: "User unblocked successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -67,7 +63,7 @@ const unblockUser = async (req, res) => {
 const removeAsResident = async (req, res) => {
   try {
     const { userId } = req.body;
-    console.log(userId);
+
     const user = await User.findById(userId);
 
     if (!user) {
@@ -118,14 +114,13 @@ const fetchResidentDetails = async (req, res) => {
   try {
     const { id } = req.params;
     const residentDetails = await User.findById(id).select("-password");
-    console.log(residentDetails);
+
     const room = await Room.findOne({ roomNo: residentDetails.roomNo });
     const roomType = await RoomType.findById(room.roomType);
     res
       .status(200)
       .json({ residentDetails: residentDetails, roomTypeDetails: roomType });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -137,7 +132,6 @@ const fetchGuestDetails = async (req, res) => {
     const guestDetails = await User.findById(id).select("-password");
     res.status(200).json({ guestDetails: guestDetails });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -148,7 +142,6 @@ const fetchHostelMenu = async (req, res) => {
     const hostelMenu = await Menu.find({});
     res.status(200).json({ hostelMenu: hostelMenu });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -160,7 +153,6 @@ const fetchMenuDetails = async (req, res) => {
     const menuDetails = await Menu.findById(id);
     res.status(200).json({ menuDetails: menuDetails });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -221,7 +213,6 @@ const updateMenuDetails = async (req, res) => {
 
     res.status(200).json({ message: "Menu updated successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -232,7 +223,6 @@ const fetchAllRooms = async (req, res) => {
     const rooms = await Room.find({}).populate("roomType");
     res.status(200).json({ rooms: rooms });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -244,10 +234,9 @@ const getReviews = async (req, res) => {
       path: "user",
       select: "-password",
     });
-    console.log(reviews);
+
     res.status(200).json({ reviews: reviews });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -261,7 +250,6 @@ const approveReview = async (req, res) => {
     await review.save();
     res.status(200).json({ message: "Review approved successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -275,7 +263,6 @@ const rejectReview = async (req, res) => {
     await review.save();
     res.status(200).json({ message: "Review rejected successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -287,10 +274,9 @@ const getLeaveLetters = async (req, res) => {
       path: "user",
       select: "-password",
     });
-    console.log(leaveLetters);
+
     res.status(200).json({ leaveLetters: leaveLetters });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -302,10 +288,9 @@ const getComplaints = async (req, res) => {
       path: "user",
       select: "-password",
     });
-    console.log(complaints);
+
     res.status(200).json({ complaints: complaints });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -317,7 +302,6 @@ const getComplaintDetails = async (req, res) => {
     const complaint = await Complaint.findById(id);
     res.status(200).json({ complaint: complaint });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -336,7 +320,6 @@ const updateComplaintDetails = async (req, res) => {
       .status(200)
       .json({ message: "Complaint updated successfully", complaint });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -350,10 +333,9 @@ const getPaidRents = async (req, res) => {
         path: "user",
         select: "-password",
       });
-    console.log(paidRents);
+
     res.status(200).json({ paidRents: paidRents });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -365,10 +347,9 @@ const getUnpaidRents = async (req, res) => {
       path: "user",
       select: "-password",
     });
-    console.log(unpaidRents);
+
     res.status(200).json({ unpaidRents: unpaidRents });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -379,7 +360,6 @@ const fetchRooms = async (req, res) => {
     const rooms = await Room.find({ roomType: id, status: "available" });
     res.status(200).json({ rooms: rooms });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -392,7 +372,7 @@ const assignRoom = async (req, res) => {
       throw new Error("Please select a Room No.");
     }
 
-    const oldRoom = await Room.findOne({roomNo: oldRoomNo});
+    const oldRoom = await Room.findOne({ roomNo: oldRoomNo });
     // Decrease the no of occupants by 1 for occupants field in the old room document
     oldRoom.occupants -= 1;
 
@@ -423,7 +403,6 @@ const assignRoom = async (req, res) => {
 
     res.status(200).json({ message: "Room No changed successfully!" });
   } catch (err) {
-    console.log(err);
     res.status(400).json({ error: err.message });
   }
 };
@@ -450,5 +429,5 @@ module.exports = {
   getPaidRents,
   getUnpaidRents,
   fetchRooms,
-  assignRoom
+  assignRoom,
 };

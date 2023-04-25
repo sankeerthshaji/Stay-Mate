@@ -31,10 +31,10 @@ function AdminHostelMenu() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.hostelMenu);
+      
       setHostelMenu(response.data.hostelMenu);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -101,16 +101,16 @@ function AdminHostelMenu() {
   async function fetchMenuDetails(id) {
     setLoader(true);
     try {
-      console.log(id);
+      
       const response = await axios.get(`/admin/hostelMenu/${id}`, {
         headers: {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      console.log(response.data.menuDetails);
+      
       setMenuDetails(response.data.menuDetails);
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -129,7 +129,7 @@ function AdminHostelMenu() {
     event.preventDefault();
     setLoading(true);
     try {
-      console.log(menuDetails);
+      
       const id = menuDetails._id;
       const response = await axios.put(
         `/admin/hostelMenu/${id}`,
@@ -142,12 +142,12 @@ function AdminHostelMenu() {
           },
         }
       );
-      console.log(response);
+      
       toast.success(response.data.message);
       handleClose();
       fetchHostelMenu();
     } catch (err) {
-      console.log(err);
+      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
