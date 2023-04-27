@@ -186,11 +186,11 @@ function Complaint() {
       <div className="w-16 flex-shrink-0">
         <UserSideBar />
       </div>
-      <div className="flex-1 bg-gray-50">
+      <div className="flex-1 overflow-x-auto p-5 bg-gray-50">
         {loader ? (
           <Loader />
         ) : (
-          <div className="overflow-x-auto p-5">
+          <>
             {showModal && modal}
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
@@ -204,7 +204,7 @@ function Complaint() {
               </button>
             </div>
             <UserTable columns={columns} data={complaints} />
-          </div>
+          </>
         )}
       </div>
     </div>

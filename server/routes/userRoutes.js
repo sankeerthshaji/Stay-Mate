@@ -32,6 +32,7 @@ const {
   getRentPaymentStatus,
   getAvailableRoomTypes,
   assignNewRoomType,
+  postVacatingLetter
 } = require("../controllers/userController");
 const admissionValidationMiddleware = require("../middlewares/validations/admission");
 const updateProfileValidationMiddleware = require("../middlewares/validations/updateProfile");
@@ -45,6 +46,7 @@ const { create } = require("../models/roomType");
 const reviewValidationMiddleware = require("../middlewares/validations/review");
 const LeaveLetterValidationMiddleware = require("../middlewares/validations/leaveLetter");
 const ComplaintValidationMiddleware = require("../middlewares/validations/complaintSchema");
+const VacatingLetterValidationMiddleware = require("../middlewares/validations/vacatingLetterSchema");
 const upload = multer({ storage });
 
 const router = express.Router();
@@ -129,6 +131,8 @@ router.get("/rentPaid", requireAuthResident, getRentPaid);
 
 router.get("/availableRoomTypes", requireAuthResident, getAvailableRoomTypes);
 
-router.post("/assignNewRoomType", requireAuthResident, assignNewRoomType)
+router.post("/assignNewRoomType", requireAuthResident, assignNewRoomType);
+
+router.post("/vacatingLetter", requireAuthResident, VacatingLetterValidationMiddleware, postVacatingLetter)
 
 module.exports = router;

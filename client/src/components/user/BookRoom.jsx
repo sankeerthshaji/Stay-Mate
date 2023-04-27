@@ -298,7 +298,7 @@ function BookRoom() {
           </div>
 
           <div className="py-4 px-10">
-            <input type="checkbox" id="terms" defaultChecked />
+            <input type="checkbox" id="terms" defaultChecked/>
             <label htmlFor="terms" className="text-sm px-4 font-semibold">
               I've read and accept the{" "}
               <span className="text-[#c5322d] font-bold">

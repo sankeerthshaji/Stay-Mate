@@ -46,7 +46,9 @@ function AdminSideBar() {
           text="Leave letters"
         />
       </Link>
+      <Link to="/admin/vacatingLetters">
       <SideBarIcon icon={<BsEnvelope size="25" />} text="Vacating letters" />
+      </Link>
       {/* <SideBarIcon
         icon={<HiOutlineDocumentReport size="25" />}
         text="Sales Report"

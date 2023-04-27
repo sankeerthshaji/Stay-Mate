@@ -14,6 +14,9 @@ const Complaint = require("../models/complaint");
 const RentDue = require("../models/rentDue");
 const moment = require("moment");
 const mongoose = require("mongoose");
+const VacatingLetter = require("../models/vacatingLetter");
+const cron = require("node-cron");
+const shell = require("shelljs");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -542,7 +545,7 @@ const getRoomTypeDetails = async (req, res) => {
       },
     ]);
     const room = userWithRoom[0].room;
-    
+
     if (!room) {
       throw new Error("Room not found");
     }
@@ -838,7 +841,7 @@ const getRentPaymentStatus = async (req, res) => {
       }
 
       // Retrieve the roomNo of the user from the User collection and then retrieve the corresponding room document from the Room collection.
-      const roomNo = resident.roomNo;
+      const roomNo = user.roomNo;
       const room = await Room.findOne({ roomNo });
       if (!room) {
         throw new Error(`Room with roomNo ${roomNo} not found`);
@@ -907,7 +910,6 @@ const getAvailableRoomTypes = async (req, res) => {
     const availableRoomTypes = await RoomType.find({
       status: "available",
     }).select("name");
-    console.log(availableRoomTypes);
     res.status(200).json({ availableRoomTypes });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -981,6 +983,91 @@ const assignNewRoomType = async (req, res) => {
   }
 };
 
+const postVacatingLetter = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const { values, userId } = req.body;
+    await VacatingLetter.create([{ ...values, user: userId }], { session });
+    const user = await User.findById(userId).session(session);
+    const room = await Room.findOne({ roomNo: user.roomNo }).session(session);
+    room.occupants -= 1;
+    if (room.occupants < room.capacity && room.status === "occupied") {
+      room.status = "available";
+    }
+    await RoomType.findOneAndUpdate(
+      { _id: room.roomType, status: "unavailable" },
+      { $set: { status: "available" } },
+      { session }
+    );
+    user.role = "guest";
+    user.roomNo = undefined;
+    await Promise.all([user.save({ session }), room.save({ session })]);
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(200).json({
+      message:
+        "Your vacating letter has been submitted successfully! We hope you had a comfortable and enjoyable stay with us.",
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// cron.schedule("10 * * * * *", async function generateRent() {
+//   try {
+//     const users = await User.find({ role: { $ne: "guest" } });
+//     // console.log(users);
+
+//     console.log("hii");
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
+
+// cron.schedule("0 0 0 11 * *", async () => {
+//   console.log("running a task");
+// });
+
+cron.schedule("0 0 0 1 * *", async function generateMonthlyRent() {
+  try{
+  const users = await User.find({ role: { $ne: "guest" } });
+  const rentMonth = new Date().toLocaleString("default", { month: "long" });
+  const rentYear = new Date().getFullYear();
+  const rentDues = [];
+
+  for (const user of users) {
+    const room = await Room.findOne({ roomNo: user.roomNo });
+    const roomType = await RoomType.findById(room.roomType);
+    const rentAmount = roomType.rent;
+    const rentDate = new Date(rentYear, new Date().getMonth(), 1);
+    const lastDateWithoutFine = new Date(rentYear, new Date().getMonth(), 5);
+    const lastDateWithFine = new Date(rentYear, new Date().getMonth(), 10);
+
+    rentDues.push({
+      user: user._id,
+      rentMonth,
+      rentDate,
+      rentAmount,
+      lastDateWithoutFine,
+      lastDateWithFine,
+      fine: 0,
+    });
+  }
+
+  await RentDue.insertMany(rentDues);
+  console.log(`Created ${rentDues.length} new rentDue documents.`);
+} catch(error){
+  console.error(error);
+}
+});
+
 module.exports = {
   getRoomTypes,
   admission,
@@ -1014,4 +1101,5 @@ module.exports = {
   getRentPaymentStatus,
   getAvailableRoomTypes,
   assignNewRoomType,
+  postVacatingLetter,
 };

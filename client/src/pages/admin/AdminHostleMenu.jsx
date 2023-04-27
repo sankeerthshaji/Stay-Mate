@@ -14,7 +14,6 @@ function AdminHostelMenu() {
   const [loading, setLoading] = useState(false);
   const [loader, setLoader] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  // const [id, setId] = useState(null);
   const admin = useSelector((state) => state.admin);
   const { adminLogout } = useAdminLogout();
   const inputRef = useRef(null);
@@ -269,7 +268,10 @@ function AdminHostelMenu() {
               </div>
 
               <div className="flex flex-col gap-4">
-                <button className="bg-blue-500 text-white p-2 rounded-md transform hover:scale-105 transition duration-300">
+                <button
+                  className="bg-blue-500 text-white p-2 rounded-md transform hover:scale-105 transition duration-300"
+                  disabled={loading}
+                >
                   {loading ? (
                     <ClipLoader size={20} color={"#fff"} />
                   ) : (
@@ -294,14 +296,17 @@ function AdminHostelMenu() {
         {loader ? (
           <Loader />
         ) : (
-          <div className="overflow-x-auto p-5">
-            <div className="flex justify-between p-3">
-              <h1 className="flex text-2xl font-bold text-center">
-                Hostel Menu
-              </h1>
+          <>
+            {showModal && modal}
+            <div className="overflow-x-auto p-5">
+              <div className="flex justify-between p-3">
+                <h1 className="flex text-2xl font-bold text-center">
+                  Hostel Menu
+                </h1>
+              </div>
+              <AdminTable columns={columns} data={hostelMenu} />
             </div>
-            <AdminTable columns={columns} data={hostelMenu} />
-          </div>
+          </>
         )}
       </div>
     </div>

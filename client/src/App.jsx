@@ -32,6 +32,8 @@ import PaidRents from "./pages/admin/PaidRents";
 import UnpaidRents from "./pages/admin/UnpaidRents";
 import GuestDetailsPage from "./pages/admin/GuestDetailsPage";
 import ResidentDetailsPage from "./pages/admin/ResidentDetailsPage";
+import VacatingLetter from "./pages/user/VacatingLetter";
+import VacatingLetters from "./pages/admin/VacatingLetters";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -54,7 +56,7 @@ function App() {
       dispatch({ type: "ADMIN_LOGIN", payload: admin });
     }
     setLoading(false);
-  },[dispatch]);
+  }, [dispatch]);
 
   if (loading) {
     return <Loader />;
@@ -121,52 +123,28 @@ function App() {
 
           <Route
             path="/confirmation"
-            element={
-              resident ? (
-                  <ConfirmationPage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={resident ? <ConfirmationPage /> : <Navigate to="/login" />}
           />
 
           <Route
             path="/userProfile"
-            element={
-              resident ? (
-                  <UserProfilePage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={resident ? <UserProfilePage /> : <Navigate to="/login" />}
           />
 
           <Route
             path="/editProfile"
-            element={
-              resident ? (
-                  <EditProfilePage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={resident ? <EditProfilePage /> : <Navigate to="/login" />}
           />
 
           <Route
             path="/changePassword"
-            element={
-              resident ? (
-                  <ChangePassword />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={resident ? <ChangePassword /> : <Navigate to="/login" />}
           />
 
           <Route
             path="/admin/residentDetails/:id"
             element={
-              admin ? <ResidentDetailsPage/> : <Navigate to="/admin/login" />
+              admin ? <ResidentDetailsPage /> : <Navigate to="/admin/login" />
             }
           />
 
@@ -179,13 +157,7 @@ function App() {
 
           <Route
             path="/hostelMenu"
-            element={
-              resident ? (
-                  <HostelMenu />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={resident ? <HostelMenu /> : <Navigate to="/login" />}
           />
 
           <Route
@@ -202,13 +174,7 @@ function App() {
 
           <Route
             path="/review"
-            element={
-              resident ? (
-                  <ReviewPage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={resident ? <ReviewPage /> : <Navigate to="/login" />}
           />
 
           <Route
@@ -218,13 +184,7 @@ function App() {
 
           <Route
             path="/leaveLetters"
-            element={
-              resident ? (
-                  <LeaveLetter />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={resident ? <LeaveLetter /> : <Navigate to="/login" />}
           />
 
           <Route
@@ -234,13 +194,7 @@ function App() {
 
           <Route
             path="/complaints"
-            element={
-              resident ? (
-                  <Complaint />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={resident ? <Complaint /> : <Navigate to="/login" />}
           />
 
           <Route
@@ -250,34 +204,18 @@ function App() {
 
           <Route
             path="/rentDue"
-            element={
-              resident ? (
-                  <RentDuePage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={resident ? <RentDuePage /> : <Navigate to="/login" />}
           />
 
           <Route
             path="/rentPaid"
-            element={
-              resident ? (
-                  <RentPaid />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={resident ? <RentPaid /> : <Navigate to="/login" />}
           />
 
           <Route
             path="/rentConfirmation"
             element={
-              resident ? (
-                  <RentConfirmationPage />
-              ) : (
-                <Navigate to="/login" />
-              )
+              resident ? <RentConfirmationPage /> : <Navigate to="/login" />
             }
           />
 
@@ -289,6 +227,18 @@ function App() {
           <Route
             path="/admin/unpaidRents"
             element={admin ? <UnpaidRents /> : <Navigate to="/admin/login" />}
+          />
+
+          <Route
+            path="/vacatingLetter"
+            element={resident ? <VacatingLetter /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/admin/vacatingLetters"
+            element={
+              admin ? <VacatingLetters /> : <Navigate to="/admin/login" />
+            }
           />
         </Routes>
       </BrowserRouter>

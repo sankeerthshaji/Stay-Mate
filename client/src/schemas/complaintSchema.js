@@ -10,6 +10,7 @@ export const complaintSchema = yup.object().shape({
     .required("Complaint Type is required"),
   description: yup
     .string()
+    .trim()
     .max(500, "Complaint Description should not exceed 500 characters")
     .required("Complaint Description is required"),
 });

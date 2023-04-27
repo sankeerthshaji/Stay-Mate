@@ -10,6 +10,7 @@ const LeaveLetter = require("../models/leaveLetter");
 const Complaint = require("../models/complaint");
 const RentDue = require("../models/rentDue");
 const Payment = require("../models/payment");
+const VacatingLetter = require("../models/vacatingLetter");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -409,6 +410,21 @@ const assignRoom = async (req, res) => {
   }
 };
 
+// Fetch Vacating Letters
+const getVacatingLetters = async (req, res) => {
+  try {
+    const vacatingLetters = await VacatingLetter.find({}).populate({
+      path: "user",
+      select: "-password",
+    });
+
+    res.status(200).json({ vacatingLetters });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
   loginAdmin,
   fetchUsers,
@@ -432,4 +448,5 @@ module.exports = {
   getUnpaidRents,
   fetchRooms,
   assignRoom,
+  getVacatingLetters,
 };

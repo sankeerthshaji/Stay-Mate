@@ -48,7 +48,7 @@ function UserSideBar() {
           text="Leave Letter"
         />
       </Link>
-      <Link to="/userProfile">
+      <Link to="/vacatingLetter">
         <SideBarIcon icon={<BsEnvelope size="25" />} text="Vacating Letter" />
       </Link>
       <Link to="/roomTypes">

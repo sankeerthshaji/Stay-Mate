@@ -23,6 +23,7 @@ const {
   getUnpaidRents,
   fetchRooms,
   assignRoom,
+  getVacatingLetters
 } = require("../controllers/adminController");
 const { requireAuthAdmin } = require("../middlewares/authorization");
 const AdminComplaintValidationMiddleware = require("../middlewares/validations/adminComplaintSchema");
@@ -73,5 +74,7 @@ router.get("/unpaidRents", requireAuthAdmin, getUnpaidRents);
 router.get("/rooms/:id", requireAuthAdmin, fetchRooms);
 
 router.patch("/assignRoom", requireAuthAdmin, assignRoom);
+
+router.get("/vacatingLetters", requireAuthAdmin, getVacatingLetters);
 
 module.exports = router;

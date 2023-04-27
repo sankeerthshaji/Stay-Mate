@@ -15,11 +15,11 @@ const rentDueSchema = new Schema(
       type: Number,
       required: true,
     },
-    lastDateWithFine: {
+    lastDateWithoutFine: {
       type: Date,
       required: true,
     },
-    lastDateWithoutFine: {
+    lastDateWithFine: {
       type: Date,
       required: true,
     },
@@ -37,7 +37,7 @@ const rentDueSchema = new Schema(
       type: String,
       enum: ["Paid", "Unpaid"],
       default: "Unpaid",
-    }
+    },
   },
   {
     timestamps: true,

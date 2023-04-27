@@ -8,6 +8,7 @@ export const reviewSchema = yup.object().shape({
     .required("Rating is required"),
   body: yup
     .string()
+    .trim()
     .max(500, "Review should not exceed 500 characters")
     .required("Review is required"),
 });

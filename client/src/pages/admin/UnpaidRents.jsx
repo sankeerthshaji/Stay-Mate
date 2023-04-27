@@ -44,12 +44,12 @@ function UnpaidRents() {
 
   const columns = [
     {
-      Header: "User",
-      Cell: ({ row }) => row.original.user.fullName,
+      Header: "#",
+      Cell: ({ row }) => row.index + 1,
     },
     {
-      Header: "Room No",
-      Cell: ({ row }) => row.original.user.roomNo,
+      Header: "User",
+      Cell: ({ row }) => row.original.user.fullName,
     },
     {
       Header: "Amount Due",
