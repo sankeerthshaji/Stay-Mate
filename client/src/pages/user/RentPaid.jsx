@@ -27,17 +27,16 @@ function RentPaid() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      
+
       setRentPaid(response.data.rentPaid);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);
@@ -54,29 +53,30 @@ function RentPaid() {
       Cell: ({ row }) => row.original._id,
     },
     {
-        Header: "Month",
-        Cell: ({ row }) => row.original.monthOfPayment,
+      Header: "Month",
+      Cell: ({ row }) => row.original.monthOfPayment,
     },
     {
       Header: "Payment Date",
-      Cell: ({ row }) => new Date(row.original.dateOfPayment).toLocaleDateString(),
+      Cell: ({ row }) =>
+        new Date(row.original.dateOfPayment).toLocaleDateString(),
     },
     {
       Header: "Rent Amount",
       Cell: ({ row }) => row.original.rentAmount,
-    }
+    },
   ];
 
   return (
-    <div>
-      {loader ? (
-        <Loader />
-      ) : (
-        <div className="flex h-screen">
-          <div className="w-16 flex-shrink-0">
-            <UserSideBar />
-          </div>
-          <div className="flex-1 overflow-x-auto p-5 bg-gray-100">
+    <div className="flex h-screen">
+      <div className="w-16 flex-shrink-0">
+        <UserSideBar />
+      </div>
+      <div className="flex-1 bg-gray-50">
+        {loader ? (
+          <Loader />
+        ) : (
+          <div className="overflow-x-auto p-5">
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
                 Rent History
@@ -84,8 +84,8 @@ function RentPaid() {
             </div>
             <UserTable columns={columns} data={rentPaid} />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

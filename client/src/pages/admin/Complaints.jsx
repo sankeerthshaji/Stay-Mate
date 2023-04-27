@@ -34,10 +34,9 @@ function Complaints() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      
+
       setComplaints(response.data.complaints);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -121,10 +120,9 @@ function Complaints() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      
+
       setComplaintDetails(response.data.complaint);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -156,19 +154,15 @@ function Complaints() {
           },
         }
       );
-      
+
       toast.success(response.data.message);
       fetchLeaveLetters();
       setShowModal(false);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
+        // Handle 401 Unauthorized error
           logout();
-        }
+          console.error(err);
       } else if (err.response && err.response.status === 422) {
         if (err?.response?.data?.errors) {
           setErrors(err.response.data.errors);
@@ -227,25 +221,22 @@ function Complaints() {
   );
 
   return (
-    <div>
-      {loader ? (
-        <Loader />
-      ) : (
-        <div className="flex h-screen">
-          <div className="w-16 flex-shrink-0">
-            <AdminSideBar />
-          </div>
-          <div className="flex-1 overflow-x-auto p-5 bg-gray-100">
-            {showModal && modal}
+    <div className="flex h-screen">
+      <div className="w-16 flex-shrink-0">
+        <AdminSideBar />
+      </div>
+      <div className="flex-1 bg-gray-50">
+        {loader ? (
+          <Loader />
+        ) : (
+          <div className="overflow-x-auto p-5">
             <div className="flex justify-between p-3">
-              <h1 className="flex text-2xl font-bold text-center">
-                Complaint Management
-              </h1>
+              <h1 className="flex text-2xl font-bold text-center">Complaint Management</h1>
             </div>
             <AdminTable columns={columns} data={complaints} />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

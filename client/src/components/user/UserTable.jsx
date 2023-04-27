@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTable } from "react-table";
 
 function UserTable(props) {
@@ -28,13 +28,7 @@ function UserTable(props) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()} className="bg-white">
-          {props.noComplaints ? (
-            <tr>
-              <td className="bg-gray-50 flex justify-center w-full">No data</td>
-            </tr>
-          ) : null}
-          {
-            rows.map((row, i) => {
+          {rows.map((row, i) => {
             prepareRow(row);
 
             return (

@@ -1,11 +1,18 @@
 import React, { useEffect } from "react";
 import success from "../../assets/img/success.png";
 import tick from "../../assets/img/tick.webp";
-import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function Confirmation() {
-  const resident = useSelector((state) => state.resident);
+  const location = useLocation();
+  const roomNo = location.state?.roomNo;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!location.state?.roomNo) {
+      navigate("/userProfile", { replace: true });
+    }
+  }, [location.state, navigate]);
 
   return (
     <div className="flex flex-col justify-center items-center py-16 gap-8">
@@ -27,8 +34,8 @@ function Confirmation() {
           Welcome to StayMate hostel!
         </div>
         <div className="flex justify-center break-words w-full text-center px-4 sm:px-0">
-          Your room number is {resident?.roomNo} and you can get the keys from the
-          warden's office.
+          Your room number is {roomNo && roomNo} and you can get the keys from
+          the warden's office.
         </div>
         <div className="flex justify-center break-words w-full text-center px-4 sm:px-0">
           Contact us if you need any help. We hope you enjoy your stay!

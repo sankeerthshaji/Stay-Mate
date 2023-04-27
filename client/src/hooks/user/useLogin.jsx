@@ -15,10 +15,10 @@ function useLogin() {
     try {
       setLoading(true);
       const response = await axios.post("/login", { email, password });
-      const json = response.data;
-      
+      const { id, role, token } = response.data;
+      const json = { id, token };
 
-      if (json.roomNo) {
+      if (role === "resident") {
         //save user data in local storage as guest
         localStorage.setItem("resident", JSON.stringify(json));
         //save user data in redux store
@@ -26,7 +26,7 @@ function useLogin() {
           type: "RESIDENT_LOGIN",
           payload: json,
         });
-        
+
         // toast.success("Login successfull");
       } else {
         //save user data in local storage as guest
@@ -36,7 +36,7 @@ function useLogin() {
           type: "GUEST_LOGIN",
           payload: json,
         });
-        
+
         // toast.success("Login successfull");
       }
     } catch (error) {

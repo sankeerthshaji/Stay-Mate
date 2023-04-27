@@ -5,7 +5,6 @@ import axios from "../../axios/axios";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import useLogout from "../../hooks/user/useLogout";
-import store from "../../redux/store";
 
 function BookRoom() {
   const { id } = useParams(); // get the room ID from the URL params
@@ -30,7 +29,7 @@ function BookRoom() {
     async function fetchRoomData() {
       try {
         const response = await axios.get(`/roomDetails/${id}`);
-        
+
         setRoomData({
           details: response.data.roomDetails,
           dynamicRent: response.data.dynamicRent,
@@ -69,7 +68,6 @@ function BookRoom() {
   };
 
   const handlePayment = async () => {
-    
     try {
       setLoading(true);
       if (resident) {
@@ -95,7 +93,6 @@ function BookRoom() {
         }
       );
       const order = response?.data?.order;
-      
 
       let options = {
         key: "rzp_test_tN9rva6tbuI8ng", // Enter the Key ID generated from the Dashboard
@@ -136,18 +133,13 @@ function BookRoom() {
       });
       rzp1.open();
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          handleTokenExpiration();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          toast.error("You are not authorized to perform this action.");
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
       } else {
+        // Handle other errors
+        console.error(err); // log the error message
         toast.error(err.response.data.error || "Something went wrong");
       }
     } finally {
@@ -175,15 +167,13 @@ function BookRoom() {
       )
       .then((response) => {
         if (response.data.status === "success") {
-          
-
           localStorage.removeItem("guest");
           dispatch({
             type: "GUEST_LOGOUT",
           });
 
-          const { id, roomNo, token } = response.data;
-          const json = { id, roomNo, token };
+          const { id, token, roomNo } = response.data;
+          const json = { id, token };
           localStorage.setItem("resident", JSON.stringify(json));
           dispatch({
             type: "RESIDENT_LOGIN",
@@ -191,26 +181,21 @@ function BookRoom() {
           });
 
           toast.success(response.data.message);
-          navigate("/confirmation");
+          navigate("/confirmation",{state: {roomNo}});
         } else {
           toast.error("Payment Failed");
           // navigate("/paymentFailed");
         }
       })
       .catch((err) => {
-        
         if (err.response && err.response.status === 401) {
-          if (
-            err.response.data.error === "Session timed out. Please login again."
-          ) {
-            // Handle "Session timed out" error
-            handleTokenExpiration();
-          } else if (err.response.data.error === "Request is not authorized") {
-            // Handle "Request is not authorized" error
-            toast.error("You are not authorized to perform this action.");
-          }
+          // Handle 401 errors
+          logout();
+          console.error(err); // log the error message
         } else {
-          toast.error("Something went wrong");
+          // Handle other errors
+          console.error(err); // log the error message
+          toast.error("Payment failed");
         }
       });
   }
@@ -326,6 +311,7 @@ function BookRoom() {
             <button
               onClick={handlePayment}
               className="bg-[#235784] text-white w-5/6 py-2 font-bold text-lg rounded-md transform hover:scale-110 transition duration-300"
+              disabled={loading}
             >
               {loading ? (
                 <ClipLoader size={20} color={"#fff"} />

@@ -22,11 +22,6 @@ function EditProfile() {
   const [errors, setErrors] = useState({});
   const { logout } = useLogout();
 
-  const handleTokenExpiration = () => {
-    logout();
-    navigate("/login");
-  };
-
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -35,17 +30,16 @@ function EditProfile() {
             Authorization: `Bearer ${resident.token}`,
           },
         });
-        
+
         setUserDetails(response.data.userDetails);
       } catch (err) {
-        
         if (err.response && err.response.status === 401) {
-          if (
-            err.response.data.error === "Session timed out. Please login again."
-          ) {
-            // Handle "Session timed out" error
-            handleTokenExpiration();
-          }
+          // Handle 401 errors
+          logout();
+          console.error(err); // log the error message
+        } else {
+          // Handle other errors
+          console.error(err); // log the error message
         }
       } finally {
         setLoader(false);
@@ -77,7 +71,6 @@ function EditProfile() {
         : finalImage;
 
     if (imageFile) {
-      
       setImage(imageFile);
     } else {
       toast.error("Please select an image.");
@@ -91,7 +84,6 @@ function EditProfile() {
   };
 
   const handleSubmit = async (values, actions) => {
-    
     setLoading(true);
 
     try {
@@ -110,11 +102,15 @@ function EditProfile() {
           },
         }
       );
-      
+
       toast.success(response.data.message);
       navigate("/userProfile");
     } catch (error) {
-      if (error?.response && error?.response?.data?.errors) {
+      if (err.response && err.response.status === 401) {
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (error?.response && error?.response?.data?.errors) {
         setErrors(error.response.data.errors);
       } else {
         toast.error(error?.response?.data?.error);

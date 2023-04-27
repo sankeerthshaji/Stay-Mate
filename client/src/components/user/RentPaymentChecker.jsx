@@ -30,14 +30,13 @@ function RentPaymentChecker({ children }) {
           return;
         }
       } catch (err) {
-        
         if (err.response && err.response.status === 401) {
-          if (
-            err.response.data.error === "Session timed out. Please login again."
-          ) {
-            // Handle "Session timed out" error
-            logout();
-          }
+          // Handle 401 errors
+          logout();
+          console.error(err); // log the error message
+        } else {
+          // Handle other errors
+          console.error(err); // log the error message
         }
       } finally {
         setLoading(false);

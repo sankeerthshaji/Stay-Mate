@@ -30,7 +30,6 @@ import RentPaid from "./pages/user/RentPaid";
 import RentConfirmationPage from "./pages/user/RentConfirmationPage";
 import PaidRents from "./pages/admin/PaidRents";
 import UnpaidRents from "./pages/admin/UnpaidRents";
-import RentPaymentChecker from "./components/user/RentPaymentChecker";
 import GuestDetailsPage from "./pages/admin/GuestDetailsPage";
 import ResidentDetailsPage from "./pages/admin/ResidentDetailsPage";
 
@@ -55,7 +54,7 @@ function App() {
       dispatch({ type: "ADMIN_LOGIN", payload: admin });
     }
     setLoading(false);
-  }, [dispatch]);
+  },[dispatch]);
 
   if (loading) {
     return <Loader />;
@@ -124,9 +123,7 @@ function App() {
             path="/confirmation"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <ConfirmationPage />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )
@@ -137,9 +134,7 @@ function App() {
             path="/userProfile"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <UserProfilePage />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )
@@ -150,9 +145,7 @@ function App() {
             path="/editProfile"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <EditProfilePage />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )
@@ -163,9 +156,7 @@ function App() {
             path="/changePassword"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <ChangePassword />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )
@@ -190,9 +181,7 @@ function App() {
             path="/hostelMenu"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <HostelMenu />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )
@@ -215,9 +204,7 @@ function App() {
             path="/review"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <ReviewPage />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )
@@ -233,9 +220,7 @@ function App() {
             path="/leaveLetters"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <LeaveLetter />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )
@@ -251,9 +236,7 @@ function App() {
             path="/complaints"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <Complaint />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )
@@ -269,9 +252,7 @@ function App() {
             path="/rentDue"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <RentDuePage />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )
@@ -282,9 +263,7 @@ function App() {
             path="/rentPaid"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <RentPaid />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )
@@ -295,9 +274,7 @@ function App() {
             path="/rentConfirmation"
             element={
               resident ? (
-                <RentPaymentChecker>
                   <RentConfirmationPage />
-                </RentPaymentChecker>
               ) : (
                 <Navigate to="/login" />
               )

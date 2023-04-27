@@ -13,7 +13,7 @@ function CustomTextArea({ label, errorMessage, ...props }) {
         <textarea
           {...field}
           {...props}
-          className={`w-full rounded-lg shadow-sm ${
+          className={`w-full resize-none rounded-lg shadow-sm ${
             showError ? "border-red-500 border-2" : ""
           }`}
         />

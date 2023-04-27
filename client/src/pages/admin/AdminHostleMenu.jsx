@@ -31,10 +31,9 @@ function AdminHostelMenu() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      
+
       setHostelMenu(response.data.hostelMenu);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -101,16 +100,14 @@ function AdminHostelMenu() {
   async function fetchMenuDetails(id) {
     setLoader(true);
     try {
-      
       const response = await axios.get(`/admin/hostelMenu/${id}`, {
         headers: {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      
+
       setMenuDetails(response.data.menuDetails);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -129,7 +126,6 @@ function AdminHostelMenu() {
     event.preventDefault();
     setLoading(true);
     try {
-      
       const id = menuDetails._id;
       const response = await axios.put(
         `/admin/hostelMenu/${id}`,
@@ -142,21 +138,19 @@ function AdminHostelMenu() {
           },
         }
       );
-      
+
       toast.success(response.data.message);
       handleClose();
       fetchHostelMenu();
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
       } else {
-        toast.error(err.response.data.message || "Something went wrong");
+        // Handle other errors
+        console.error(err); // log the error message
+        toast.error(err.response.data.error || "Something went wrong");
       }
     } finally {
       setLoading(false);
@@ -292,16 +286,15 @@ function AdminHostelMenu() {
   );
 
   return (
-    <div>
-      {loader ? (
-        <Loader />
-      ) : (
-        <div className="flex h-screen">
-          <div className="w-16 flex-shrink-0">
-            <AdminSideBar />
-          </div>
-          <div className="flex-1 overflow-x-auto p-5 bg-gray-100">
-            {showModal && modal}
+    <div className="flex h-screen">
+      <div className="w-16 flex-shrink-0">
+        <AdminSideBar />
+      </div>
+      <div className="flex-1 bg-gray-50">
+        {loader ? (
+          <Loader />
+        ) : (
+          <div className="overflow-x-auto p-5">
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
                 Hostel Menu
@@ -309,8 +302,8 @@ function AdminHostelMenu() {
             </div>
             <AdminTable columns={columns} data={hostelMenu} />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

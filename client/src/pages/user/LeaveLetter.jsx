@@ -36,17 +36,16 @@ function LeaveLetter() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      
+
       setLeaveLetters(response.data.leaveLetters);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);
@@ -95,7 +94,7 @@ function LeaveLetter() {
           },
         }
       );
-      
+
       handleClose();
       fetchLeaveLetters();
       Swal.fire({
@@ -103,14 +102,10 @@ function LeaveLetter() {
         text: response.data.message,
       });
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
       } else if (err.response && err.response.status === 422) {
         if (err?.response?.data?.errors) {
           setErrors(err.response.data.errors);
@@ -167,11 +162,7 @@ function LeaveLetter() {
 
             <div className="flex flex-col gap-4">
               <button className="bg-blue-500 text-white p-2 rounded-md transform hover:scale-105 transition duration-300">
-                {loading ? (
-                  <ClipLoader size={20} color={"#fff"} />
-                ) : (
-                  "Submit"
-                )}
+                {loading ? <ClipLoader size={20} color={"#fff"} /> : "Submit"}
               </button>
             </div>
           </Form>
@@ -181,15 +172,15 @@ function LeaveLetter() {
   );
 
   return (
-    <div>
-      {loader ? (
-        <Loader />
-      ) : (
-        <div className="flex h-screen">
-          <div className="w-16 flex-shrink-0">
-            <UserSideBar />
-          </div>
-          <div className="flex-1 overflow-x-auto p-5 bg-gray-100">
+    <div className="flex h-screen">
+      <div className="w-16 flex-shrink-0">
+        <UserSideBar />
+      </div>
+      <div className="flex-1 bg-gray-50">
+        {loader ? (
+          <Loader />
+        ) : (
+          <div className="overflow-x-auto p-5">
             {showModal && modal}
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
@@ -204,8 +195,8 @@ function LeaveLetter() {
             </div>
             <UserTable columns={columns} data={leaveLetters} />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -23,9 +23,9 @@ function RentDue() {
 
   async function fetchRoomData() {
     try {
-      const roomNo = resident?.roomNo;
+      const userId = resident?.id;
       const response = await axios.get("/roomTypeDetails", {
-        params: { roomNo },
+        params: { userId },
         headers: {
           Authorization: `Bearer ${resident.token}`,
           // add any additional headers here
@@ -145,21 +145,16 @@ function RentDue() {
       });
       rzp1.open();
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          toast.error("You are not authorized to perform this action.");
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
       } else {
+        // Handle other errors
+        console.error(err); // log the error message
         toast.error(err.response.data.error || "Something went wrong");
       }
-    } finally {
+    }finally {
       setLoading(false);
     }
   };
@@ -191,19 +186,14 @@ function RentDue() {
           // navigate("/paymentFailed");
         }
       })
-      .catch((err) => {
-        
+      .catch ((err) => {
         if (err.response && err.response.status === 401) {
-          if (
-            err.response.data.error === "Session timed out. Please login again."
-          ) {
-            // Handle "Session timed out" error
-            logout();
-          } else if (err.response.data.error === "Request is not authorized") {
-            // Handle "Request is not authorized" error
-            toast.error("You are not authorized to perform this action.");
-          }
+          // Handle 401 errors
+          logout();
+          console.error(err); // log the error message
         } else {
+          // Handle other errors
+          console.error(err); // log the error message
           toast.error("Something went wrong");
         }
       });

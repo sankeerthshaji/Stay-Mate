@@ -5,7 +5,7 @@ function Loader() {
 
     const loaderProps = {
         loading: true,
-        size: 65,
+        size: 50,
         duration: 1,
         colors: ['#5e22f0', '#ffffff']
     }

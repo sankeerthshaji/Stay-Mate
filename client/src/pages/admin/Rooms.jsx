@@ -21,17 +21,16 @@ function Rooms() {
             Authorization: `Bearer ${admin.token}`,
           },
         });
-        
+
         setRooms(response.data.rooms);
       } catch (err) {
-        
         if (err.response && err.response.status === 401) {
-          if (
-            err.response.data.error === "Session timed out. Please login again."
-          ) {
-            // Handle "Session timed out" error
-            adminLogout();
-          }
+          // Handle 401 errors
+          adminLogout();
+          console.error(err); // log the error message
+        } else {
+          // Handle other errors
+          console.error(err); // log the error message
         }
       } finally {
         setLoading(false);
@@ -64,15 +63,15 @@ function Rooms() {
   ];
 
   return (
-    <div>
-      {loading ? (
-        <Loader />
-      ) : (
-        <div className="flex h-screen">
-          <div className="w-16 flex-shrink-0">
-            <AdminSideBar />
-          </div>
-          <div className="flex-1 overflow-x-auto p-5 bg-gray-100">
+    <div className="flex h-screen">
+      <div className="w-16 flex-shrink-0">
+        <AdminSideBar />
+      </div>
+      <div className="flex-1 bg-gray-50">
+        {loading ? (
+          <Loader />
+        ) : (
+          <div className="overflow-x-auto p-5">
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
                 Hostel Rooms
@@ -80,10 +79,10 @@ function Rooms() {
             </div>
             <AdminTable columns={columns} data={rooms} />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
 
-export default Rooms
+export default Rooms;

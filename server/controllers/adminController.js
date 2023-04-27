@@ -67,17 +67,17 @@ const removeAsResident = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      throw new Error("User not found");
     }
 
     if (user.role !== "resident") {
-      return res.status(400).json({ message: "User is not a resident" });
+      throw new Error("User is not a resident");
     }
 
     const room = await Room.findOne({ roomNo: user.roomNo });
 
     if (!room) {
-      return res.status(404).json({ message: "Room not found" });
+      throw new Error("Room not found");
     }
 
     room.occupants -= 1;
@@ -89,7 +89,7 @@ const removeAsResident = async (req, res) => {
     const roomType = await RoomType.findById(room.roomType);
 
     if (!roomType) {
-      return res.status(404).json({ message: "Room type not found" });
+      throw new Error("Room type not found");
     }
 
     if (roomType.status === "unavailable") {
@@ -102,10 +102,10 @@ const removeAsResident = async (req, res) => {
     await user.save();
     await room.save();
 
-    return res.json({ message: "User removed as resident" });
+    return res.status(200).json({ message: "User removed as resident" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -187,9 +187,7 @@ const updateMenuDetails = async (req, res) => {
       }) ||
       !validator.isLength(menuDetails.dinner, { min: 1, max: 100 })
     ) {
-      return res.status(400).json({
-        message: "Menu item must be 1-100 characters long",
-      });
+      throw new Error("Menu item must be between 1 to 100 characters");
     }
 
     // if (
@@ -373,6 +371,10 @@ const assignRoom = async (req, res) => {
     }
 
     const oldRoom = await Room.findOne({ roomNo: oldRoomNo });
+    if (newRoomId === oldRoom._id.toString()) {
+      return res.status(200).json({ message: "Room No already assigned" });
+    }
+
     // Decrease the no of occupants by 1 for occupants field in the old room document
     oldRoom.occupants -= 1;
 
@@ -401,7 +403,7 @@ const assignRoom = async (req, res) => {
     resident.roomNo = newRoom.roomNo;
     await resident.save();
 
-    res.status(200).json({ message: "Room No changed successfully!" });
+    res.status(200).json({ status: true });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

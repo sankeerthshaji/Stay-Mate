@@ -31,9 +31,9 @@ function Review() {
   async function fetchRoomData() {
     try {
       setLoader(true);
-      const roomNo = resident?.roomNo;
+      const userId = resident?.id;
       const response = await axios.get("/roomTypeDetails", {
-        params: { roomNo },
+        params: { userId },
         headers: {
           Authorization: `Bearer ${resident.token}`,
           // add any additional headers here
@@ -42,14 +42,13 @@ function Review() {
       
       setRoomTypeDetails(response.data.roomTypeDetails);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);
@@ -67,14 +66,13 @@ function Review() {
       
       setReview(response.data.hostelReview);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);

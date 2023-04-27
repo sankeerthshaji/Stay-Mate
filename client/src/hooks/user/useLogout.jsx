@@ -10,8 +10,6 @@ export default function useLogout() {
       dispatch({
         type: "GUEST_LOGOUT",
       });
-      
-      
     }
     //check if user is logged in as resident
     if (localStorage.getItem("resident")) {
@@ -21,6 +19,5 @@ export default function useLogout() {
       });
     }
   };
-
   return { logout };
 }

@@ -13,6 +13,10 @@ const roomTypeSchema = new Schema(
       required: true,
       unique: true,
     },
+    description: {
+      type: String,
+      required: true,
+    },
     capacity: {
       type: Number,
       required: true,

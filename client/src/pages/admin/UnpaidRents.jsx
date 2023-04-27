@@ -26,17 +26,16 @@ function UnpaidRents() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      
+
       setUnpaidRents(response.data.unpaidRents);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);
@@ -58,20 +57,21 @@ function UnpaidRents() {
     },
     {
       Header: "Due Date",
-      Cell: ({ row }) => new Date(row.original.lastDateWithFine).toLocaleDateString(),
+      Cell: ({ row }) =>
+        new Date(row.original.lastDateWithFine).toLocaleDateString(),
     },
   ];
 
   return (
-    <div>
-      {loader ? (
-        <Loader />
-      ) : (
-        <div className="flex h-screen">
-          <div className="w-16 flex-shrink-0">
-            <AdminSideBar />
-          </div>
-          <div className="flex-1 overflow-x-auto p-5 bg-gray-100">
+    <div className="flex h-screen">
+      <div className="w-16 flex-shrink-0">
+        <AdminSideBar />
+      </div>
+      <div className="flex-1 bg-gray-50">
+        {loader ? (
+          <Loader />
+        ) : (
+          <div className="overflow-x-auto p-5">
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
                 Rent Management
@@ -79,8 +79,7 @@ function UnpaidRents() {
               <div className="flex gap-2">
                 <button
                   className="text-gray-900 border border-gray-900 hover:bg-gray-900 hover:text-white font-bold p-1 sm:p-2 rounded-md transition duration-300"
-                  onClick={()=>navigate("/admin/paidRents")}
-
+                  onClick={() => navigate("/admin/paidRents")}
                 >
                   Paid Rents
                 </button>
@@ -94,8 +93,8 @@ function UnpaidRents() {
             </div>
             <AdminTable columns={columns} data={unpaidRents} />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

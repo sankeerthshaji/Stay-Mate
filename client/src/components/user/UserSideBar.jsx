@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { BiFoodMenu } from "react-icons/bi";
 import { BsCreditCardFill } from "react-icons/bs";
@@ -11,12 +11,16 @@ import { BsEnvelope } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
 import { TbHomeMove } from "react-icons/tb";
 import useLogout from "../../hooks/user/useLogout";
+import { toast } from "react-toastify";
 
 function UserSideBar() {
   const { logout } = useLogout();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
+    navigate("/login");
+    toast.success("Logout successfully");
   };
   return (
     <div className="fixed top-0 left-0 h-screen w-16 m-0 flex flex-col bg-gray-900 text-white shadow-lg">

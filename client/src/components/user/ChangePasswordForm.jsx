@@ -56,15 +56,9 @@ function ChangePasswordForm() {
     });
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          handleTokenExpiration();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          toast.error("You are not authorized to perform this action.");
-        }
+       // Handle 401 error
+       logout();
+       console.error(err)
       } else {
         Swal.fire({
           icon: 'error',

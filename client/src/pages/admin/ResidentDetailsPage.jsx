@@ -34,7 +34,7 @@ function ResidentDetailsPage() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      
+
       setResidentDetails(response.data.residentDetails);
       setRoomTypeDetails(response.data.roomTypeDetails);
       fetchRooms(response.data.roomTypeDetails._id);
@@ -48,17 +48,13 @@ function ResidentDetailsPage() {
       const formattedDate = `${day}/${month}/${year}`;
       setFormattedDateOfBirth(formattedDate);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     }
   };
@@ -70,20 +66,16 @@ function ResidentDetailsPage() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      
+
       setRooms(response.data.rooms);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);
@@ -125,26 +117,20 @@ function ResidentDetailsPage() {
           },
         }
       );
-      
+      if (response.data.status) {
+        fetchResidentDetails();
+      }
       Swal.fire({
         icon: "success",
         title: "Success",
-        text: response.data.message,
+        text: "Room No changed successfully!",
       });
-      fetchResidentDetails();
       setShowModal(false);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
       } else {
         toast.error(err.response.data.error || "Something went wrong");
       }

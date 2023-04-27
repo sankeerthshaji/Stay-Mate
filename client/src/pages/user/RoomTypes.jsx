@@ -14,7 +14,6 @@ function RoomTypes() {
       setLoaded(true);
       try {
         const response = await axios.get("/roomTypes");
-
         setRoomTypes(response.data);
       } catch (error) {
         console.error(error.message);

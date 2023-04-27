@@ -13,6 +13,7 @@ const LeaveLetter = require("../models/leaveLetter");
 const Complaint = require("../models/complaint");
 const RentDue = require("../models/rentDue");
 const moment = require("moment");
+const mongoose = require("mongoose");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -103,7 +104,7 @@ const verifySignupOtp = async (req, res) => {
 
       res.status(200).json({ message: "OTP verified successfully" });
     } else {
-      res.status(400).json({ message: "Invalid OTP" });
+      throw new Error("Invalid OTP");
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -119,14 +120,14 @@ const loginUser = async (req, res) => {
     //check if user role is guest or resident
     if (user.role == "guest") {
       const token = createToken(user._id);
-      res.status(200).json({ id: user._id, token });
+      res.status(200).json({ id: user._id, role: user.role, token });
       return;
     }
 
     //check if user is resident
     if (user.role == "resident") {
       const token = createToken(user._id);
-      res.status(200).json({ id: user._id, roomNo: user.roomNo, token });
+      res.status(200).json({ id: user._id, role: user.role, token });
       return;
     }
   } catch (error) {
@@ -261,7 +262,7 @@ const createBookingOrder = async (req, res) => {
     const user = await User.findById(userId);
 
     if (user.roomNo) {
-      return res.status(400).json({ error: "You have already booked a room" });
+      throw new Error("You already have a room booked.");
     }
 
     let instance = new Razorpay({
@@ -330,9 +331,7 @@ const verifyBookingPayment = async (req, res) => {
 
       // Check if user already has a roomNo field
       if (user.roomNo) {
-        return res
-          .status(400)
-          .json({ error: "You have already booked a room" });
+        throw new Error("You already have a room booked.");
       }
 
       user.roomNo = availableRoom.roomNo;
@@ -378,7 +377,7 @@ const verifyBookingPayment = async (req, res) => {
         roomNo: availableRoom.roomNo,
       });
     } else {
-      res.status(400).json({ message: "Payment Failed" });
+      res.status(400).json({ message: "Payment verification failed." });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -387,34 +386,34 @@ const verifyBookingPayment = async (req, res) => {
 
 // async function createRoom() {
 //   const newRoom = new Room({
-//     roomNo: '110',
-//     roomType: '64147dddca39c8e3730a3095',
-//     capacity: 6
+//     roomNo: "D10",
+//     roomType: "6448c83150c5c7158eabcdf0",
+//     capacity: 6,
+//     __v: 0,
 //   });
 
 //   try {
 //     const savedRoom = await newRoom.save();
-//
 //   } catch (error) {
-//     console.error('Error creating new room:', error);
+//     console.error("Error creating new room:", error);
 //   }
 // }
 
-async function createMenu() {
-  const newMenu = new Menu({
-    day: "Sunday",
-    breakfast: "Dosa, Chutney, tea",
-    lunch: "Rice, Chena-Parippu curry, Beetroot Upperi, Achar, Pappadam",
-    snacks: "Black Tea and Enna Kadi",
-    dinner: "Chapathi, Veg kuruma",
-  });
+// async function createMenu() {
+//   const newMenu = new Menu({
+//     day: "Sunday",
+//     breakfast: "Dosa, Chutney, tea",
+//     lunch: "Rice, Chena-Parippu curry, Beetroot Upperi, Achar, Pappadam",
+//     snacks: "Black Tea and Enna Kadi",
+//     dinner: "Chapathi, Veg kuruma",
+//   });
 
-  try {
-    const savedMenu = await newMenu.save();
-  } catch (error) {
-    console.error("Error creating new menu:", error);
-  }
-}
+//   try {
+//     const savedMenu = await newMenu.save();
+//   } catch (error) {
+//     console.error("Error creating new menu:", error);
+//   }
+// }
 
 // Fetching user details
 const fetchUserDetails = async (req, res) => {
@@ -526,26 +525,40 @@ const fetchHostelMenu = async (req, res) => {
 
 const getRoomTypeDetails = async (req, res) => {
   try {
-    const roomNo = req.query.roomNo;
-    // Find the room document that matches the roomNo
-    const room = await Room.findOne({ roomNo });
-
+    const userWithRoom = await User.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(req.query.userId) },
+      },
+      {
+        $lookup: {
+          from: "rooms",
+          localField: "roomNo",
+          foreignField: "roomNo",
+          as: "room",
+        },
+      },
+      {
+        $unwind: "$room",
+      },
+    ]);
+    const room = userWithRoom[0].room;
+    
     if (!room) {
-      return res.status(404).json({ error: "Room not found" });
+      throw new Error("Room not found");
     }
 
     // Find the roomType document that matches the roomType ID in the room document
     const roomType = await RoomType.findById(room.roomType);
 
     if (!roomType) {
-      return res.status(404).json({ error: "Room type not found" });
+      throw new Error("Room type not found");
     }
 
     // Return the roomType document to the frontend
     res.json({ roomTypeDetails: roomType });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -756,7 +769,7 @@ const verifyRentPayment = async (req, res) => {
         message: "Rent Payment Successful",
       });
     } else {
-      res.status(400).json({ message: "Payment Failed" });
+      throw new Error("Payment Failed");
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -867,6 +880,107 @@ const getRentPaymentStatus = async (req, res) => {
   }
 };
 
+// const createRoomType = async (req, res) => {
+//   try {
+//     const newRoomType = new RoomType({
+//       title: "Standard 6 Bed Dorm Shared Bathroom",
+//       name: "Six-Share",
+//       description:
+//         "Diam phasellus vestibulum lorem sed risus ultricies tristique.",
+//       capacity: 6,
+//       rent: 5000,
+//       admissionFees: 1000,
+//       image: {
+//         url: "https://res.cloudinary.com/dfiqqrico/image/upload/v1679060337/stayMate/01_dsj1ys.webp",
+//         filename: "stayMate/01_dsj1ys",
+//       },
+//       status: "available",
+//     });
+//     await newRoomType.save();
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+const getAvailableRoomTypes = async (req, res) => {
+  try {
+    const availableRoomTypes = await RoomType.find({
+      status: "available",
+    }).select("name");
+    console.log(availableRoomTypes);
+    res.status(200).json({ availableRoomTypes });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const assignNewRoomType = async (req, res) => {
+  try {
+    const { userId, roomNo, newRoomTypeId } = req.body;
+    if (!newRoomTypeId) {
+      throw new Error("Please select a Room Type.");
+    }
+
+    const oldRoom = await Room.findOne({ roomNo });
+    if (newRoomTypeId === oldRoom.roomType.toString()) {
+      return res.status(200).json({ status: false });
+    }
+    // Decrease the no of occupants by 1 for occupants field in the old room document
+    oldRoom.occupants -= 1;
+    // Check whether the status of old room is occupied, then update the status to available
+    if (oldRoom.status === "occupied") {
+      oldRoom.status = "available";
+    }
+    // Save the updated old room document
+    await oldRoom.save();
+
+    const oldRoomType = await RoomType.findById(oldRoom.roomType);
+    if (oldRoomType.status === "occupied") {
+      oldRoomType.status = "available";
+      await oldRoomType.save();
+    }
+
+    const newRoom = await Room.findOne({
+      roomType: newRoomTypeId,
+      status: "available",
+    });
+    // If no available rooms found, return error
+    if (!newRoom) {
+      throw new Error("No rooms available for this room type");
+    }
+    // Increase the no of occupants to 1 for occupants field in the selected document
+    newRoom.occupants += 1;
+    // Check whether the no of occupants is equal to the capacity field in the document, if it is equal, then update the status to unavailable
+    if (newRoom.occupants === newRoom.capacity) {
+      newRoom.status = "occupied";
+    }
+    // Save the updated room document
+    await newRoom.save();
+
+    // Update the roomNo field in user document
+    const user = await User.findById(userId);
+    user.roomNo = newRoom.roomNo;
+    // Save the updated user document
+    await user.save();
+
+    // Check if the status of all the rooms of the New RoomType is 'occupied' and update the status field accordingly
+    const newRoomType = await RoomType.findById(newRoomTypeId);
+    const roomsOfType = await Room.find({ roomType: newRoomTypeId });
+    const allOccupied = roomsOfType.every((room) => room.status === "occupied");
+    if (allOccupied) {
+      newRoomType.status = "unavailable";
+      await newRoomType.save();
+    }
+    res.status(200).json({
+      newRoomNo: newRoom.roomNo,
+      newRoomType: newRoomType.name,
+      status: true,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getRoomTypes,
   admission,
@@ -877,8 +991,9 @@ module.exports = {
   getRoomDetails,
   createBookingOrder,
   verifyBookingPayment,
+  // createRoomType,
   // createRoom,
-  createMenu,
+  // createMenu,
   fetchUserDetails,
   updateProfile,
   changePassword,
@@ -897,4 +1012,6 @@ module.exports = {
   verifyRentPayment,
   getRentPaid,
   getRentPaymentStatus,
+  getAvailableRoomTypes,
+  assignNewRoomType,
 };

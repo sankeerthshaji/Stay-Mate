@@ -9,8 +9,9 @@ const {
   getRoomDetails,
   createBookingOrder,
   verifyBookingPayment,
+  // createRoomType,
   //   createRoom,
-  createMenu,
+  // createMenu,
   fetchUserDetails,
   updateProfile,
   changePassword,
@@ -29,6 +30,8 @@ const {
   createRentOrder,
   verifyRentPayment,
   getRentPaymentStatus,
+  getAvailableRoomTypes,
+  assignNewRoomType,
 } = require("../controllers/userController");
 const admissionValidationMiddleware = require("../middlewares/validations/admission");
 const updateProfileValidationMiddleware = require("../middlewares/validations/updateProfile");
@@ -69,6 +72,8 @@ router.post("/createBookingOrder", requireAuthGuest, createBookingOrder);
 
 router.post("/verifyBookingPayment", requireAuthGuest, verifyBookingPayment);
 
+// router.post("/createRoomType", createRoomType)
+
 // router.post("/createRoom", createRoom)
 
 router.get("/rentPaymentStatus", requireAuthResident, getRentPaymentStatus);
@@ -85,7 +90,7 @@ router.patch(
 
 router.post("/changePassword/:id", requireAuthResident, changePassword);
 
-router.post("/createMenu", createMenu);
+// router.post("/createMenu", createMenu);
 
 router.get("/fetchHostelMenu", requireAuthResident, fetchHostelMenu);
 
@@ -121,5 +126,9 @@ router.post("/createRentOrder", requireAuthGuest, createRentOrder);
 router.post("/verifyRentPayment", requireAuthGuest, verifyRentPayment);
 
 router.get("/rentPaid", requireAuthResident, getRentPaid);
+
+router.get("/availableRoomTypes", requireAuthResident, getAvailableRoomTypes);
+
+router.post("/assignNewRoomType", requireAuthResident, assignNewRoomType)
 
 module.exports = router;

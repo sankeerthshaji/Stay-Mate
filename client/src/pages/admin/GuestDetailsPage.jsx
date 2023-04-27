@@ -26,9 +26,7 @@ function GuestDetailsPage() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      
       setGuestDetails(response.data.guestDetails);
-
       // Format date of birth
       const dateStr = response.data.guestDetails.dateOfBirth;
       const date = new Date(dateStr);
@@ -38,17 +36,13 @@ function GuestDetailsPage() {
       const formattedDate = `${day}/${month}/${year}`;
       setFormattedDateOfBirth(formattedDate);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);

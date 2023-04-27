@@ -17,7 +17,6 @@ function Complaint() {
   const [loading, setLoading] = useState(false);
   const [loader, setLoader] = useState(true);
   const [complaints, setComplaints] = useState([]);
-  const [noComplaints, setNoComplaints] = useState(false);
   const [errors, setErrors] = useState({});
   const resident = useSelector((state) => state.resident);
   const { logout } = useLogout();
@@ -36,17 +35,9 @@ function Complaint() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      
+
       setComplaints(response.data.complaints);
-      if(response.data.complaints.length === 0){
-        Swal.fire({
-          icon: "info",
-          text: "You have not registered any complaints yet.",
-        });
-        setNoComplaints(true);
-      }
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
         if (
           err.response.data.error === "Session timed out. Please login again."
@@ -81,7 +72,7 @@ function Complaint() {
           },
         }
       );
-      
+
       handleClose();
       fetchComplaints();
       Swal.fire({
@@ -89,14 +80,10 @@ function Complaint() {
         text: response.data.message,
       });
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
       } else if (err.response && err.response.status === 422) {
         if (err?.response?.data?.errors) {
           setErrors(err.response.data.errors);
@@ -195,15 +182,15 @@ function Complaint() {
   ];
 
   return (
-    <div>
-      {loader ? (
-        <Loader />
-      ) : (
-        <div className="flex h-screen">
-          <div className="w-16 flex-shrink-0">
-            <UserSideBar />
-          </div>
-          <div className="flex-1 overflow-x-auto p-5 bg-gray-100">
+    <div className="flex h-screen">
+      <div className="w-16 flex-shrink-0">
+        <UserSideBar />
+      </div>
+      <div className="flex-1 bg-gray-50">
+        {loader ? (
+          <Loader />
+        ) : (
+          <div className="overflow-x-auto p-5">
             {showModal && modal}
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
@@ -216,10 +203,10 @@ function Complaint() {
                 Add Complaint
               </button>
             </div>
-            <UserTable columns={columns} data={complaints} noComplaints={noComplaints}/>
+            <UserTable columns={columns} data={complaints} />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -23,17 +23,16 @@ function LeaveLetters() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      
+
       setLeaveLetters(response.data.leaveLetters);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);
@@ -60,24 +59,22 @@ function LeaveLetters() {
   ];
 
   return (
-    <div>
-      {loader ? (
-        <Loader />
-      ) : (
-        <div className="flex h-screen">
-          <div className="w-16 flex-shrink-0">
-            <AdminSideBar />
-          </div>
-          <div className="flex-1 overflow-x-auto p-5 bg-gray-100">
+    <div className="flex h-screen">
+      <div className="w-16 flex-shrink-0">
+        <AdminSideBar />
+      </div>
+      <div className="flex-1 bg-gray-50">
+        {loader ? (
+          <Loader />
+        ) : (
+          <div className="overflow-x-auto p-5">
             <div className="flex justify-between p-3">
-              <h1 className="flex text-2xl font-bold text-center">
-                Leave Letters
-              </h1>
+              <h1 className="flex text-2xl font-bold text-center">Leave Letters</h1>
             </div>
             <AdminTable columns={columns} data={leaveLetters} />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

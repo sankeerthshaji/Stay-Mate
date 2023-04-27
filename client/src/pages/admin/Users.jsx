@@ -17,11 +17,6 @@ function Users() {
   const { logout } = useLogout();
   const { adminLogout } = useAdminLogout();
 
-  const handleTokenExpiration = () => {
-    adminLogout();
-    toast.error("Your session has expired. Please log in again.");
-  };
-
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -30,20 +25,16 @@ function Users() {
           Authorization: `Bearer ${admin.token}`,
         },
       });
-      
+
       setUsers(response.data.users);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoading(false);
@@ -65,23 +56,18 @@ function Users() {
           },
         }
       );
-      
+
       logout();
       toast.success("User blocked successfully");
       fetchUsers();
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          handleTokenExpiration();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          toast.error("You are not authorized to perform this action.");
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
       } else {
+        // Handle other errors
+        console.error(err); // log the error message
         toast.error("Something went wrong");
       }
     }
@@ -98,22 +84,17 @@ function Users() {
           },
         }
       );
-      
+
       toast.success("User unblocked successfully");
       fetchUsers();
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          handleTokenExpiration();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          toast.error("You are not authorized to perform this action.");
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
       } else {
+        // Handle other errors
+        console.error(err); // log the error message
         toast.error("Something went wrong");
       }
     }
@@ -132,24 +113,19 @@ function Users() {
           },
         }
       );
-      
+
       logout();
       fetchUsers();
       toast.success("User removed as resident successfully");
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          handleTokenExpiration();
-        } else if (err.response.data.error === "Request is not authorized") {
-          // Handle "Request is not authorized" error
-          toast.error("You are not authorized to perform this action.");
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
       } else {
-        toast.error("Something went wrong");
+        // Handle other errors
+        console.error(err); // log the error message
+        toast.error(err.response.data.error || "Something went wrong");
       }
     }
   };
@@ -294,15 +270,15 @@ function Users() {
   ];
 
   return (
-    <div>
-      {loading ? (
-        <Loader />
-      ) : (
-        <div className="flex h-screen">
-          <div className="w-16 flex-shrink-0">
-            <AdminSideBar />
-          </div>
-          <div className="flex-1 overflow-x-auto p-5 bg-gray-100">
+    <div className="flex h-screen">
+      <div className="w-16 flex-shrink-0">
+        <AdminSideBar />
+      </div>
+      <div className="flex-1 bg-gray-50">
+        {loading ? (
+          <Loader />
+        ) : (
+          <div className="overflow-x-auto p-5">
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
                 User Management
@@ -310,8 +286,8 @@ function Users() {
             </div>
             <AdminTable columns={columns} data={users} />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
