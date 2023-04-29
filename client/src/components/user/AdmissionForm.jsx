@@ -144,7 +144,7 @@ function AdmissionForm() {
                 />
 
                 <CustomInput
-                  label="Confirm Password"  
+                  label="Confirm Password"
                   name="confirmPassword"
                   id="Confirm Password"
                   placeholder="Enter your password again"
@@ -285,34 +285,6 @@ function AdmissionForm() {
                   type="text"
                   errorMessage={errors?.pincode}
                 />
-
-                {/* <CustomSelect
-                    label="Room Type"
-                    name="roomType"
-                    errorMessage={errors?.roomType}
-                  >
-                    <option value="">Please select Room Type</option>
-                    {roomTypes.map((roomType) => (
-                      <option key={roomType._id} value={roomType._id}>
-                        {roomType.title}
-                      </option>
-                    ))}
-                  </CustomSelect> */}
-
-                {/* <CustomSelect
-                  label="Current Education Status"
-                  name="currentEducationStatus"
-                  errorMessage={errors?.currentEducationStatus}
-                >
-                  <option value="">Select an option</option>
-                  <option value="currently_studying">
-                    Candidate currently studying
-                  </option>
-                  <option value="not_currently_studying">
-                    Candidate not currently studying
-                  </option>
-                </CustomSelect> */}
-
               </div>
               <div className="flex justify-center py-16">
                 <Avatar

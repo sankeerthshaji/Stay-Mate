@@ -8,7 +8,7 @@ import { ClipLoader } from "react-spinners";
 function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ function ForgotPasswordForm() {
 
   const handleClick = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await axios.post("/forgotPassword", { email });
       setError("");
       toast.success(response.data.message);
@@ -31,7 +31,7 @@ function ForgotPasswordForm() {
       setError(err.response.data.error);
       //   toast.error(error.response.data.error || "Something went wrong");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
   return (
@@ -62,7 +62,11 @@ function ForgotPasswordForm() {
             onClick={handleClick}
             className="w-full bg-[#3b5998] text-white py-2 rounded-md transform hover:scale-105 transition duration-300"
           >
-            {loading ? <ClipLoader size={20} color={"#fff"} /> : "Reset Password"}
+            {loading ? (
+              <ClipLoader size={20} color={"#fff"} />
+            ) : (
+              "Reset Password"
+            )}
           </button>
         </div>
         <div className="text-center">

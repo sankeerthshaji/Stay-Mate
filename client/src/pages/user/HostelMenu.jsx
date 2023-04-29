@@ -28,6 +28,10 @@ function HostelMenu() {
           // Handle 401 errors
           logout();
           console.error(err); // log the error message
+        } else if (err.response && err.response.status === 403) {
+          // Handle 403 errors
+          logout();
+          console.error(err); // log the error message
         } else {
           // Handle other errors
           console.error(err); // log the error message

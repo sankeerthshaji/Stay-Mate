@@ -1,6 +1,6 @@
-import React from 'react'
-import ChangePasswordForm from '../../components/user/ChangePasswordForm'
-import UserSideBar from '../../components/user/UserSideBar'
+import React from "react";
+import ChangePasswordForm from "../../components/user/ChangePasswordForm";
+import UserSideBar from "../../components/user/UserSideBar";
 
 function ChangePassword() {
   return (
@@ -10,7 +10,7 @@ function ChangePassword() {
       </div>
       <ChangePasswordForm />
     </div>
-  )
+  );
 }
 
-export default ChangePassword
+export default ChangePassword;

@@ -1,15 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAdminLogin from "../../hooks/admin/useAdminLogin";
 import { ClipLoader } from "react-spinners";
-
 
 function AdminLoginForm() {
   const inputRef = useRef(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { adminLogin, error, loading } = useAdminLogin();
-  const navigate = useNavigate();
 
   useEffect(() => {
     inputRef.current.focus();
@@ -31,7 +29,6 @@ function AdminLoginForm() {
             </div>
           </div>
           <form className="grid gap-6" onSubmit={handleSubmit}>
-            
             <div>
               <input
                 className="w-full border-2 border-gray-300 p-2 rounded-md"
@@ -77,7 +74,6 @@ function AdminLoginForm() {
                 {loading ? <ClipLoader size={20} color={"#fff"} /> : "Login"}
               </button>
             </div>
-
           </form>
         </div>
       </div>

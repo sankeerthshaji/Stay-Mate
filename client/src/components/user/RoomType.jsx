@@ -91,7 +91,7 @@ function RoomType({ roomType }) {
           <div>
             {roomType.status === "unavailable" ? (
               <div className="flex items-center gap-1.5">
-                <ImCross className="text-red-500"/>
+                <ImCross className="text-red-500" />
                 <p className="text-red-500 font-bold">Not Available</p>
               </div>
             ) : (

@@ -32,7 +32,7 @@ function AdminSideBar() {
         <SideBarIcon icon={<BiFoodMenu size="25" />} text="Hostel Menu" />
       </Link>
       <Link to="/admin/paidRents">
-      <SideBarIcon icon={<FaMoneyBill size="25" />} text="Rent" />
+        <SideBarIcon icon={<FaMoneyBill size="25" />} text="Rent" />
       </Link>
       <Link to="/admin/reviews">
         <SideBarIcon icon={<MdReviews size="25" />} text="Reviews" />
@@ -47,12 +47,8 @@ function AdminSideBar() {
         />
       </Link>
       <Link to="/admin/vacatingLetters">
-      <SideBarIcon icon={<BsEnvelope size="25" />} text="Vacating letters" />
+        <SideBarIcon icon={<BsEnvelope size="25" />} text="Vacating letters" />
       </Link>
-      {/* <SideBarIcon
-        icon={<HiOutlineDocumentReport size="25" />}
-        text="Sales Report"
-      /> */}
       <SideBarIcon
         icon={<FiLogOut size="25" />}
         text="Logout"

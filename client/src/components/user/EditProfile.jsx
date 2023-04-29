@@ -37,6 +37,10 @@ function EditProfile() {
           // Handle 401 errors
           logout();
           console.error(err); // log the error message
+        } else if (err.response && err.response.status === 403) {
+          // Handle 403 errors
+          logout();
+          console.error(err); // log the error message
         } else {
           // Handle other errors
           console.error(err); // log the error message
@@ -108,6 +112,10 @@ function EditProfile() {
     } catch (error) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
         logout();
         console.error(err); // log the error message
       } else if (error?.response && error?.response?.data?.errors) {

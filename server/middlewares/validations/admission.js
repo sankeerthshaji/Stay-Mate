@@ -14,7 +14,7 @@ const admissionSchema = yup.object().shape({
     .string()
     .matches(passwordRegex, { message: "Please create a stronger password" })
     .required("Password is required"),
-    confirmPassword: yup
+  confirmPassword: yup
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .required("Confirm password is required"),
@@ -110,4 +110,3 @@ const validateSchema = (schema) => async (req, res, next) => {
 const admissionValidationMiddleware = validateSchema(admissionSchema);
 
 module.exports = admissionValidationMiddleware;
-

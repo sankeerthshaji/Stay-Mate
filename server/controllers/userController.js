@@ -16,7 +16,8 @@ const moment = require("moment");
 const mongoose = require("mongoose");
 const VacatingLetter = require("../models/vacatingLetter");
 const cron = require("node-cron");
-const shell = require("shelljs");
+const express = require("express");
+const app = express();
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -387,37 +388,6 @@ const verifyBookingPayment = async (req, res) => {
   }
 };
 
-// async function createRoom() {
-//   const newRoom = new Room({
-//     roomNo: "D10",
-//     roomType: "6448c83150c5c7158eabcdf0",
-//     capacity: 6,
-//     __v: 0,
-//   });
-
-//   try {
-//     const savedRoom = await newRoom.save();
-//   } catch (error) {
-//     console.error("Error creating new room:", error);
-//   }
-// }
-
-// async function createMenu() {
-//   const newMenu = new Menu({
-//     day: "Sunday",
-//     breakfast: "Dosa, Chutney, tea",
-//     lunch: "Rice, Chena-Parippu curry, Beetroot Upperi, Achar, Pappadam",
-//     snacks: "Black Tea and Enna Kadi",
-//     dinner: "Chapathi, Veg kuruma",
-//   });
-
-//   try {
-//     const savedMenu = await newMenu.save();
-//   } catch (error) {
-//     console.error("Error creating new menu:", error);
-//   }
-// }
-
 // Fetching user details
 const fetchUserDetails = async (req, res) => {
   try {
@@ -671,13 +641,16 @@ const getRentDue = async (req, res) => {
   try {
     const { userId } = req.query;
     // Check whether a RentDue document already exists for the current month and year for the given userId.
-    const today = moment();
-    const month = moment(today).format("MMMM");
-    const date = moment(today).startOf("month");
+    const rentMonth = new Date().toLocaleString("default", { month: "long" });
+    const rentDate = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      1
+    );
     const rentDue = await RentDue.findOne({
       user: userId,
-      rentMonth: month,
-      rentDate: moment(date).format("YYYY-MM-DD"),
+      rentMonth,
+      rentDate,
       status: "Unpaid",
     });
 
@@ -746,14 +719,16 @@ const verifyRentPayment = async (req, res) => {
 
     if (hmac == razorpay_signature) {
       // update the rentDue document by updating the status to paid
-      const today = moment();
-      const month = moment(today).format("MMMM");
-      const date = moment(today).startOf("month");
-
+      const rentMonth = new Date().toLocaleString("default", { month: "long" });
+      const rentDate = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        1
+      );
       const rentDue = await RentDue.findOne({
         user: userId,
-        rentMonth: month,
-        rentDate: moment(date).format("YYYY-MM-DD"),
+        rentMonth,
+        rentDate,
         status: "Unpaid",
       });
       rentDue.status = "Paid";
@@ -778,132 +753,6 @@ const verifyRentPayment = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-const getRentPaymentStatus = async (req, res) => {
-  try {
-    const { resident } = req.query;
-    const user = await User.findById(resident.id);
-    const room = await Room.findOne({ roomNo: user.roomNo });
-    const roomType = await RoomType.findById(room.roomType);
-    const today = moment();
-    const month = moment(today).format("MMMM");
-    const date = moment(today).startOf("month");
-    const rentDue = await RentDue.findOne({
-      user: resident.id,
-      rentMonth: month,
-      rentDate: moment(date).format("YYYY-MM-DD"),
-      status: "Unpaid",
-    });
-
-    if (rentDue) {
-      const currentDate = moment(today);
-      const lastDateWithFine = moment(rentDue.lastDateWithFine);
-      if (currentDate.isAfter(lastDateWithFine)) {
-        room.occupants -= 1;
-        if (room.occupants < room.capacity && room.status === "occupied") {
-          room.status = "available";
-        }
-        if (roomType.status === "unavailable") {
-          roomType.status = "available";
-          await roomType.save();
-        }
-        user.role = "guest";
-        user.roomNo = undefined;
-        await user.save();
-        await room.save();
-        // Delete the rentDue document
-        await RentDue.findByIdAndDelete(rentDue._id);
-        res.status(200).json({ status: "Late" });
-      } else {
-        res.status(200).json({ status: "Unpaid" });
-      }
-    } else {
-      const dateOfAdmission = user.dateOfAdmission;
-      // Check whether the dateOfAdmission month and year are the same as the current month and year.
-      const admissionMonthYear = moment(dateOfAdmission).format("MMMM, YYYY");
-      const currentMonthYear = moment(today).format("MMMM, YYYY");
-
-      if (admissionMonthYear === currentMonthYear) {
-        return res.status(200).json({ status: "paid" });
-      }
-
-      // Check whether the user has already paid the rent for the current month.
-      // const month = moment(today).format("MMMM");
-      const rentPaid = await RentDue.findOne({
-        user: resident.id,
-        rentMonth: month,
-        rentDate: moment(date).format("YYYY-MM-DD"),
-        status: "Paid",
-      });
-
-      if (rentPaid) {
-        return res.status(200).json({ status: "paid" });
-      }
-
-      // Retrieve the roomNo of the user from the User collection and then retrieve the corresponding room document from the Room collection.
-      const roomNo = user.roomNo;
-      const room = await Room.findOne({ roomNo });
-      if (!room) {
-        throw new Error(`Room with roomNo ${roomNo} not found`);
-      }
-
-      // Retrieve the rent amount of the corresponding roomType from the RoomType collection using the roomNo
-      const { rent } = roomType;
-
-      // Calculate the lastDateWithFine and lastDateWithoutFine for the current month and year.
-      const lastDateWithoutFine = moment(date).add(4, "days");
-      const lastDateWithFine = moment(date).add(9, "days");
-
-      // Calculate the fine amount if the rent is paid after lastDateWithoutFine
-      let fine = 0;
-      const currentDate = moment(today);
-      if (currentDate.isAfter(lastDateWithoutFine)) {
-        const daysLate = currentDate.diff(lastDateWithoutFine, "days");
-        fine = daysLate * 100;
-        if (currentDate.isAfter(lastDateWithFine)) {
-          fine = 500;
-        }
-      }
-
-      const newRentDue = new RentDue({
-        rentMonth: month,
-        rentDate: moment(date).format("YYYY-MM-DD"),
-        rentAmount: rent,
-        lastDateWithFine: moment(lastDateWithFine).format("YYYY-MM-DD"),
-        lastDateWithoutFine: moment(lastDateWithoutFine).format("YYYY-MM-DD"),
-        fine,
-        user: resident.id,
-      });
-
-      await newRentDue.save();
-      res.status(200).json({ status: "Unpaid" });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// const createRoomType = async (req, res) => {
-//   try {
-//     const newRoomType = new RoomType({
-//       title: "Standard 6 Bed Dorm Shared Bathroom",
-//       name: "Six-Share",
-//       description:
-//         "Diam phasellus vestibulum lorem sed risus ultricies tristique.",
-//       capacity: 6,
-//       rent: 5000,
-//       admissionFees: 1000,
-//       image: {
-//         url: "https://res.cloudinary.com/dfiqqrico/image/upload/v1679060337/stayMate/01_dsj1ys.webp",
-//         filename: "stayMate/01_dsj1ys",
-//       },
-//       status: "available",
-//     });
-//     await newRoomType.save();
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 const getAvailableRoomTypes = async (req, res) => {
   try {
@@ -1020,52 +869,104 @@ const postVacatingLetter = async (req, res) => {
   }
 };
 
-// cron.schedule("10 * * * * *", async function generateRent() {
-//   try {
-//     const users = await User.find({ role: { $ne: "guest" } });
-//     // console.log(users);
-
-//     console.log("hii");
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
-
-// cron.schedule("0 0 0 11 * *", async () => {
-//   console.log("running a task");
-// });
-
 cron.schedule("0 0 0 1 * *", async function generateMonthlyRent() {
-  try{
-  const users = await User.find({ role: { $ne: "guest" } });
-  const rentMonth = new Date().toLocaleString("default", { month: "long" });
-  const rentYear = new Date().getFullYear();
-  const rentDues = [];
+  try {
+    const users = await User.find({ role: { $ne: "guest" } });
+    const rentMonth = new Date().toLocaleString("default", { month: "long" });
+    const rentYear = new Date().getFullYear();
+    const rentDues = [];
 
-  for (const user of users) {
-    const room = await Room.findOne({ roomNo: user.roomNo });
-    const roomType = await RoomType.findById(room.roomType);
-    const rentAmount = roomType.rent;
-    const rentDate = new Date(rentYear, new Date().getMonth(), 1);
-    const lastDateWithoutFine = new Date(rentYear, new Date().getMonth(), 5);
-    const lastDateWithFine = new Date(rentYear, new Date().getMonth(), 10);
+    for (const user of users) {
+      const room = await Room.findOne({ roomNo: user.roomNo });
+      const roomType = await RoomType.findById(room.roomType);
+      const rentAmount = roomType.rent;
+      const rentDate = new Date(rentYear, new Date().getMonth(), 1);
+      const lastDateWithoutFine = new Date(rentYear, new Date().getMonth(), 5);
+      const lastDateWithFine = new Date(rentYear, new Date().getMonth(), 10);
 
-    rentDues.push({
-      user: user._id,
+      rentDues.push({
+        user: user._id,
+        rentMonth,
+        rentDate,
+        rentAmount,
+        lastDateWithoutFine,
+        lastDateWithFine,
+        fine: 0,
+      });
+    }
+
+    await RentDue.insertMany(rentDues);
+    console.log(`Created ${rentDues.length} new rentDue documents.`);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+cron.schedule("0 0 0 6-10 * *", async function updateRentDues() {
+  try {
+    const rentMonth = new Date().toLocaleString("default", { month: "long" });
+    const rentDate = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      1
+    );
+    const rentDues = await RentDue.find({
       rentMonth,
       rentDate,
-      rentAmount,
-      lastDateWithoutFine,
-      lastDateWithFine,
-      fine: 0,
+      status: "Unpaid",
     });
+    const now = new Date();
+    for (const rentDue of rentDues) {
+      if (
+        now > rentDue.lastDateWithoutFine &&
+        now <= rentDue.lastDateWithFine
+      ) {
+        const daysLate = Math.floor(
+          (now - rentDue.lastDateWithoutFine) / (1000 * 60 * 60 * 24)
+        );
+        const fine = daysLate * 100;
+        await RentDue.updateOne({ _id: rentDue._id }, { fine });
+      }
+    }
+    console.log(`Updated rent dues for ${rentDues.length} users.`);
+  } catch (error) {
+    console.error(error);
   }
+});
 
-  await RentDue.insertMany(rentDues);
-  console.log(`Created ${rentDues.length} new rentDue documents.`);
-} catch(error){
-  console.error(error);
-}
+cron.schedule("0 0 0 11 * *", async function removeResidents() {
+  try {
+    const rentMonth = new Date().toLocaleString("default", { month: "long" });
+    const rentDate = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      1
+    );
+    const rentDues = await RentDue.find({
+      rentMonth,
+      rentDate,
+      status: "Unpaid",
+    });
+
+    for (const rentDue of rentDues) {
+      const user = await User.findById(rentDue.user);
+      const room = await Room.findOne({ roomNo: user.roomNo });
+      room.occupants -= 1;
+      if (room.occupants < room.capacity && room.status === "occupied") {
+        room.status = "available";
+      }
+      await RoomType.findOneAndUpdate(
+        { _id: room.roomType, status: "unavailable" },
+        { $set: { status: "available" } }
+      );
+      user.role = "guest";
+      user.roomNo = undefined;
+      await Promise.all([user.save(), room.save()]);
+    }
+    console.log(`Removed ${rentDues.length} residents.`);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 module.exports = {
@@ -1078,9 +979,6 @@ module.exports = {
   getRoomDetails,
   createBookingOrder,
   verifyBookingPayment,
-  // createRoomType,
-  // createRoom,
-  // createMenu,
   fetchUserDetails,
   updateProfile,
   changePassword,
@@ -1098,7 +996,6 @@ module.exports = {
   createRentOrder,
   verifyRentPayment,
   getRentPaid,
-  getRentPaymentStatus,
   getAvailableRoomTypes,
   assignNewRoomType,
   postVacatingLetter,

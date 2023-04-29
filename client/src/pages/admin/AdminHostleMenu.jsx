@@ -34,12 +34,12 @@ function AdminHostelMenu() {
       setHostelMenu(response.data.hostelMenu);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);
@@ -81,7 +81,6 @@ function AdminHostelMenu() {
           className="bg-blue-500 text-white px-2 py-1 rounded"
         >
           Edit
-          {/* <Link to={`/admin/editHostelMenu/${row.original._id}`}>Edit</Link> */}
         </button>
       ),
     },
@@ -108,12 +107,12 @@ function AdminHostelMenu() {
       setMenuDetails(response.data.menuDetails);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);

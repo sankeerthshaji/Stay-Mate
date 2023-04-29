@@ -17,7 +17,7 @@ function GuestDetailsPage() {
 
   useEffect(() => {
     fetchGuestDetails();
-  },[guestDetails]);
+  }, [guestDetails]);
 
   const fetchGuestDetails = async () => {
     try {

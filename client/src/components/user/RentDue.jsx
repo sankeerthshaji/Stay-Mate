@@ -31,17 +31,20 @@ function RentDue() {
           // add any additional headers here
         },
       });
-      
+
       setRoomTypeDetails(response.data.roomTypeDetails);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
+        logout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     }
   }
@@ -55,17 +58,20 @@ function RentDue() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      
+
       setRentDue(response.data.rentDue);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
+        logout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     }
   };
@@ -104,7 +110,6 @@ function RentDue() {
         }
       );
       const order = response?.data?.order;
-      
 
       let options = {
         key: "rzp_test_tN9rva6tbuI8ng", // Enter the Key ID generated from the Dashboard
@@ -115,9 +120,6 @@ function RentDue() {
         image: "https://example.com/your_logo",
         order_id: order?.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
         handler: function (response) {
-          // alert(response.razorpay_payment_id);
-          // alert(response.razorpay_order_id);
-          // alert(response.razorpay_signature);
           verifyPayment(response, order);
         },
         prefill: {
@@ -134,13 +136,6 @@ function RentDue() {
       };
       let rzp1 = new Razorpay(options);
       rzp1.on("payment.failed", function (response) {
-        // alert(response.error.code);
-        // alert(response.error.description);
-        // alert(response.error.source);
-        // alert(response.error.step);
-        // alert(response.error.reason);
-        // alert(response.error.metadata.order_id);
-        // alert(response.error.metadata.payment_id);
         // navigate("/paymentFailed");
       });
       rzp1.open();
@@ -154,7 +149,7 @@ function RentDue() {
         console.error(err); // log the error message
         toast.error(err.response.data.error || "Something went wrong");
       }
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -178,7 +173,6 @@ function RentDue() {
       )
       .then((response) => {
         if (response.data.status === "success") {
-          
           toast.success(response.data.message);
           navigate("/rentConfirmation");
         } else {
@@ -186,9 +180,13 @@ function RentDue() {
           // navigate("/paymentFailed");
         }
       })
-      .catch ((err) => {
+      .catch((err) => {
         if (err.response && err.response.status === 401) {
           // Handle 401 errors
+          logout();
+          console.error(err); // log the error message
+        } else if (err.response && err.response.status === 403) {
+          // Handle 403 errors
           logout();
           console.error(err); // log the error message
         } else {

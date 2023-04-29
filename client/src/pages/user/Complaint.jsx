@@ -39,12 +39,16 @@ function Complaint() {
       setComplaints(response.data.complaints);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
+        logout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);
@@ -82,6 +86,10 @@ function Complaint() {
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
         logout();
         console.error(err); // log the error message
       } else if (err.response && err.response.status === 422) {

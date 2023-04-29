@@ -38,12 +38,12 @@ function Complaints() {
       setComplaints(response.data.complaints);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);
@@ -124,12 +124,12 @@ function Complaints() {
       setComplaintDetails(response.data.complaint);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          adminLogout();
-        }
+        // Handle 401 errors
+        adminLogout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoader(false);
@@ -161,8 +161,8 @@ function Complaints() {
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 Unauthorized error
-          logout();
-          console.error(err);
+        logout();
+        console.error(err);
       } else if (err.response && err.response.status === 422) {
         if (err?.response?.data?.errors) {
           setErrors(err.response.data.errors);
@@ -194,7 +194,6 @@ function Complaints() {
               name="status"
               errorMessage={errors?.status}
             >
-              {/* <option value="">Select a status</option> */}
               <option value="New">New</option>
               <option value="In Progress">In Progress</option>
               <option value="Resolved">Resolved</option>
@@ -231,7 +230,9 @@ function Complaints() {
         ) : (
           <div className="overflow-x-auto p-5">
             <div className="flex justify-between p-3">
-              <h1 className="flex text-2xl font-bold text-center">Complaint Management</h1>
+              <h1 className="flex text-2xl font-bold text-center">
+                Complaint Management
+              </h1>
             </div>
             <AdminTable columns={columns} data={complaints} />
           </div>

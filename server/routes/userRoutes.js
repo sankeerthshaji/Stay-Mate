@@ -9,9 +9,6 @@ const {
   getRoomDetails,
   createBookingOrder,
   verifyBookingPayment,
-  // createRoomType,
-  //   createRoom,
-  // createMenu,
   fetchUserDetails,
   updateProfile,
   changePassword,
@@ -29,10 +26,9 @@ const {
   getRentPaid,
   createRentOrder,
   verifyRentPayment,
-  getRentPaymentStatus,
   getAvailableRoomTypes,
   assignNewRoomType,
-  postVacatingLetter
+  postVacatingLetter,
 } = require("../controllers/userController");
 const admissionValidationMiddleware = require("../middlewares/validations/admission");
 const updateProfileValidationMiddleware = require("../middlewares/validations/updateProfile");
@@ -42,7 +38,6 @@ const {
   requireAuthGuest,
   requireAuthResident,
 } = require("../middlewares/authorization");
-const { create } = require("../models/roomType");
 const reviewValidationMiddleware = require("../middlewares/validations/review");
 const LeaveLetterValidationMiddleware = require("../middlewares/validations/leaveLetter");
 const ComplaintValidationMiddleware = require("../middlewares/validations/complaintSchema");
@@ -74,12 +69,6 @@ router.post("/createBookingOrder", requireAuthGuest, createBookingOrder);
 
 router.post("/verifyBookingPayment", requireAuthGuest, verifyBookingPayment);
 
-// router.post("/createRoomType", createRoomType)
-
-// router.post("/createRoom", createRoom)
-
-router.get("/rentPaymentStatus", requireAuthResident, getRentPaymentStatus);
-
 router.get("/userProfile/:id", requireAuthResident, fetchUserDetails);
 
 router.patch(
@@ -91,8 +80,6 @@ router.patch(
 );
 
 router.post("/changePassword/:id", requireAuthResident, changePassword);
-
-// router.post("/createMenu", createMenu);
 
 router.get("/fetchHostelMenu", requireAuthResident, fetchHostelMenu);
 
@@ -133,6 +120,11 @@ router.get("/availableRoomTypes", requireAuthResident, getAvailableRoomTypes);
 
 router.post("/assignNewRoomType", requireAuthResident, assignNewRoomType);
 
-router.post("/vacatingLetter", requireAuthResident, VacatingLetterValidationMiddleware, postVacatingLetter)
+router.post(
+  "/vacatingLetter",
+  requireAuthResident,
+  VacatingLetterValidationMiddleware,
+  postVacatingLetter
+);
 
 module.exports = router;

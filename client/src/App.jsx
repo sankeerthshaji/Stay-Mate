@@ -43,6 +43,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("hii")
     const guest = JSON.parse(localStorage.getItem("guest"));
     const resident = JSON.parse(localStorage.getItem("resident"));
     const admin = JSON.parse(localStorage.getItem("admin"));

@@ -39,11 +39,15 @@ function Review() {
           // add any additional headers here
         },
       });
-      
+
       setRoomTypeDetails(response.data.roomTypeDetails);
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
         logout();
         console.error(err); // log the error message
       } else {
@@ -63,11 +67,15 @@ function Review() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      
+
       setReview(response.data.hostelReview);
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
         logout();
         console.error(err); // log the error message
       } else {
@@ -99,7 +107,6 @@ function Review() {
   }
 
   const handleSubmit = async (values) => {
-    
     setLoading(true);
     try {
       // update the rating value based on the checked radio button
@@ -119,18 +126,18 @@ function Review() {
           },
         }
       );
-      
+
       toast.success(response.data.message);
       fetchReview();
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
+        logout();
+        console.error(err); // log the error message
       } else if (err.response && err.response.status === 422) {
         if (err?.response?.data?.errors) {
           setErrors(err.response.data.errors);
@@ -152,18 +159,21 @@ function Review() {
           Authorization: `Bearer ${resident.token}`,
         },
       });
-      
+
       toast.success(response.data.message);
       fetchReview();
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
+        logout();
+        console.error(err); // log the error message
+      } else {
+        // Handle other errors
+        console.error(err); // log the error message
       }
     } finally {
       setLoading(false);
@@ -197,7 +207,6 @@ function Review() {
   };
 
   const handleUpdate = async (values) => {
-    
     setLoading(true);
     try {
       const response = await axios.put(
@@ -212,19 +221,19 @@ function Review() {
           },
         }
       );
-      
+
       toast.success(response.data.message);
       fetchReview();
       setShowModal(false);
     } catch (err) {
-      
       if (err.response && err.response.status === 401) {
-        if (
-          err.response.data.error === "Session timed out. Please login again."
-        ) {
-          // Handle "Session timed out" error
-          logout();
-        }
+        // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
+        logout();
+        console.error(err); // log the error message
       } else if (err.response && err.response.status === 422) {
         if (err?.response?.data?.errors) {
           setErrors(err.response.data.errors);
@@ -347,31 +356,6 @@ function Review() {
     </UserModal>
   );
 
-  // const fetchReviewDetails = async (id) => {
-  //   try {
-  //     setLoader(true);
-  //     const response = await axios.get(`/hostelReview/${id}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${resident.token}`,
-  //       },
-  //     });
-  //     
-  //     setReviewDetails(response.data.hostelReview);
-  //   } catch (err) {
-  //     
-  //     if (err.response && err.response.status === 401) {
-  //       if (
-  //         err.response.data.error === "Session timed out. Please login again."
-  //       ) {
-  //         // Handle "Session timed out" error
-  //         logout();
-  //       }
-  //     }
-  //   } finally {
-  //     setLoader(false);
-  //   }
-  // };
-
   return (
     <div className="flex justify-center items-center h-screen">
       {loader ? (
@@ -428,15 +412,6 @@ function Review() {
             >
               <Form>
                 <div>
-                  {/* <CustomInput
-                    label="Rating"
-                    name="rating"
-                    id="Rating"
-                    type="range"
-                    min={1}
-                    max={5}
-                    errorMessage={errors?.rating}
-                  /> */}
                   <fieldset className="starability-growRotate">
                     <input
                       type="radio"
@@ -523,16 +498,15 @@ function Review() {
                 <h1 className="text-xl font-semibold mb-3">Your Review</h1>
                 <div className="p-3 mb-3 border-2">
                   <div>
-                    {/* <h1 className="font-semibold mb-3">
-                      Rating: {review.rating}
-                    </h1> */}
                     <p
                       className="starability-result mb-3"
                       data-rating={review.rating}
                     >
                       {`Rated: ${review.rating} stars`}
                     </p>
-                    <p className="text-sm mb-3 break-words">Review: {review.body}</p>
+                    <p className="text-sm mb-3 break-words">
+                      Review: {review.body}
+                    </p>
                     <div className="flex gap-2.5">
                       {showModal && modal}
                       <button

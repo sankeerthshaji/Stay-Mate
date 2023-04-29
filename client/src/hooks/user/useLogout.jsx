@@ -1,5 +1,4 @@
 import { useDispatch } from "react-redux";
-import store from "../../redux/store";
 
 export default function useLogout() {
   const dispatch = useDispatch();

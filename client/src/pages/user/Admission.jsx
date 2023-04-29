@@ -4,12 +4,11 @@ import Navbar from "../../components/user/Navbar/Navbar";
 import AdmissionForm from "../../components/user/admissionForm";
 
 function Admission() {
-
   return (
     <div>
-      <Navbar/>
-      <AdmissionForm/>
-      <Footer/>
+      <Navbar />
+      <AdmissionForm />
+      <Footer />
     </div>
   );
 }

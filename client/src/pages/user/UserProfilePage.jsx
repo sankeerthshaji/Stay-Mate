@@ -39,6 +39,10 @@ export default function UserProfilePage() {
         // Handle 401 errors
         logout();
         console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
+        logout();
+        console.error(err); // log the error message
       } else {
         // Handle other errors
         console.error(err); // log the error message
@@ -58,6 +62,10 @@ export default function UserProfilePage() {
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
         logout();
         console.error(err); // log the error message
       } else {
@@ -104,17 +112,21 @@ export default function UserProfilePage() {
         }).then(() => {
           fetchUserDetails();
         });
-      }else{
+      } else {
         Swal.fire({
-          icon: 'warning',
-          title: 'You have selected the same room type',
-          text: 'Please select a different room type.',
+          icon: "warning",
+          title: "You have selected the same room type",
+          text: "Please select a different room type.",
         });
       }
       setShowModal(false);
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
         logout();
         console.error(err); // log the error message
       } else {

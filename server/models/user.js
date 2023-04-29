@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const ObjectID = mongoose.Schema.Types.ObjectId;
 const bcrypt = require("bcrypt");
 
 const userSchema = new Schema(
@@ -99,11 +98,6 @@ const userSchema = new Schema(
     dateOfAdmission: {
       type: Date,
     },
-
-    // review: {
-    //   type: ObjectID,
-    //   ref: "Review",
-    // },
 
     isBlocked: {
       type: Boolean,

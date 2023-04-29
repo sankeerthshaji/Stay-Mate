@@ -61,12 +61,6 @@ function BookRoom() {
       break;
   }
 
-  const handleTokenExpiration = () => {
-    logout();
-    toast.error("Your session has expired. Please log in again.");
-    navigate("/login");
-  };
-
   const handlePayment = async () => {
     try {
       setLoading(true);
@@ -103,9 +97,6 @@ function BookRoom() {
         image: "https://example.com/your_logo",
         order_id: order?.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
         handler: function (response) {
-          // alert(response.razorpay_payment_id);
-          // alert(response.razorpay_order_id);
-          // alert(response.razorpay_signature);
           verifyPayment(response, order);
         },
         prefill: {
@@ -122,13 +113,7 @@ function BookRoom() {
       };
       let rzp1 = new Razorpay(options);
       rzp1.on("payment.failed", function (response) {
-        // alert(response.error.code);
-        // alert(response.error.description);
-        // alert(response.error.source);
-        // alert(response.error.step);
-        // alert(response.error.reason);
-        // alert(response.error.metadata.order_id);
-        // alert(response.error.metadata.payment_id);
+        toast.error("Payment Failed");
         // navigate("/paymentFailed");
       });
       rzp1.open();
@@ -136,6 +121,14 @@ function BookRoom() {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
         logout();
+        navigate("/login");
+        toast.error("Please login to continue");
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
+        logout();
+        navigate("/login");
+        toast.error("Please login to continue");
         console.error(err); // log the error message
       } else {
         // Handle other errors
@@ -181,7 +174,7 @@ function BookRoom() {
           });
 
           toast.success(response.data.message);
-          navigate("/confirmation",{state: {roomNo}});
+          navigate("/confirmation", { state: { roomNo } });
         } else {
           toast.error("Payment Failed");
           // navigate("/paymentFailed");
@@ -191,6 +184,14 @@ function BookRoom() {
         if (err.response && err.response.status === 401) {
           // Handle 401 errors
           logout();
+          navigate("/login");
+          toast.error("Please login to continue")
+          console.error(err); // log the error message
+        } else if (err.response && err.response.status === 403) {
+          // Handle 403 errors
+          logout();
+          navigate("/login");
+          toast.error("Please login to continue")
           console.error(err); // log the error message
         } else {
           // Handle other errors
@@ -298,7 +299,7 @@ function BookRoom() {
           </div>
 
           <div className="py-4 px-10">
-            <input type="checkbox" id="terms" defaultChecked/>
+            <input type="checkbox" id="terms" defaultChecked />
             <label htmlFor="terms" className="text-sm px-4 font-semibold">
               I've read and accept the{" "}
               <span className="text-[#c5322d] font-bold">

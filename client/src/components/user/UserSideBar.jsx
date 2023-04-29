@@ -52,7 +52,7 @@ function UserSideBar() {
         <SideBarIcon icon={<BsEnvelope size="25" />} text="Vacating Letter" />
       </Link>
       <Link to="/roomTypes">
-      <SideBarIcon icon={<TbHomeMove size="25"/>} text="Back to Home"/>
+        <SideBarIcon icon={<TbHomeMove size="25" />} text="Back to Home" />
       </Link>
       <SideBarIcon
         icon={<FiLogOut size="25" />}

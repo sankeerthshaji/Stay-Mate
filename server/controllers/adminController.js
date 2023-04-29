@@ -191,17 +191,6 @@ const updateMenuDetails = async (req, res) => {
       throw new Error("Menu item must be between 1 to 100 characters");
     }
 
-    // if (
-    //   !validator.isAlpha(menuDetails.breakfast.description) ||
-    //   !validator.isAlpha(menuDetails.lunch.description) ||
-    //   !validator.isAlpha(menuDetails.snacks.description) ||
-    //   !validator.isAlpha(menuDetails.dinner.description)
-    // ) {
-    //   return res.status(400).json({
-    //     message: "Menu item must only contain alphabets",
-    //   });
-    // }
-
     // update menu details
     await Menu.findByIdAndUpdate(menuDetails._id, {
       breakfast: menuDetails.breakfast,
@@ -423,7 +412,6 @@ const getVacatingLetters = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 module.exports = {
   loginAdmin,

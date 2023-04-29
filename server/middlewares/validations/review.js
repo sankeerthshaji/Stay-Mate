@@ -16,7 +16,7 @@ const reviewSchema = yup.object().shape({
 const validateSchema = (schema) => async (req, res, next) => {
   try {
     await schema.validate(req.body.values, { abortEarly: false });
-    
+
     next();
   } catch (err) {
     console.error(err);

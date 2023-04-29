@@ -4,7 +4,6 @@ import tick from "../../assets/img/tick.webp";
 import { Link } from "react-router-dom";
 
 function RentConfirmation() {
-
   return (
     <div className="flex flex-1 flex-col justify-center items-center py-16 gap-6">
       <div className="w-44">

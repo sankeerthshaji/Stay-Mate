@@ -7,7 +7,7 @@ function OtpPage() {
   return (
     <div>
       <Navbar />
-        <Otp/>
+      <Otp />
       <Footer />
     </div>
   );

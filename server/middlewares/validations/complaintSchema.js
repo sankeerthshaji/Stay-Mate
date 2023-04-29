@@ -16,23 +16,23 @@ const complaintSchema = yup.object().shape({
 });
 
 const validateSchema = (schema) => async (req, res, next) => {
-    try {
-      await schema.validate(req.body.values, { abortEarly: false });
-      
-      next();
-    } catch (err) {
-      console.error(err);
-      if (err.name === "ValidationError") {
-        const errors = {};
-        err.inner.forEach((e) => {
-          errors[e.path] = e.message;
-        });
-        return res.status(422).json({ errors });
-      }
-      res.status(400).json({ error: err.message });
+  try {
+    await schema.validate(req.body.values, { abortEarly: false });
+
+    next();
+  } catch (err) {
+    console.error(err);
+    if (err.name === "ValidationError") {
+      const errors = {};
+      err.inner.forEach((e) => {
+        errors[e.path] = e.message;
+      });
+      return res.status(422).json({ errors });
     }
-  };
-  
-  const ComplaintValidationMiddleware = validateSchema(complaintSchema);
-  
-  module.exports = ComplaintValidationMiddleware;
+    res.status(400).json({ error: err.message });
+  }
+};
+
+const ComplaintValidationMiddleware = validateSchema(complaintSchema);
+
+module.exports = ComplaintValidationMiddleware;

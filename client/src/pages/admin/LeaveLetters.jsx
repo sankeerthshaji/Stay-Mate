@@ -69,7 +69,9 @@ function LeaveLetters() {
         ) : (
           <div className="overflow-x-auto p-5">
             <div className="flex justify-between p-3">
-              <h1 className="flex text-2xl font-bold text-center">Leave Letters</h1>
+              <h1 className="flex text-2xl font-bold text-center">
+                Leave Letters
+              </h1>
             </div>
             <AdminTable columns={columns} data={leaveLetters} />
           </div>

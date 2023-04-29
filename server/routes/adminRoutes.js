@@ -23,7 +23,7 @@ const {
   getUnpaidRents,
   fetchRooms,
   assignRoom,
-  getVacatingLetters
+  getVacatingLetters,
 } = require("../controllers/adminController");
 const { requireAuthAdmin } = require("../middlewares/authorization");
 const AdminComplaintValidationMiddleware = require("../middlewares/validations/adminComplaintSchema");
@@ -65,7 +65,12 @@ router.get("/complaints", requireAuthAdmin, getComplaints);
 
 router.get("/complaint/:id", requireAuthAdmin, getComplaintDetails);
 
-router.patch("/complaint/:id", requireAuthAdmin, AdminComplaintValidationMiddleware, updateComplaintDetails);
+router.patch(
+  "/complaint/:id",
+  requireAuthAdmin,
+  AdminComplaintValidationMiddleware,
+  updateComplaintDetails
+);
 
 router.get("/paidRents", requireAuthAdmin, getPaidRents);
 

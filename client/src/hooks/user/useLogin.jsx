@@ -2,11 +2,8 @@ import React, { useState } from "react";
 import axios from "../../axios/axios";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import store from "../../redux/store";
-import { useNavigate } from "react-router-dom";
 
 function useLogin() {
-  const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();

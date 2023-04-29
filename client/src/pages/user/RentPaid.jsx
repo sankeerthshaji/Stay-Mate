@@ -2,14 +2,12 @@ import React, { useEffect, useState } from "react";
 import Loader from "../../components/user/Loader";
 import UserSideBar from "../../components/user/UserSideBar";
 import UserTable from "../../components/user/UserTable";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import useLogout from "../../hooks/user/useLogout";
 import axios from "../../axios/axios";
 
 function RentPaid() {
   const [loader, setLoader] = useState(true);
-  const navigate = useNavigate();
   const resident = useSelector((state) => state.resident);
   const { logout } = useLogout();
   const [rentPaid, setRentPaid] = useState({});
@@ -32,6 +30,10 @@ function RentPaid() {
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
+        logout();
+        console.error(err); // log the error message
+      } else if (err.response && err.response.status === 403) {
+        // Handle 403 errors
         logout();
         console.error(err); // log the error message
       } else {

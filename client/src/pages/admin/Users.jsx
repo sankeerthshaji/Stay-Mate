@@ -5,7 +5,6 @@ import axios from "../../axios/axios";
 import Loader from "../../components/user/Loader";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import useLogout from "../../hooks/user/useLogout";
 import useAdminLogout from "../../hooks/admin/useAdminLogout";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -14,7 +13,6 @@ function Users() {
   const admin = useSelector((state) => state.admin);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { logout } = useLogout();
   const { adminLogout } = useAdminLogout();
 
   const fetchUsers = async () => {
@@ -57,7 +55,6 @@ function Users() {
         }
       );
 
-      logout();
       toast.success("User blocked successfully");
       fetchUsers();
     } catch (err) {
@@ -84,7 +81,6 @@ function Users() {
           },
         }
       );
-
       toast.success("User unblocked successfully");
       fetchUsers();
     } catch (err) {
@@ -114,7 +110,6 @@ function Users() {
         }
       );
 
-      logout();
       fetchUsers();
       toast.success("User removed as resident successfully");
     } catch (err) {
