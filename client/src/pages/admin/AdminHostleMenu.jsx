@@ -291,20 +291,18 @@ function AdminHostelMenu() {
       <div className="w-16 flex-shrink-0">
         <AdminSideBar />
       </div>
-      <div className="flex-1 bg-gray-50">
+      <div className="flex-1 overflow-x-auto p-5 bg-gray-50">
         {loader ? (
           <Loader />
         ) : (
           <>
             {showModal && modal}
-            <div className="overflow-x-auto p-5">
-              <div className="flex justify-between p-3">
-                <h1 className="flex text-2xl font-bold text-center">
-                  Hostel Menu
-                </h1>
-              </div>
-              <AdminTable columns={columns} data={hostelMenu} />
+            <div className="flex justify-between p-3">
+              <h1 className="flex text-2xl font-bold text-center">
+                Hostel Menu
+              </h1>
             </div>
+            <AdminTable columns={columns} data={hostelMenu} />
           </>
         )}
       </div>

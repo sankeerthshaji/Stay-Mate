@@ -194,7 +194,7 @@ function AdmissionForm() {
                   name="parentName"
                   id="Parent Name"
                   placeholder="Enter your Parent's name"
-                  type="tel"
+                  type="text"
                   errorMessage={errors?.parentName}
                 />
 

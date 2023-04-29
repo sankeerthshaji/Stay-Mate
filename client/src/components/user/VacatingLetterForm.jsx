@@ -62,7 +62,7 @@ function VacatingLetterForm() {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <section className="grid gap-4 p-6 w-80 sm:w-96 bg-white shadow-2xl">
+      <section className="grid gap-4 p-6 w-72 sm:w-96 bg-white shadow-2xl">
         <div className="text-2xl font-bold">Submit Vacating Letter</div>
         <Formik
           initialValues={{
