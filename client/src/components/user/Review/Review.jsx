@@ -364,7 +364,7 @@ function Review() {
         <div className="flex flex-col justify-center md:flex-row gap-3">
           <div className="border-solid border-2 border-gray-200 md:w-1/2 xl:w-1/3">
             <div>
-              <img src="https://html.merku.love/hosteller/img/room/01.webp" />
+              <img src="https://res.cloudinary.com/dfiqqrico/image/upload/v1682956292/01_row8d1.webp" />
             </div>
             <div className="px-5 py-4 border-gray-500 grid gap-2.5">
               <div>

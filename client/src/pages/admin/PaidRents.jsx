@@ -67,11 +67,11 @@ function PaidRents() {
       <div className="w-16 flex-shrink-0">
         <AdminSideBar />
       </div>
-      <div className="flex-1 overflow-x-auto p-5 bg-gray-50">
+      <div className="flex-1 overflow-x-auto bg-gray-50">
         {loader ? (
           <Loader />
         ) : (
-          <>
+          <div className="p-5">
             <div className="flex justify-between p-3">
               <h1 className="flex text-2xl font-bold text-center">
                 Rent Management
@@ -92,7 +92,7 @@ function PaidRents() {
               </div>
             </div>
             <AdminTable columns={columns} data={paidRents} />
-          </>
+          </div>
         )}
       </div>
     </div>

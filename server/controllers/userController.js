@@ -641,21 +641,16 @@ const getRentDue = async (req, res) => {
   try {
     const { userId } = req.query;
     // Check whether a RentDue document already exists for the current month and year for the given userId.
-    const rentMonth = new Date().toLocaleString("default", { month: "long" });
     const rentDate = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      1
+      Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1)
     );
     const rentDue = await RentDue.findOne({
       user: userId,
-      rentMonth,
       rentDate,
       status: "Unpaid",
     });
-
     if (rentDue) {
-      return res.status(200).json({ rentDue: rentDue });
+      return res.status(200).json({ rentDue });
     }
 
     // If no RentDue document exists for the current month and year for the given userId, create a new RentDue document.
@@ -719,15 +714,11 @@ const verifyRentPayment = async (req, res) => {
 
     if (hmac == razorpay_signature) {
       // update the rentDue document by updating the status to paid
-      const rentMonth = new Date().toLocaleString("default", { month: "long" });
       const rentDate = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        1
+        Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1)
       );
       const rentDue = await RentDue.findOne({
         user: userId,
-        rentMonth,
         rentDate,
         status: "Unpaid",
       });
@@ -835,9 +826,19 @@ const assignNewRoomType = async (req, res) => {
 const postVacatingLetter = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-
   try {
     const { values, userId } = req.body;
+    const rentDate = new Date(
+      Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1)
+    );
+    const rentDue = await RentDue.findOne({
+      user: userId,
+      rentDate,
+      status: "Unpaid",
+    }).session(session);
+    if (rentDue) {
+      throw new Error("Please pay the rent before vacating.");
+    }
     await VacatingLetter.create([{ ...values, user: userId }], { session });
     const user = await User.findById(userId).session(session);
     const room = await Room.findOne({ roomNo: user.roomNo }).session(session);
@@ -845,17 +846,19 @@ const postVacatingLetter = async (req, res) => {
     if (room.occupants < room.capacity && room.status === "occupied") {
       room.status = "available";
     }
-    await RoomType.findOneAndUpdate(
+    const roomType = await RoomType.findOneAndUpdate(
       { _id: room.roomType, status: "unavailable" },
       { $set: { status: "available" } },
-      { session }
+      {
+        session,
+        new: true,
+      }
     );
     user.role = "guest";
     user.roomNo = undefined;
     await Promise.all([user.save({ session }), room.save({ session })]);
     await session.commitTransaction();
     session.endSession();
-
     res.status(200).json({
       message:
         "Your vacating letter has been submitted successfully! We hope you had a comfortable and enjoyable stay with us.",
@@ -863,7 +866,6 @@ const postVacatingLetter = async (req, res) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-
     console.error(error);
     res.status(500).json({ error: error.message });
   }

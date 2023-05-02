@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 function Navbar() {
   let links = [
     { name: "Home", link: "/roomTypes" },
-    { name: "About", link: "/roomTypes" },
     { name: "Rooms", link: "/roomTypes" },
     { name: "Contacts", link: "/roomTypes" },
   ];

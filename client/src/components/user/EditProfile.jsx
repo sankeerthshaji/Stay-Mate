@@ -137,8 +137,8 @@ function EditProfile() {
           <div className="text-center underline text-3xl font-bold">
             Edit Profile
           </div>
-          <div className="px-12 py-6 sm:mx-auto sm:w-full">
-            <div className="bg-white py-8 sm:shadow-2xl rounded-lg sm:px-10">
+          <div className="px-6 sm:px-12 py-6 sm:mx-auto sm:w-full">
+            <div className="bg-white py-8 px-6 shadow-lg sm:shadow-2xl rounded-lg sm:px-10">
               <Formik
                 initialValues={{
                   fullName: userDetails?.fullName,
@@ -217,7 +217,7 @@ function EditProfile() {
                       name="parentName"
                       id="Parent Name"
                       placeholder="Enter your Parent's name"
-                      type="tel"
+                      type="text"
                       errorMessage={errors?.parentName}
                     />
 

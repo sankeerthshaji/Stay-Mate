@@ -8,17 +8,19 @@ import { IoBedOutline } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import noRent from "../../assets/img/noRent.jpg";
+import Loader from "./Loader";
 
 function RentDue() {
   const [roomTypeDetails, setRoomTypeDetails] = useState({});
   const [rentDue, setRentDue] = useState({});
+  const [loader, setLoader] = useState(true);
   const [loading, setLoading] = useState(false);
   const resident = useSelector((state) => state.resident);
   const { logout } = useLogout();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchRentDue(fetchRoomData());
+    fetchRentDue();
   }, []);
 
   async function fetchRoomData() {
@@ -33,6 +35,7 @@ function RentDue() {
       });
 
       setRoomTypeDetails(response.data.roomTypeDetails);
+      console.log(response.data.roomTypeDetails);
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
@@ -46,6 +49,8 @@ function RentDue() {
         // Handle other errors
         console.error(err); // log the error message
       }
+    } finally {
+      setLoader(false);
     }
   }
 
@@ -60,6 +65,7 @@ function RentDue() {
       });
 
       setRentDue(response.data.rentDue);
+      fetchRoomData();
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
@@ -199,128 +205,140 @@ function RentDue() {
 
   return (
     <div className="flex-grow bg-gray-50">
-      {Object.keys(rentDue).length > 0 ? (
-        <div className="flex flex-col xl:flex-row justify-center gap-12 px-4 py-16 sm:px-20">
-          <div className="shadow-lg xl:shadow-2xl md:w-full xl:w-6/12">
-            <div className="w-full">
-              <img src="https://html.merku.love/hosteller/img/room/01.webp" />
-            </div>
-            <div className="px-3 py-6 sm:px-6 xl:px-4 border-gray-500 grid gap-3">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-semibold">
-                  {roomTypeDetails.title}
-                </h1>
-              </div>
-
-              <div className="flex-wrap text-gray-600 text-lg sm:text-xl">
-                {roomTypeDetails.description}
-              </div>
-
-              <div className="flex flex-wrap text-gray-900">
-                <div className="flex gap-1 items-center">
-                  <div>
-                    <FaRegUser />
-                  </div>
-                  <div>
-                    {roomTypeDetails.capacity}{" "}
-                    {roomTypeDetails.capacity === 1 ? "Sleep" : "Sleeps"}
-                  </div>
-                </div>
-
-                <div className="flex gap-2 items-center px-6">
-                  <div>
-                    <IoBedOutline size={24} />
-                  </div>
-                  <div>{bedType}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col shadow-xl bg-[#e5ecee] gap-8">
-            <div className="font-bold text-xl px-6 py-8 border-b border-[#bfbfbf]">
-              Payment Summary
-            </div>
-            <div className="flex w-full justify-between px-8">
-              <div className="sm:text-lg font-semibold">Rent Date</div>
-              <div className="sm:text-lg font-semibold">
-                {new Date(rentDue.rentDate).toLocaleDateString()}
-              </div>
-            </div>
-
-            <div className="flex w-full justify-between px-8">
-              <div className="sm:text-lg font-semibold">
-                Last Date(Without Fine)
-              </div>
-              <div className="sm:text-lg font-semibold">
-                {new Date(rentDue.lastDateWithoutFine).toLocaleDateString()}
-              </div>
-            </div>
-
-            <div className="flex w-full justify-between px-8">
-              <div className="sm:text-lg  font-semibold">
-                Last Date(With Fine)
-              </div>
-              <div className="sm:text-lg font-semibold">
-                {new Date(rentDue.lastDateWithFine).toLocaleDateString()}
-              </div>
-            </div>
-
-            <div className="flex w-full justify-between px-8">
-              <div className="sm:text-lg font-semibold">Rent Amount</div>
-              <div className="sm:text-lg font-semibold">
-                Rs.{rentDue.rentAmount}
-              </div>
-            </div>
-
-            <div className="flex w-full justify-between px-8">
-              <div className="sm:text-lg  font-semibold">Fine Amount</div>
-              <div className="sm:text-lg font-semibold">Rs.{rentDue.fine}</div>
-            </div>
-
-            <div className="flex w-full justify-between px-8">
-              <div className="sm:text-lg font-bold">Total Payment Amount</div>
-              <div className="sm:text-lg font-semibold">
-                Rs.{rentDue.rentAmount + rentDue.fine}
-              </div>
-            </div>
-
-            <div className="px-10">
-              <input type="checkbox" id="terms" defaultChecked />
-              <label htmlFor="terms" className="text-sm px-4 font-semibold">
-                I've read and accept the{" "}
-                <span className="text-[#c5322d] font-bold">
-                  terms & conditions*
-                </span>
-              </label>
-            </div>
-
-            <div className="flex justify-center mb-5">
-              <button
-                onClick={handlePayment}
-                className="bg-[#235784] text-white w-5/6 py-2 font-bold text-lg rounded-md transform hover:scale-110 transition duration-300"
-              >
-                {loading ? (
-                  <ClipLoader size={20} color={"#fff"} />
-                ) : (
-                  "Make Payment"
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
+      {loader ? (
+        <Loader />
       ) : (
-        <div className="flex flex-col justify-center items-center h-screen gap-5 bg-white">
-          <div className="w-44">
-            <img src={noRent} alt="" />
-          </div>
-          <div className="font-bold text-[#235784] text-3xl">No Rent Due</div>
-          <div>
-            <button className="bg-[#235784] text-white text-lg px-4 py-2 rounded-md transform hover:scale-105 transition duration-300">
-              <Link to="/rentPaid">See Rent History</Link>
-            </button>
-          </div>
-        </div>
+        <>
+          {Object.keys(rentDue).length > 0 ? (
+            <div className="flex flex-col xl:flex-row justify-center gap-12 px-4 py-16 sm:px-20">
+              <div className="shadow-lg xl:shadow-2xl md:w-full xl:w-6/12">
+                <div className="w-full">
+                  <img src="https://res.cloudinary.com/dfiqqrico/image/upload/v1682956292/01_row8d1.webp" />
+                </div>
+                <div className="px-3 py-6 sm:px-6 xl:px-4 border-gray-500 grid gap-3">
+                  <div>
+                    <h1 className="text-xl sm:text-2xl font-semibold">
+                      {roomTypeDetails.title}
+                    </h1>
+                  </div>
+
+                  <div className="flex-wrap text-gray-600 text-lg sm:text-xl">
+                    {roomTypeDetails.description}
+                  </div>
+
+                  <div className="flex flex-wrap text-gray-900">
+                    <div className="flex gap-1 items-center">
+                      <div>
+                        <FaRegUser />
+                      </div>
+                      <div>
+                        {roomTypeDetails.capacity}{" "}
+                        {roomTypeDetails.capacity === 1 ? "Sleep" : "Sleeps"}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 items-center px-6">
+                      <div>
+                        <IoBedOutline size={24} />
+                      </div>
+                      <div>{bedType}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col shadow-xl bg-[#e5ecee] gap-8">
+                <div className="font-bold text-xl px-6 py-8 border-b border-[#bfbfbf]">
+                  Payment Summary
+                </div>
+                <div className="flex w-full justify-between px-8">
+                  <div className="sm:text-lg font-semibold">Rent Date</div>
+                  <div className="sm:text-lg font-semibold">
+                    {new Date(rentDue.rentDate).toLocaleDateString()}
+                  </div>
+                </div>
+
+                <div className="flex w-full justify-between px-8">
+                  <div className="sm:text-lg font-semibold">
+                    Last Date(Without Fine)
+                  </div>
+                  <div className="sm:text-lg font-semibold">
+                    {new Date(rentDue.lastDateWithoutFine).toLocaleDateString()}
+                  </div>
+                </div>
+
+                <div className="flex w-full justify-between px-8">
+                  <div className="sm:text-lg  font-semibold">
+                    Last Date(With Fine)
+                  </div>
+                  <div className="sm:text-lg font-semibold">
+                    {new Date(rentDue.lastDateWithFine).toLocaleDateString()}
+                  </div>
+                </div>
+
+                <div className="flex w-full justify-between px-8">
+                  <div className="sm:text-lg font-semibold">Rent Amount</div>
+                  <div className="sm:text-lg font-semibold">
+                    Rs.{rentDue.rentAmount}
+                  </div>
+                </div>
+
+                <div className="flex w-full justify-between px-8">
+                  <div className="sm:text-lg  font-semibold">Fine Amount</div>
+                  <div className="sm:text-lg font-semibold">
+                    Rs.{rentDue.fine}
+                  </div>
+                </div>
+
+                <div className="flex w-full justify-between px-8">
+                  <div className="sm:text-lg font-bold">
+                    Total Payment Amount
+                  </div>
+                  <div className="sm:text-lg font-semibold">
+                    Rs.{rentDue.rentAmount + rentDue.fine}
+                  </div>
+                </div>
+
+                <div className="px-10">
+                  <input type="checkbox" id="terms" defaultChecked />
+                  <label htmlFor="terms" className="text-sm px-4 font-semibold">
+                    I've read and accept the{" "}
+                    <span className="text-[#c5322d] font-bold">
+                      terms & conditions*
+                    </span>
+                  </label>
+                </div>
+
+                <div className="flex justify-center mb-5">
+                  <button
+                    onClick={handlePayment}
+                    className="bg-[#235784] text-white w-5/6 py-2 font-bold text-lg rounded-md transform hover:scale-110 transition duration-300"
+                  >
+                    {loading ? (
+                      <ClipLoader size={20} color={"#fff"} />
+                    ) : (
+                      "Make Payment"
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col justify-center items-center h-screen gap-5 bg-white">
+              <div className="w-44">
+                <img src={noRent} alt="" />
+              </div>
+              <div className="font-bold text-[#235784] text-3xl">
+                No Rent Due
+              </div>
+              <div>
+                <button className="bg-[#235784] text-white text-lg px-4 py-2 rounded-md transform hover:scale-105 transition duration-300">
+                  <Link to="/rentPaid">See Rent History</Link>
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
