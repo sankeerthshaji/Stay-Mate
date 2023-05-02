@@ -35,7 +35,7 @@ function RentDue() {
       });
 
       setRoomTypeDetails(response.data.roomTypeDetails);
-      console.log(response.data.roomTypeDetails);
+      
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors

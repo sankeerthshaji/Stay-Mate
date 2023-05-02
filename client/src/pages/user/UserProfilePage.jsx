@@ -33,7 +33,7 @@ export default function UserProfilePage() {
       });
       setUserDetails(response.data.userDetails);
       fetchAvailableRoomTypes();
-      console.log(response.data.userDetails);
+      
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
@@ -58,7 +58,7 @@ export default function UserProfilePage() {
         },
       });
       setRoomTypes(response.data.availableRoomTypes);
-      console.log(response.data.availableRoomTypes);
+      
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // Handle 401 errors
@@ -102,7 +102,7 @@ export default function UserProfilePage() {
           },
         }
       );
-      console.log(response.data);
+      
       if (response.data.status) {
         Swal.fire({
           title: "Room Type Changed!",

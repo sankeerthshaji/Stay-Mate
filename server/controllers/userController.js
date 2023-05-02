@@ -898,7 +898,6 @@ cron.schedule("0 0 0 1 * *", async function generateMonthlyRent() {
     }
 
     await RentDue.insertMany(rentDues);
-    console.log(`Created ${rentDues.length} new rentDue documents.`);
   } catch (error) {
     console.error(error);
   }
@@ -930,7 +929,6 @@ cron.schedule("0 0 0 6-10 * *", async function updateRentDues() {
         await RentDue.updateOne({ _id: rentDue._id }, { fine });
       }
     }
-    console.log(`Updated rent dues for ${rentDues.length} users.`);
   } catch (error) {
     console.error(error);
   }
@@ -965,7 +963,6 @@ cron.schedule("0 0 0 11 * *", async function removeResidents() {
       user.roomNo = undefined;
       await Promise.all([user.save(), room.save()]);
     }
-    console.log(`Removed ${rentDues.length} residents.`);
   } catch (error) {
     console.error(error);
   }
