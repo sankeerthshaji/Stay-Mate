@@ -34,6 +34,7 @@ import GuestDetailsPage from "./pages/admin/GuestDetailsPage";
 import ResidentDetailsPage from "./pages/admin/ResidentDetailsPage";
 import VacatingLetter from "./pages/user/VacatingLetter";
 import VacatingLetters from "./pages/admin/VacatingLetters";
+import LandingPage from "./pages/user/LandingPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -66,6 +67,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/roomTypes" element={<RoomTypes />} />
           <Route
             path="/admission"

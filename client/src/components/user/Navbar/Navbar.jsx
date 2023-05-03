@@ -7,9 +7,9 @@ import { toast } from "react-toastify";
 
 function Navbar() {
   let links = [
-    { name: "Home", link: "/roomTypes" },
+    { name: "Home", link: "/" },
+    { name: "About", link: "/about" },
     { name: "Rooms", link: "/roomTypes" },
-    { name: "Contacts", link: "/roomTypes" },
   ];
 
   let [open, setOpen] = useState(false);

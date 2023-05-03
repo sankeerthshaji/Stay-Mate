@@ -44,16 +44,19 @@ function UnpaidRents() {
 
   const columns = [
     {
-      Header: "#",
-      Cell: ({ row }) => row.index + 1,
-    },
-    {
       Header: "User",
       Cell: ({ row }) => row.original.user.fullName,
     },
     {
       Header: "Amount Due",
       Cell: ({ row }) => row.original.rentAmount,
+    },
+    {
+      Header: "Month",
+      Cell: ({ row }) =>
+        new Date(row.original.rentDate).toLocaleString("default", {
+          month: "long",
+        }),
     },
     {
       Header: "Due Date",

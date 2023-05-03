@@ -55,7 +55,7 @@ function UserProfile({ userDetails, onClick }) {
 
       <div className="flex flex-col items-center py-5 lg:py-0">
         <div className="rounded-md shadow-xl border-4 sm:px-5">
-          <div className="px-2 sm:p-3 flex justify-between items-center gap-3 sm:gap-24 border-b-4">
+          <div className="px-2 py-3 sm:p-3 flex justify-between items-center gap-3 sm:gap-24 border-b-4">
             <div className="font-bold sm:text-xl md:text-xl">Full Name</div>
             <div className="text-[#2C3C4A] sm:text-lg md:text-xl sm:font-semibold md:font-bold">
               {userDetails?.fullName}

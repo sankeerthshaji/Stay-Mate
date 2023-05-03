@@ -905,14 +905,10 @@ cron.schedule("0 0 0 1 * *", async function generateMonthlyRent() {
 
 cron.schedule("0 0 0 6-10 * *", async function updateRentDues() {
   try {
-    const rentMonth = new Date().toLocaleString("default", { month: "long" });
     const rentDate = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      1
+      Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1)
     );
     const rentDues = await RentDue.find({
-      rentMonth,
       rentDate,
       status: "Unpaid",
     });
@@ -936,14 +932,10 @@ cron.schedule("0 0 0 6-10 * *", async function updateRentDues() {
 
 cron.schedule("0 0 0 11 * *", async function removeResidents() {
   try {
-    const rentMonth = new Date().toLocaleString("default", { month: "long" });
     const rentDate = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      1
+      Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1)
     );
     const rentDues = await RentDue.find({
-      rentMonth,
       rentDate,
       status: "Unpaid",
     });

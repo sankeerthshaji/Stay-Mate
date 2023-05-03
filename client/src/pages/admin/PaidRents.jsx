@@ -44,16 +44,16 @@ function PaidRents() {
 
   const columns = [
     {
-      Header: "#",
-      Cell: ({ row }) => row.index + 1,
-    },
-    {
       Header: "User",
       Cell: ({ row }) => row.original.user.fullName,
     },
     {
       Header: "Amount Paid",
       Cell: ({ row }) => row.original.rentAmount,
+    },
+    {
+      Header: "Payment Month",
+      Cell: ({ row }) => new Date(row.original.dateOfPayment).toLocaleString("default", { month: "long" }), // get month name from date
     },
     {
       Header: "Date of Payment",
