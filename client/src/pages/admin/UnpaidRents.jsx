@@ -5,7 +5,7 @@ import AdminTable from "../../components/admin/AdminTable";
 import useAdminLogout from "../../hooks/admin/useAdminLogout";
 import { useSelector } from "react-redux";
 import axios from "../../axios/axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function UnpaidRents() {
   const [loader, setLoader] = useState(true);
@@ -13,6 +13,11 @@ function UnpaidRents() {
   const { adminLogout } = useAdminLogout();
   const admin = useSelector((state) => state.admin);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isActive = location.pathname === "/admin/unpaidRents";
+  const active = isActive
+  ? "border border-gray-900 bg-gray-900 text-white font-bold p-1 sm:p-2 rounded-md"
+  : "text-gray-900 border border-gray-900 hover:bg-gray-900 hover:text-white font-bold p-1 sm:p-2 rounded-md transition duration-300";
 
   useEffect(() => {
     fetchUnpaidRents();
@@ -87,7 +92,7 @@ function UnpaidRents() {
                   Paid Rents
                 </button>
                 <button
-                  className="text-gray-900 border border-gray-900 hover:bg-gray-900 hover:text-white font-bold p-1 sm:p-2 rounded-md transition duration-300"
+                  className={active}
                   onClick={fetchUnpaidRents}
                 >
                   Unpaid Rents

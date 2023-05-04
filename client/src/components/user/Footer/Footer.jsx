@@ -1,8 +1,12 @@
 import React from "react";
 import { Icons, Links } from "./Menus";
 import SocialIcons from "./SocialIcons";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Footer() {
+  const location = useLocation();
+  const resident = useSelector((state) => state.resident);
   return (
     <footer className="bg-blue-900 text-white ">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-32 sm:px-32 px-5 py-16">
@@ -17,16 +21,23 @@ function Footer() {
         <div>
           <h1 className="mb-1 font-bold text-2xl">Quick Links</h1>
           {Links.map((link, index) => {
-            return (
-              <p
-                key={index}
-                className="pt-3 font-bold text-lg hover:underline duration-300"
-              >
-                <a href={link.link} className="hover:text-blue-100">
-                  {link.name}
-                </a>
-              </p>
-            );
+            const isActive = location.pathname === link.link;
+            const activeClass = isActive
+              ? "pt-3 font-bold text-lg underline"
+              : "pt-3 font-bold text-lg hover:underline duration-300";
+            if (link.name === "Login" && resident) {
+              return (
+                <p key={index} className={activeClass}>
+                  <a href="/userProfile">Account</a>
+                </p>
+              );
+            } else {
+              return (
+                <p key={index} className={activeClass}>
+                  <a href={link.link}>{link.name}</a>
+                </p>
+              );
+            }
           })}
         </div>
         <div>

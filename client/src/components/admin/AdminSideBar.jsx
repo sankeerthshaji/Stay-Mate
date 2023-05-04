@@ -22,33 +22,43 @@ function AdminSideBar() {
 
   return (
     <div className="fixed top-0 left-0 h-screen w-16 m-0 flex flex-col bg-gray-900 text-white shadow-lg">
-      <Link to="/admin">
-        <SideBarIcon icon={<FaUsers size="25" />} text="Users" />
-      </Link>
-      <Link to="/admin/rooms">
-        <SideBarIcon icon={<MdOutlineMeetingRoom size="25" />} text="Rooms" />
-      </Link>
-      <Link to="/admin/hostelMenu">
-        <SideBarIcon icon={<BiFoodMenu size="25" />} text="Hostel Menu" />
-      </Link>
-      <Link to="/admin/paidRents">
-        <SideBarIcon icon={<FaMoneyBill size="25" />} text="Rent" />
-      </Link>
-      <Link to="/admin/reviews">
-        <SideBarIcon icon={<MdReviews size="25" />} text="Reviews" />
-      </Link>
-      <Link to="/admin/complaints">
-        <SideBarIcon icon={<FaWpforms size="25" />} text="Complaints" />
-      </Link>
-      <Link to="/admin/leaveLetters">
-        <SideBarIcon
-          icon={<SlEnvolopeLetter size="25" />}
-          text="Leave letters"
-        />
-      </Link>
-      <Link to="/admin/vacatingLetters">
-        <SideBarIcon icon={<BsEnvelope size="25" />} text="Vacating letters" />
-      </Link>
+      <SideBarIcon icon={<FaUsers size="25" />} text="Users" link="/admin"/>
+      <SideBarIcon
+        icon={<MdOutlineMeetingRoom size="25" />}
+        text="Rooms"
+        link="/admin/rooms"
+      />
+      <SideBarIcon
+        icon={<BiFoodMenu size="25" />}
+        text="Hostel Menu"
+        link="/admin/hostelMenu"
+      />
+      <SideBarIcon
+        icon={<FaMoneyBill size="25" />}
+        text="Rent"
+        link="/admin/paidRents"
+        link2="/admin/unpaidRents"
+      />
+      <SideBarIcon
+        icon={<MdReviews size="25" />}
+        text="Reviews"
+        link="/admin/reviews"
+      />
+      <SideBarIcon
+        icon={<FaWpforms size="25" />}
+        text="Complaints"
+        link="/admin/complaints"
+      />
+      <SideBarIcon
+        icon={<SlEnvolopeLetter size="25" />}
+        text="Leave letters"
+        link="/admin/leaveLetters"
+      />
+      <SideBarIcon
+        icon={<BsEnvelope size="25" />}
+        text="Vacating letters"
+        link="/admin/vacatingLetters"
+      />
       <SideBarIcon
         icon={<FiLogOut size="25" />}
         text="Logout"
@@ -58,12 +68,19 @@ function AdminSideBar() {
   );
 }
 
-const SideBarIcon = ({ icon, text, onClick }) => {
+const SideBarIcon = ({ icon, text, onClick, link, link2 }) => {
+  const isActive =
+    location.pathname === link || location.pathname === link2
+  const activeClass = isActive
+    ? "sidebar-icon-active group"
+    : "sidebar-icon group";
   return (
-    <div className="sidebar-icon group" onClick={onClick}>
-      {icon}
-      <span className="sidebar-tooltip group-hover:scale-100">{text}</span>
-    </div>
+    <Link to={link}>
+      <div className={activeClass} onClick={onClick}>
+        {icon}
+        <span className="sidebar-tooltip group-hover:scale-100">{text}</span>
+      </div>
+    </Link>
   );
 };
 

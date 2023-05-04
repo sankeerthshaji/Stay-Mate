@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useLogout from "../../../hooks/user/useLogout";
 import Button from "./Button";
 import { toast } from "react-toastify";
@@ -18,6 +18,7 @@ function Navbar() {
   const resident = useSelector((state) => state.resident);
   const { logout } = useLogout();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -45,11 +46,16 @@ function Navbar() {
         } lg:opacity-100`}
         >
           {links.map((link, index) => {
+            const isActive = location.pathname === link.link;
+            const activeClass = isActive
+              ? "text-blue-900 underline"
+              : "text-black hover:text-blue-900 hover:underline";
+
             return (
               <li key={link.name} className="lg:ml-16 text-xl lg:my-0 my-7">
                 <Link
                   to={link.link}
-                  className="text-black hover:text-blue-900 hover:underline"
+                  className={activeClass}
                 >
                   {link.name}
                 </Link>
@@ -57,11 +63,17 @@ function Navbar() {
             );
           })}
 
-          {!guest && resident && <Button onClick={() => {navigate("/userProfile")}}>Account</Button>}
-
-          {guest && !resident && (
-            <Button onClick={handleLogout}>Logout</Button>
+          {!guest && resident && (
+            <Button
+              onClick={() => {
+                navigate("/userProfile");
+              }}
+            >
+              Account
+            </Button>
           )}
+
+          {guest && !resident && <Button onClick={handleLogout}>Logout</Button>}
 
           {!guest && !resident && (
             <Link to="/login">

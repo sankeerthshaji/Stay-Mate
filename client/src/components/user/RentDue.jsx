@@ -213,7 +213,7 @@ function RentDue() {
             <div className="flex flex-col xl:flex-row justify-center gap-12 px-4 py-16 sm:px-20">
               <div className="shadow-lg xl:shadow-2xl md:w-full xl:w-6/12">
                 <div className="w-full">
-                  <img src="https://res.cloudinary.com/dfiqqrico/image/upload/v1682956292/01_row8d1.webp" />
+                  <img src={roomTypeDetails.image.url} />
                 </div>
                 <div className="px-3 py-6 sm:px-6 xl:px-4 border-gray-500 grid gap-3">
                   <div>
