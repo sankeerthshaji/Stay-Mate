@@ -35,6 +35,7 @@ import ResidentDetailsPage from "./pages/admin/ResidentDetailsPage";
 import VacatingLetter from "./pages/user/VacatingLetter";
 import VacatingLetters from "./pages/admin/VacatingLetters";
 import LandingPage from "./pages/user/LandingPage";
+import NotFoundPage from "./pages/user/NotFoundPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -72,7 +73,7 @@ function App() {
           <Route
             path="/admission"
             element={
-              !guest && !resident ? <Admission /> : <Navigate to="/roomTypes" />
+              !guest && !resident ? <Admission /> : <Navigate to="/" />
             }
           />
           <Route path="/otp" element={<OtpPage />} />
@@ -96,7 +97,7 @@ function App() {
               !guest && !resident ? (
                 <ForgotPassword />
               ) : (
-                <Navigate to="/roomTypes" />
+                <Navigate to="/" />
               )
             }
           />
@@ -106,7 +107,7 @@ function App() {
               !guest && !resident ? (
                 <ResetPassword />
               ) : (
-                <Navigate to="/roomTypes" />
+                <Navigate to="/" />
               )
             }
           />
@@ -242,6 +243,8 @@ function App() {
               admin ? <VacatingLetters /> : <Navigate to="/admin/login" />
             }
           />
+
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />
