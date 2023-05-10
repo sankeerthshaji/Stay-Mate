@@ -226,8 +226,8 @@ function RentDue() {
                     {roomTypeDetails.description}
                   </div>
 
-                  <div className="flex flex-wrap text-gray-900">
-                    <div className="flex gap-1 items-center">
+                  <div className="flex flex-wrap text-gray-900 sm:text-xl gap-6">
+                    <div className="flex gap-2 items-center">
                       <div>
                         <FaRegUser />
                       </div>
@@ -237,7 +237,7 @@ function RentDue() {
                       </div>
                     </div>
 
-                    <div className="flex gap-2 items-center px-6">
+                    <div className="flex gap-2 items-center">
                       <div>
                         <IoBedOutline size={24} />
                       </div>

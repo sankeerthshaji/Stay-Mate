@@ -16,8 +16,6 @@ const moment = require("moment");
 const mongoose = require("mongoose");
 const VacatingLetter = require("../models/vacatingLetter");
 const cron = require("node-cron");
-const express = require("express");
-const app = express();
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -903,7 +901,7 @@ cron.schedule("0 0 0 1 * *", async function generateMonthlyRent() {
   }
 });
 
-cron.schedule("0 0 0 6-10 * *", async function updateRentDues() {
+cron.schedule("0 0 0 6-11 * *", async function updateRentDues() {
   try {
     const rentDate = new Date(
       Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1)
@@ -912,14 +910,13 @@ cron.schedule("0 0 0 6-10 * *", async function updateRentDues() {
       rentDate,
       status: "Unpaid",
     });
-    const now = new Date();
+    const now = new Date().toISOString();
     for (const rentDue of rentDues) {
-      if (
-        now > rentDue.lastDateWithoutFine &&
-        now <= rentDue.lastDateWithFine
-      ) {
+      const lastDateWithoutFine = rentDue.lastDateWithoutFine.toISOString();
+      const lastDateWithFine = rentDue.lastDateWithFine.toISOString();
+      if (now > lastDateWithoutFine && now <= lastDateWithFine) {
         const daysLate = Math.floor(
-          (now - rentDue.lastDateWithoutFine) / (1000 * 60 * 60 * 24)
+          (new Date(now) - rentDue.lastDateWithoutFine) / (1000 * 60 * 60 * 24)
         );
         const fine = daysLate * 100;
         await RentDue.updateOne({ _id: rentDue._id }, { fine });

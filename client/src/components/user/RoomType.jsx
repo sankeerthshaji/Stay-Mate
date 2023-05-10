@@ -40,7 +40,7 @@ function RoomType({ roomType }) {
           <div className="flex-wrap text-gray-600  text-xl">
             {roomType.description}
           </div>
-          <div className="flex flex-wrap text-gray-900 text-xl">
+          <div className="flex flex-wrap items-center text-gray-900 text-xl gap-6 sm:gap-6">
             <div className="flex gap-2 items-center">
               <div>
                 <FaRegUser />
@@ -51,7 +51,7 @@ function RoomType({ roomType }) {
               </div>
             </div>
 
-            <div className="flex gap-2 items-center px-6">
+            <div className="flex gap-2 items-center">
               <div>
                 <IoBedOutline size={25} />
               </div>

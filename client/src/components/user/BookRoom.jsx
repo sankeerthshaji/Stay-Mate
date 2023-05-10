@@ -221,7 +221,7 @@ function BookRoom() {
               {roomData?.details?.description}
             </div>
 
-            <div className="flex flex-wrap text-gray-900 text-xl">
+            <div className="flex flex-wrap text-gray-900 text-xl gap-6">
               <div className="flex gap-2 items-center">
                 <div>
                   <FaRegUser />
@@ -232,7 +232,7 @@ function BookRoom() {
                 </div>
               </div>
 
-              <div className="flex gap-2 items-center px-6">
+              <div className="flex gap-2 items-center">
                 <div>
                   <IoBedOutline size={24} />
                 </div>

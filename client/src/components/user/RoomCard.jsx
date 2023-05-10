@@ -1,7 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { IoBedOutline } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
-import { VscCircleFilled } from "react-icons/vsc";
+import { MdOutlineArrowForward } from "react-icons/md";
 
 function RoomCard({ roomType }) {
   let bedType = null;
@@ -24,8 +25,10 @@ function RoomCard({ roomType }) {
   return (
     <div className="shadow-xl rounded-lg overflow-hidden">
       <img src={roomType?.image?.url} alt="room" />
-      <h1 className="text-gray-900 text-lg font-bold p-4 sm:text-xl xl:text-lg">{roomType?.title}</h1>
-      <div className="px-4 flex flex-wrap text-gray-900 sm:text-xl xl:text-base">
+      <h1 className="text-gray-900 text-lg font-bold p-4 sm:text-xl xl:text-lg">
+        {roomType?.title}
+      </h1>
+      <div className="px-4 flex flex-wrap text-gray-900 sm:text-xl xl:text-base gap-6">
         <div className="flex gap-2 items-center">
           <div>
             <FaRegUser />
@@ -35,24 +38,22 @@ function RoomCard({ roomType }) {
           </div>
         </div>
 
-        <div className="flex gap-2 items-center px-6">
+        <div className="flex gap-2 items-center">
           <div>
             <IoBedOutline size={24} />
           </div>
           <div>{bedType && bedType}</div>
         </div>
       </div>
-      {roomType?.status === "unavailable" ? (
-        <div className="flex p-3 gap-1">
-          <VscCircleFilled size={24} className="text-red-500" />
-          <p className="text-red-500 font-bold ">Not Available</p>
-        </div>
-      ) : (
-        <div className="flex p-3 gap-1">
-          <VscCircleFilled size={24} className="text-green-500" />
-          <p className="text-green-500 font-bold">Available</p>
-        </div>
-      )}
+      <div className="flex p-4 items-center gap-2">
+        <Link
+          to="/roomTypes"
+          className="text-[#235784] font-semibold sm:text-lg xl:text-base"
+        >
+          See availability
+        </Link>
+        <MdOutlineArrowForward color="#235784" />
+      </div>
     </div>
   );
 }

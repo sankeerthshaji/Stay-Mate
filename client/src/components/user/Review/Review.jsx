@@ -377,7 +377,7 @@ function Review() {
                 {roomTypeDetails?.description}
               </div>
 
-              <div className="flex flex-wrap text-gray-900">
+              <div className="flex flex-wrap text-gray-900 gap-6">
                 <div className="flex gap-2 items-center">
                   <div>
                     <FaRegUser />
@@ -388,7 +388,7 @@ function Review() {
                   </div>
                 </div>
 
-                <div className="flex gap-2 items-center px-6">
+                <div className="flex gap-2 items-center">
                   <div>
                     <IoBedOutline size={24} />
                   </div>

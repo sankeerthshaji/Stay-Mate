@@ -36,6 +36,7 @@ import VacatingLetter from "./pages/user/VacatingLetter";
 import VacatingLetters from "./pages/admin/VacatingLetters";
 import LandingPage from "./pages/user/LandingPage";
 import NotFoundPage from "./pages/user/NotFoundPage";
+import AboutPage from "./pages/user/AboutPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -69,6 +70,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/roomTypes" element={<RoomTypes />} />
           <Route
             path="/admission"
