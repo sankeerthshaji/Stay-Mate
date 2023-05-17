@@ -901,7 +901,7 @@ cron.schedule("0 0 0 1 * *", async function generateMonthlyRent() {
   }
 });
 
-cron.schedule("0 0 0 6-11 * *", async function updateRentDues() {
+cron.schedule("0 0 0 6-10 * *", async function updateRentDues() {
   try {
     const rentDate = new Date(
       Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1)
@@ -910,13 +910,11 @@ cron.schedule("0 0 0 6-11 * *", async function updateRentDues() {
       rentDate,
       status: "Unpaid",
     });
-    const now = new Date().toISOString();
+    const now = new Date();
     for (const rentDue of rentDues) {
-      const lastDateWithoutFine = rentDue.lastDateWithoutFine.toISOString();
-      const lastDateWithFine = rentDue.lastDateWithFine.toISOString();
-      if (now > lastDateWithoutFine && now <= lastDateWithFine) {
+      if (now > rentDue.lastDateWithoutFine) {
         const daysLate = Math.floor(
-          (new Date(now) - rentDue.lastDateWithoutFine) / (1000 * 60 * 60 * 24)
+          (now - rentDue.lastDateWithoutFine) / (1000 * 60 * 60 * 24)
         );
         const fine = daysLate * 100;
         await RentDue.updateOne({ _id: rentDue._id }, { fine });
