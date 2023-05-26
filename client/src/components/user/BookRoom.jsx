@@ -227,8 +227,8 @@ function BookRoom() {
                   <FaRegUser />
                 </div>
                 <div>
-                  {roomData?.capacity}{" "}
-                  {roomData?.capacity === 1 ? "Sleep" : "Sleeps"}
+                  {roomData?.details?.capacity}{" "}
+                  {roomData?.details?.capacity === 1 ? "Sleep" : "Sleeps"}
                 </div>
               </div>
 

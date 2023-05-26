@@ -85,8 +85,12 @@ const verifySignupOtp = async (req, res) => {
 
     if (otp == OTP) {
       const hash = await bcrypt.hash(values.password, 10);
+      const aadharNumber  = values.aadharNumber;
+      const aadharString = aadharNumber.toString();
+      const hiddenAadhar = "*".repeat(aadharString.length - 4) + aadharString.slice(-4);
       const user = new User({
         ...values,
+        aadharNumber: hiddenAadhar,
         password: hash,
         address: {
           houseName: values?.houseName,
@@ -103,7 +107,6 @@ const verifySignupOtp = async (req, res) => {
         },
       });
       await user.save();
-
       res.status(200).json({ message: "OTP verified successfully" });
     } else {
       throw new Error("Invalid OTP");
