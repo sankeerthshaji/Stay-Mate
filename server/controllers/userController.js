@@ -85,12 +85,14 @@ const verifySignupOtp = async (req, res) => {
 
     if (otp == OTP) {
       const hash = await bcrypt.hash(values.password, 10);
-      const aadharNumber  = values.aadharNumber;
+      const aadharNumber = values.aadharNumber;
       const aadharString = aadharNumber.toString();
-      const hiddenAadhar = "*".repeat(aadharString.length - 4) + aadharString.slice(-4);
+      const hiddenAadhar =
+        "*".repeat(aadharString.length - 4) + aadharString.slice(-4);
       const user = new User({
         ...values,
-        aadharNumber: hiddenAadhar,
+        aadharNumber: aadharNumber,
+        hiddenAadhar: hiddenAadhar,
         password: hash,
         address: {
           houseName: values?.houseName,
@@ -409,6 +411,10 @@ const updateProfile = async (req, res) => {
 
     const file = req.file;
 
+    const aadharNumber = values.aadharNumber;
+    const aadharString = aadharNumber.toString();
+    const hiddenAadhar =
+      "*".repeat(aadharString.length - 4) + aadharString.slice(-4);
     const updatedProfile = await User.findByIdAndUpdate(
       userId,
       {
@@ -417,7 +423,8 @@ const updateProfile = async (req, res) => {
           dateOfBirth: values.dateOfBirth,
           gender: values.gender,
           mobileNumber: values.mobileNumber,
-          aadharNumber: values.aadharNumber,
+          aadharNumber: aadharNumber,
+          hiddenAadhar: hiddenAadhar,
           parentName: values.parentName,
           parentMobileNumber: values.parentMobileNumber,
           bloodGroup: values.bloodGroup,

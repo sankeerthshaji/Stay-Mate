@@ -88,7 +88,7 @@ function UserProfile({ userDetails, onClick }) {
           <div className="px-2 py-3 sm:p-3 flex justify-between items-center gap-3 sm:gap-24 border-b-4">
             <div className="font-bold sm:text-xl md:text-xl">Aadhar No</div>
             <div className="text-[#2C3C4A] sm:text-lg md:text-xl sm:font-semibold md:font-bold">
-              {userDetails?.aadharNumber}
+              {userDetails?.hiddenAadhar}
             </div>
           </div>
           <div className="px-2 py-3 sm:p-3 flex justify-between items-center gap-3 sm:gap-24 border-b-4">

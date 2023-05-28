@@ -33,6 +33,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    hiddenAadhar: {
+      type: String,
+      required: true,
+    },
     parentName: {
       type: String,
       required: true,
