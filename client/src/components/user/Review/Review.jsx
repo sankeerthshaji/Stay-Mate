@@ -361,7 +361,7 @@ function Review() {
       {loader ? (
         <Loader />
       ) : (
-        <div className="flex flex-col justify-center md:flex-row gap-3">
+        <div className="flex flex-col justify-center md:flex-row gap-3 max-w-md sm:max-w-lg md:max-w-full">
           <div className="border-solid border-2 border-gray-200 md:w-1/2 xl:w-1/3">
             <div>
               <img src={roomTypeDetails?.image?.url} />

@@ -1,7 +1,7 @@
 const RoomType = require("../models/roomType");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const { transporter, OTP } = require("../middlewares/otp");
+const transporter = require("../config/nodemailer");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const Razorpay = require("razorpay");
@@ -12,10 +12,10 @@ const Review = require("../models/review");
 const LeaveLetter = require("../models/leaveLetter");
 const Complaint = require("../models/complaint");
 const RentDue = require("../models/rentDue");
-const moment = require("moment");
 const mongoose = require("mongoose");
 const VacatingLetter = require("../models/vacatingLetter");
 const cron = require("node-cron");
+const Otp = require("../models/otp");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -34,8 +34,8 @@ const getRoomTypes = (req, res) => {
 const admission = async (req, res) => {
   try {
     const values = JSON.parse(req.body.values);
-
     const file = req.file;
+    const OTP = Math.floor(100000 + Math.random() * 900000);
 
     let mailOptions = {
       from: process.env.NODEMAILER_USER,
@@ -48,9 +48,15 @@ const admission = async (req, res) => {
         "</h1>", // html body,
     };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-      } else {
+    const otpDocument = await Otp.updateOne(
+      { email: values.email },
+      { otp: OTP },
+      { upsert: true }
+    );
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error("Error in sending mail: ", err);
       }
     });
 
@@ -83,7 +89,12 @@ const verifySignupOtp = async (req, res) => {
       throw new Error("User already exists");
     }
 
-    if (otp == OTP) {
+    const otpDocument = await Otp.findOne({ email: values?.email });
+    if (!otpDocument) {
+      throw new Error("Invalid OTP");
+    }
+
+    if (otp === otpDocument.otp) {
       const hash = await bcrypt.hash(values.password, 10);
       const aadharNumber = values.aadharNumber;
       const aadharString = aadharNumber.toString();
@@ -145,6 +156,7 @@ const loginUser = async (req, res) => {
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
+    const OTP = Math.floor(100000 + Math.random() * 900000);
 
     if (!email) {
       throw new Error("Please enter your email address");
@@ -167,9 +179,15 @@ const forgotPassword = async (req, res) => {
         "</h1>", // html body,
     };
 
+    const otpDocument = await Otp.updateOne(
+      { email },
+      { otp: OTP },
+      { upsert: true }
+    );
+
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-      } else {
+        console.error("Error in sending mail: ", error);
       }
     });
 
@@ -183,7 +201,11 @@ const forgotPassword = async (req, res) => {
 
 const verifyPasswordResetOtp = async (req, res, otp, email) => {
   try {
-    if (otp == OTP) {
+    const otpDocument = await Otp.findOne({ email });
+    if (!otpDocument) {
+      throw new Error("Invalid OTP");
+    }
+    if (otp == otpDocument.otp) {
       res
         .status(200)
         .json({ message: "OTP verified successfully", email: email });
@@ -654,7 +676,7 @@ const getRentDue = async (req, res) => {
     );
     const rentDue = await RentDue.findOne({
       user: userId,
-      rentDate,
+      rentDate: rentDate,
       status: "Unpaid",
     });
     if (rentDue) {
@@ -959,6 +981,9 @@ cron.schedule("0 0 0 11 * *", async function removeResidents() {
       user.role = "guest";
       user.roomNo = undefined;
       await Promise.all([user.save(), room.save()]);
+
+      // Delete the rentDue document
+      await RentDue.findByIdAndDelete(rentDue._id);
     }
   } catch (error) {
     console.error(error);

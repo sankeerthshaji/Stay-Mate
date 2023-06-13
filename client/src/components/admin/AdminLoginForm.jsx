@@ -18,6 +18,10 @@ function AdminLoginForm() {
     await adminLogin(email, password);
   };
 
+  const handleDemoLogin = async(e) => {
+    await adminLogin("admin@gmail.com","admin@123")
+  }
+
   return (
     <div className="flex justify-center h-screen items-center bg-gray-50">
       <div className="w-80 sm:w-96 shadow-2xl px-5 py-6 bg-white">
@@ -70,8 +74,14 @@ function AdminLoginForm() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <button className="bg-blue-500 text-white p-2 rounded-md">
+              <button className="text-white bg-blue-500 p-2 border-2 border-blue-500 hover:bg-white hover:text-blue-500 rounded-md transition-all duration-300">
                 {loading ? <ClipLoader size={20} color={"#fff"} /> : "Login"}
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <button onClick={handleDemoLogin} type="button" className="text-blue-500 p-2 border-2 border-blue-500 bg-white hover:bg-blue-500 hover:text-white rounded-md transition-all duration-300">
+                Demo Login
               </button>
             </div>
           </form>

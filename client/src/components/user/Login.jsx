@@ -18,6 +18,10 @@ function Login() {
     await login(email, password);
   };
 
+  const handleDemoLogin = async (e) => {
+    await login("sankeerthsachu@gmail.com", "Staymate6$");
+  };
+
   return (
     <div className="flex justify-center h-screen items-center bg-gray-50">
       <div className="w-80 sm:w-96 shadow-2xl px-5 py-6 bg-white">
@@ -76,6 +80,13 @@ function Login() {
             <div className="flex flex-col gap-4">
               <button className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-md transform hover:scale-105 transition duration-300">
                 {loading ? <ClipLoader size={20} color={"#fff"} /> : "Login"}
+              </button>
+              <button
+                type="button"
+                onClick={handleDemoLogin}
+                className="bg-white text-blue-500 border-2 border-blue-500 p-2 rounded-md transform hover:scale-105 transition duration-300"
+              >
+                Demo Login
               </button>
               <div className="text-gray-700 text-sm font-light flex justify-center">
                 Don't have an account?{" "}

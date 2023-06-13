@@ -34,7 +34,7 @@ function RoomType({ roomType }) {
       <div className="p-5 grid lg:grid-cols-2 w-full">
         <div className="grid gap-4">
           <div className="text-2xl font-bold">
-            <h1>{roomType.title}</h1>
+            <h1 className="hover:cursor-pointer hover:text-[#235784] transition duration-300"><Link to={`/bookRoom/${roomType._id}`}>{roomType.title}</Link></h1>
           </div>
 
           <div className="flex-wrap text-gray-600  text-xl">
@@ -74,7 +74,7 @@ function RoomType({ roomType }) {
               </div>
             ) : (
               <button className="text-white bg-blue-800 py-3 px-5 rounded-lg text-xl font-bold w-full sm:w-40 transform hover:scale-110 transition duration-300">
-                <Link to={`/bookRoom/${roomType._id}`}>Book Now</Link>
+                <Link to={`/bookRoom/${roomType._id}`}>View details</Link>
               </button>
             )}
           </div>

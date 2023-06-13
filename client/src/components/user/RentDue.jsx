@@ -210,12 +210,12 @@ function RentDue() {
       ) : (
         <>
           {Object.keys(rentDue).length > 0 ? (
-            <div className="flex flex-col xl:flex-row justify-center gap-12 px-4 py-16 sm:px-20">
-              <div className="shadow-lg xl:shadow-2xl md:w-full xl:w-6/12">
+            <div className="grid lg:grid-cols-2 xl:grid-cols-3 px-6 py-8 gap-8 xl:gap-12 max-w-md mx-auto sm:max-w-lg md:max-w-xl lg:max-w-full lg:p-10 xl:px-24">
+              <div className="shadow-lg lg:shadow-xl xl:col-span-2">
                 <div className="w-full">
-                  <img src={roomTypeDetails.image.url} />
+                  <img className="w-full object-cover" src={roomTypeDetails.image.url} />
                 </div>
-                <div className="px-3 py-6 sm:px-6 xl:px-4 border-gray-500 grid gap-3">
+                <div className="px-3 py-6 sm:px-6 xl:px-4 border-gray-500 grid gap-3 xl:gap-">
                   <div>
                     <h1 className="text-xl sm:text-2xl font-semibold">
                       {roomTypeDetails.title}
@@ -247,59 +247,59 @@ function RentDue() {
                 </div>
               </div>
 
-              <div className="flex flex-col shadow-xl bg-[#e5ecee] gap-8">
-                <div className="font-bold text-xl px-6 py-8 border-b border-[#bfbfbf]">
+              <div className="flex flex-col shadow-xl bg-[#e5ecee] gap-6 lg:gap-9 xl:grid-cols-1">
+                <div className="font-bold text-xl p-6 border-b border-[#bfbfbf]">
                   Payment Summary
                 </div>
-                <div className="flex w-full justify-between px-8">
-                  <div className="sm:text-lg font-semibold">Rent Date</div>
-                  <div className="sm:text-lg font-semibold">
+                <div className="flex w-full justify-between">
+                  <div className="sm:text-lg font-semibold px-4 lg:px-8">Rent Date</div>
+                  <div className="sm:text-lg font-semibold px-4 lg:px-8">
                     {new Date(rentDue.rentDate).toLocaleDateString()}
                   </div>
                 </div>
 
-                <div className="flex w-full justify-between px-8">
-                  <div className="sm:text-lg font-semibold">
+                <div className="flex w-full justify-between">
+                  <div className="sm:text-lg font-semibold px-4 lg:px-8">
                     Last Date(Without Fine)
                   </div>
-                  <div className="sm:text-lg font-semibold">
+                  <div className="sm:text-lg font-semibold px-4 lg:px-8">
                     {new Date(rentDue.lastDateWithoutFine).toLocaleDateString()}
                   </div>
                 </div>
 
-                <div className="flex w-full justify-between px-8">
-                  <div className="sm:text-lg  font-semibold">
+                <div className="flex w-full justify-between">
+                  <div className="sm:text-lg font-semibold px-4 lg:px-8">
                     Last Date(With Fine)
                   </div>
-                  <div className="sm:text-lg font-semibold">
+                  <div className="sm:text-lg font-semibold px-4 lg:px-8">
                     {new Date(rentDue.lastDateWithFine).toLocaleDateString()}
                   </div>
                 </div>
 
-                <div className="flex w-full justify-between px-8">
-                  <div className="sm:text-lg font-semibold">Rent Amount</div>
-                  <div className="sm:text-lg font-semibold">
+                <div className="flex w-full justify-between">
+                  <div className="sm:text-lg font-semibold px-4 lg:px-8">Rent Amount</div>
+                  <div className="sm:text-lg font-semibold px-4 lg:px-8">
                     Rs.{rentDue.rentAmount}
                   </div>
                 </div>
 
-                <div className="flex w-full justify-between px-8">
-                  <div className="sm:text-lg  font-semibold">Fine Amount</div>
-                  <div className="sm:text-lg font-semibold">
+                <div className="flex w-full justify-between">
+                  <div className="sm:text-lg  font-semibold px-4 lg:px-8">Fine Amount</div>
+                  <div className="sm:text-lg font-semibold px-4 lg:px-8">
                     Rs.{rentDue.fine}
                   </div>
                 </div>
 
-                <div className="flex w-full justify-between px-8">
-                  <div className="sm:text-lg font-bold">
+                <div className="flex w-full justify-between">
+                  <div className="sm:text-lg font-bold px-4 lg:px-8">
                     Total Payment Amount
                   </div>
-                  <div className="sm:text-lg font-semibold">
+                  <div className="sm:text-lg font-semibold px-4 lg:px-8">
                     Rs.{rentDue.rentAmount + rentDue.fine}
                   </div>
                 </div>
 
-                <div className="px-10">
+                {/* <div className="px-10">
                   <input type="checkbox" id="terms" defaultChecked />
                   <label htmlFor="terms" className="text-sm px-4 font-semibold">
                     I've read and accept the{" "}
@@ -307,7 +307,7 @@ function RentDue() {
                       terms & conditions*
                     </span>
                   </label>
-                </div>
+                </div> */}
 
                 <div className="flex justify-center mb-5">
                   <button

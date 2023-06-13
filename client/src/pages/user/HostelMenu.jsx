@@ -75,7 +75,7 @@ function HostelMenu() {
       <div className="w-16 flex-shrink-0">
         <UserSideBar />
       </div>
-      <div className="flex-1 overflow-x-auto bg-gray-50">
+      <div className="flex-1 overflow-x-auto">
         {loading ? (
           <Loader />
         ) : (

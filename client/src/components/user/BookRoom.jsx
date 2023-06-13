@@ -206,9 +206,9 @@ function BookRoom() {
   return (
     <div>
       <div className="flex flex-col xl:flex-row justify-center gap-12 px-4 py-16 sm:px-20 sm:py-20 xl:py-24">
-        <div className="shadow-lg xl:shadow-2xl md:w-full xl:w-6/12">
+        <div className="shadow-lg xl:shadow-2xl md:w-full xl:max-w-xl">
           <div className="w-full">
-            <img src={roomData?.details?.image?.url} />
+            <img className="w-full object-cover" src={roomData?.details?.image?.url} />
           </div>
           <div className="px-3 py-6 sm:px-6 xl:px-4 border-gray-500 grid gap-3">
             <div>
@@ -276,7 +276,7 @@ function BookRoom() {
             </div>
           </div>
 
-          <div className="py-4 px-10">
+          {/* <div className="py-4 px-10">
             <input type="checkbox" id="terms" defaultChecked />
             <label htmlFor="terms" className="text-sm px-4 font-semibold">
               I've read and accept the{" "}
@@ -284,7 +284,7 @@ function BookRoom() {
                 terms & conditions*
               </span>
             </label>
-          </div>
+          </div> */}
 
           <div className="flex justify-center py-7">
             <button

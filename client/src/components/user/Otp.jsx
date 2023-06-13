@@ -72,6 +72,7 @@ export default function Otp() {
 
     const pasteText = (event) => {
       const pastedText = event.clipboardData.getData("text");
+      if (/[a-z]/gi.test(pastedText)) return;
       const fieldValues = Array.from({ length: 6 }).fill("");
       pastedText.split("").forEach((value, index) => {
         fieldValues[index] = value;
