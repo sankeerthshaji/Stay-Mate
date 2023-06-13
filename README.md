@@ -7,11 +7,11 @@ reject these letters, and provide comments to users regarding the status of thei
 
 ##
 
-* Users can fill out an admission form that collects their personal and academic details. After taking admission, users can book the type of room they prefer, such as one share, two share, or four share.
+* Users can fill out an admission form that collects their personal details. After taking admission, users can book the type of room they prefer, such as one share, two share, or four share.
 
 * The user home module of StayMate is designed to provide users with a personalized experience after logging in to their accounts. This module includes features such as profile settings, rent payment, hostel menu, leave letter submission, complaint registration and review submission.
 
-* The admin dashboard module provides hostel administrators with a comprehensive system to manage the hostel's operations, from user management and room management to complaint management, payment management, and food menu management. This module can help streamline hostel operations and provide a better experience for guests.
+* The admin module provides hostel administrators with a comprehensive system to manage the hostel's operations, from user management and room management to complaint management, payment management, and food menu management. This module can help streamline hostel operations and provide a better experience for guests.
 
 ## Technologies Used
 
