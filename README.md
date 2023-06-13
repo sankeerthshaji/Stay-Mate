@@ -1,4 +1,4 @@
-# StayMate(Online Hostel Management System)
+# StayMate (Online Hostel Management System)
 
 StayMate is an online hostel management system that allows users to apply for admission to hostel rooms, 
 view their profile settings, pay rent, check the hostel menu, register complaints, and leave feedback. In addition, 
