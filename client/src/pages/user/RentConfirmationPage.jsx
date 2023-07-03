@@ -2,8 +2,6 @@ import React from "react";
 import UserSideBar from "../../components/user/UserSideBar";
 import RentConfirmation from "../../components/user/RentConfirmation";
 
-import React from "react";
-
 function RentConfirmationPage() {
   return (
     <div className="flex h-screen">
