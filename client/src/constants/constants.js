@@ -1,2 +1,1 @@
-// export const baseUrl = "https://stay-mate-api.sankeerthshaji.me";
-export const baseUrl = "http://localhost:5000";
+export const baseUrl = "https://hostel-management-system-vd3g.onrender.com";
