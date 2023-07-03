@@ -10,7 +10,7 @@ import ForgotPassword from "./pages/user/ForgotPassword";
 import AdminLogin from "./pages/admin/AdminLogin";
 import Users from "./pages/admin/Users";
 import BookRoomPage from "./pages/user/BookRoomPage";
-import ConfirmationPage from "./pages/user/confirmationPage";
+import ConfirmationPage from "./pages/user/ConfirmationPage";
 import UserProfilePage from "./pages/user/UserProfilePage";
 import EditProfilePage from "./pages/user/EditProfilePage";
 import ResetPassword from "./pages/user/ResetPassword";
